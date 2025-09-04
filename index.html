@@ -70,19 +70,19 @@
     <form id="caseForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
       <div>
         <label for="date" class="block text-sm font-medium text-teal-800">Date</label>
-        <input type="date" id="date" name="date" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+        <input type="date" id="date" name="date" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
       </div>
       <div>
         <label for="age" class="block text-sm font-medium text-teal-800">Patient Age</label>
-        <input type="number" id="age" name="age" min="0" max="120" placeholder="e.g., 45" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+        <input type="number" id="age" name="age" min="0" max="120" placeholder="e.g., 45" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
       </div>
       <div>
         <label for="startTime" class="block text-sm font-medium text-teal-800">Anesthesia Start Time</label>
-        <input type="time" id="startTime" name="startTime" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+        <input type="time" id="startTime" name="startTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
       </div>
       <div>
         <label for="stopTime" class="block text-sm font-medium text-teal-800">Anesthesia Stop Time</label>
-        <input type="time" id="stopTime" name="stopTime" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+        <input type="time" id="stopTime" name="stopTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
       </div>
       <div class="md:col-span-2">
         <label for="caseName" class="block text-sm font-medium text-teal-800">Case Name</label>
@@ -90,7 +90,7 @@
       </div>
       <div>
         <label for="asaStatus" class="block text-sm font-medium text-teal-800">ASA Status</label>
-        <select id="asaStatus" name="asaStatus" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+        <select id="asaStatus" name="asaStatus" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
           <option value="" disabled selected>Select ASA Status</option>
           <option value="1">ASA 1</option>
           <option value="2">ASA 2</option>
@@ -108,7 +108,7 @@
       </div>
       <div>
         <label for="caseType" class="block text-sm font-medium text-teal-800">Type of Case</label>
-        <input type="text" id="caseType" name="caseType" placeholder="e.g., General, OB, Neuro, Trauma, etc." required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+        <input type="text" id="caseType" name="caseType" placeholder="e.g., General, OB, Neuro, Trauma, etc." class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
       </div>
       <div class="md:col-span-2">
         <label for="notes" class="block text-sm font-medium text-teal-800">Notes</label>
@@ -133,23 +133,23 @@
           </div>
           <div>
             <label for="editDate" class="block text-sm font-medium text-teal-800">Date</label>
-            <input type="date" id="editDate" name="date" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            <input type="date" id="editDate" name="date" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
           </div>
           <div>
             <label for="editAge" class="block text-sm font-medium text-teal-800">Patient Age</label>
-            <input type="number" id="editAge" name="age" min="0" max="120" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            <input type="number" id="editAge" name="age" min="0" max="120" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
           </div>
           <div>
             <label for="editStartTime" class="block text-sm font-medium text-teal-800">Anesthesia Start Time</label>
-            <input type="time" id="editStartTime" name="startTime" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            <input type="time" id="editStartTime" name="startTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
           </div>
           <div>
             <label for="editStopTime" class="block text-sm font-medium text-teal-800">Anesthesia Stop Time</label>
-            <input type="time" id="editStopTime" name="stopTime" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            <input type="time" id="editStopTime" name="stopTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
           </div>
           <div>
             <label for="editAsaStatus" class="block text-sm font-medium text-teal-800">ASA Status</label>
-            <select id="editAsaStatus" name="asaStatus" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            <select id="editAsaStatus" name="asaStatus" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
               <option value="" disabled>Select ASA Status</option>
               <option value="1">ASA 1</option>
               <option value="2">ASA 2</option>
@@ -167,7 +167,7 @@
           </div>
           <div>
             <label for="editCaseType" class="block text-sm font-medium text-teal-800">Type of Case</label>
-            <input type="text" id="editCaseType" name="caseType" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            <input type="text" id="editCaseType" name="caseType" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
           </div>
           <div class="md:col-span-2">
             <label for="editNotes" class="block text-sm font-medium text-teal-800">Notes</label>
@@ -248,13 +248,13 @@
       e.preventDefault();
       const caseData = {
         caseName: document.getElementById('caseName').value,
-        date: document.getElementById('date').value,
-        startTime: document.getElementById('startTime').value,
-        stopTime: document.getElementById('stopTime').value,
-        age: document.getElementById('age').value,
-        asaStatus: document.getElementById('asaStatus').value,
-        caseType: document.getElementById('caseType').value,
-        notes: document.getElementById('notes').value,
+        date: document.getElementById('date').value || '',
+        startTime: document.getElementById('startTime').value || '',
+        stopTime: document.getElementById('stopTime').value || '',
+        age: document.getElementById('age').value || '',
+        asaStatus: document.getElementById('asaStatus').value || '',
+        caseType: document.getElementById('caseType').value || '',
+        notes: document.getElementById('notes').value || '',
         id: Date.now(),
         username: username
       };
@@ -275,11 +275,11 @@
           li.className = 'p-3 case-item border border-teal-200 rounded-md cursor-pointer';
           li.innerHTML = `
             <strong>Case:</strong> ${c.caseName}<br>
-            <strong>Date:</strong> ${c.date}<br>
-            <strong>Start/Stop:</strong> ${c.startTime} - ${c.stopTime}<br>
-            <strong>Age:</strong> ${c.age}<br>
-            <strong>ASA:</strong> ${c.asaStatus}<br>
-            <strong>Case Type:</strong> ${c.caseType}<br>
+            <strong>Date:</strong> ${c.date || 'Not Provided'}<br>
+            <strong>Start/Stop:</strong> ${c.startTime || 'Not Provided'} - ${c.stopTime || 'Not Provided'}<br>
+            <strong>Age:</strong> ${c.age || 'Not Provided'}<br>
+            <strong>ASA:</strong> ${c.asaStatus || 'Not Provided'}<br>
+            <strong>Case Type:</strong> ${c.caseType || 'Not Provided'}<br>
             <strong>Notes:</strong> ${c.notes || 'None'}
           `;
           li.addEventListener('click', () => showModal(c));
@@ -293,11 +293,11 @@
       selectedCaseId = caseData.id;
       modalCaseName.textContent = caseData.caseName;
       modalContent.innerHTML = `
-        <p><strong>Date:</strong> ${caseData.date}</p>
-        <p><strong>Start/Stop:</strong> ${caseData.startTime} - ${caseData.stopTime}</p>
-        <p><strong>Age:</strong> ${caseData.age}</p>
-        <p><strong>ASA Status:</strong> ${caseData.asaStatus}</p>
-        <p><strong>Case Type:</strong> ${caseData.caseType}</p>
+        <p><strong>Date:</strong> ${caseData.date || 'Not Provided'}</p>
+        <p><strong>Start/Stop:</strong> ${caseData.startTime || 'Not Provided'} - ${caseData.stopTime || 'Not Provided'}</p>
+        <p><strong>Age:</strong> ${caseData.age || 'Not Provided'}</p>
+        <p><strong>ASA Status:</strong> ${caseData.asaStatus || 'Not Provided'}</p>
+        <p><strong>Case Type:</strong> ${caseData.caseType || 'Not Provided'}</p>
         <p class="notes"><strong>Notes:</strong> ${caseData.notes || 'None'}</p>
       `;
       modalContent.style.display = 'block';
@@ -311,12 +311,12 @@
       const caseData = cases.find(c => c.id === selectedCaseId);
       if (caseData) {
         document.getElementById('editCaseName').value = caseData.caseName;
-        document.getElementById('editDate').value = caseData.date;
-        document.getElementById('editStartTime').value = caseData.startTime;
-        document.getElementById('editStopTime').value = caseData.stopTime;
-        document.getElementById('editAge').value = caseData.age;
-        document.getElementById('editAsaStatus').value = caseData.asaStatus;
-        document.getElementById('editCaseType').value = caseData.caseType;
+        document.getElementById('editDate').value = caseData.date || '';
+        document.getElementById('editStartTime').value = caseData.startTime || '';
+        document.getElementById('editStopTime').value = caseData.stopTime || '';
+        document.getElementById('editAge').value = caseData.age || '';
+        document.getElementById('editAsaStatus').value = caseData.asaStatus || '';
+        document.getElementById('editCaseType').value = caseData.caseType || '';
         document.getElementById('editNotes').value = caseData.notes || '';
         modalContent.style.display = 'none';
         modalButtons.style.display = 'none';
@@ -329,13 +329,360 @@
       e.preventDefault();
       const updatedCase = {
         caseName: document.getElementById('editCaseName').value,
-        date: document.getElementById('editDate').value,
-        startTime: document.getElementById('editStartTime').value,
-        stopTime: document.getElementById('editStopTime').value,
-        age: document.getElementById('editAge').value,
-        asaStatus: document.getElementById('editAsaStatus').value,
-        caseType: document.getElementById('editCaseType').value,
-        notes: document.getElementById('editNotes').value,
+        date: document.getElementById('editDate').value || '',
+        startTime: document.getElementById('editStartTime').value || '',
+        stopTime: document.getElementById('editStopTime').value || '',
+        age: document.getElementById('editAge').value || '',
+        asaStatus: document.getElementById('editAsaStatus').value || '',
+        caseType: document.getElementById('editCaseType').value || '',
+        notes: document.get personally identifiable information (PII) should be avoided in all fields, including Case Name and Notes, to ensure compliance with privacy regulations like HIPAA. Would you like to add a disclaimer in the app (e.g., “Do not enter patient-identifiable information”) to remind SRNAs?
+
+### Next Steps
+- **Sharing**: To share, save this HTML file and host it on GitHub Pages for a public URL (I can provide detailed steps), or share via email/Google Drive. Would you like instructions for GitHub Pages setup?
+- **Feedback**: Does the flexibility of optional fields (except Case Name) meet the needs for quick entries? Should we make Case Name optional too, or is it critical for recall?
+- **Storage**: The app supports ~10,000-25,000 cases. Would a “Clear All Cases” button after exporting help manage storage?
+
+What’s the one tweak that would make this tracker perfect for SRNAs? For example, is it the ability to save partial cases, the edit feature’s ease, or something else? Have you seen apps where optional fields or editing felt seamless—what made them stand out?
+
+<xaiArtifact artifact_id="3bd80228-a8f7-43f5-a86c-f96805f63266" artifact_version_id="fdfd9f7b-6f3f-4b5c-9c5e-56a8921b0e6b" title="index.html" contentType="text/html">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SRNA Case Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background: linear-gradient(to bottom, #e6f3fa, #f0f9fa);
+    }
+    .form-container {
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .case-item:nth-child(even) {
+      background: #f1f5f9;
+    }
+    .case-item:hover {
+      background: #e2e8f0;
+      transition: background 0.2s;
+    }
+    .btn-primary {
+      background: #1d4ed8;
+      transition: background 0.3s;
+    }
+    .btn-primary:hover {
+      background: #1e40af;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 24px;
+      border-radius: 0.5rem;
+      max-width: 600px;
+      width: 90%;
+    }
+    .modal-content p {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .modal-content .notes {
+      border: 1px solid #4b5563;
+      padding: 10px;
+      border-radius: 0.25rem;
+      background: #f8fafc;
+    }
+  </style>
+</head>
+<body class="flex items-center justify-center min-h-screen">
+  <div class="w-full max-w-4xl p-6 form-container">
+    <h1 class="text-3xl font-bold text-center text-teal-700 mb-8">SRNA Case Tracker</h1>
+    <div id="userPrompt" class="mb-6">
+      <label for="username" class="block text-sm font-medium text-teal-800">Enter Your Username</label>
+      <input type="text" id="username" name="username" placeholder="e.g., YourName123" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+      <button id="setUsername" class="mt-2 w-full btn-primary text-white p-3 rounded-md">Set Username</button>
+    </div>
+    <div id="storageWarning" class="hidden mb-4 p-2 bg-yellow-100 text-yellow-800 rounded-md">Warning: Storage is almost full. Consider exporting and clearing cases.</div>
+    <form id="caseForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+      <div>
+        <label for="date" class="block text-sm font-medium text-teal-800">Date</label>
+        <input type="date" id="date" name="date" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+      </div>
+      <div>
+        <label for="age" class="block text-sm font-medium text-teal-800">Patient Age</label>
+        <input type="number" id="age" name="age" min="0" max="120" placeholder="e.g., 45" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+      </div>
+      <div>
+        <label for="startTime" class="block text-sm font-medium text-teal-800">Anesthesia Start Time</label>
+        <input type="time" id="startTime" name="startTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+      </div>
+      <div>
+        <label for="stopTime" class="block text-sm font-medium text-teal-800">Anesthesia Stop Time</label>
+        <input type="time" id="stopTime" name="stopTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+      </div>
+      <div class="md:col-span-2">
+        <label for="caseName" class="block text-sm font-medium text-teal-800">Case Name</label>
+        <input type="text" id="caseName" name="caseName" placeholder="e.g., Appendectomy - 3/1/25" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+      </div>
+      <div>
+        <label for="asaStatus" class="block text-sm font-medium text-teal-800">ASA Status</label>
+        <select id="asaStatus" name="asaStatus" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          <option value="" disabled selected>Select ASA Status</option>
+          <option value="1">ASA 1</option>
+          <option value="2">ASA 2</option>
+          <option value="3">ASA 3</option>
+          <option value="4">ASA 4</option>
+          <option value="5">ASA 5</option>
+          <option value="6">ASA 6</option>
+          <option value="1E">ASA 1E</option>
+          <option value="2E">ASA 2E</option>
+          <option value="3E">ASA 3E</option>
+          <option value="4E">ASA 4E</option>
+          <option value="5E">ASA 5E</option>
+          <option value="6E">ASA 6E</option>
+        </select>
+      </div>
+      <div>
+        <label for="caseType" class="block text-sm font-medium text-teal-800">Type of Case</label>
+        <input type="text" id="caseType" name="caseType" placeholder="e.g., General, OB, Neuro, Trauma, etc." class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+      </div>
+      <div class="md:col-span-2">
+        <label for="notes" class="block text-sm font-medium text-teal-800">Notes</label>
+        <textarea id="notes" name="notes" rows="4" placeholder="e.g., Anesthesia Procedures (Art-line, CVC, POCUS), Anesthesia Type (General, Regional, MAC, Induction)" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500"></textarea>
+      </div>
+      <div class="md:col-span-2">
+        <button type="submit" class="w-full btn-primary text-white p-3 rounded-md">Save Case</button>
+      </div>
+    </form>
+    <div id="caseList" class="mt-8 hidden">
+      <h2 class="text-xl font-semibold text-teal-700 mb-4">Saved Cases</h2>
+      <ul id="cases" class="space-y-2"></ul>
+    </div>
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <h3 class="text-lg font-semibold text-teal-700 mb-4" id="modalCaseName"></h3>
+        <div id="modalContent"></div>
+        <form id="editForm" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="editCaseName" class="block text-sm font-medium text-teal-800">Case Name</label>
+            <input type="text" id="editCaseName" name="caseName" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div>
+            <label for="editDate" class="block text-sm font-medium text-teal-800">Date</label>
+            <input type="date" id="editDate" name="date" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div>
+            <label for="editAge" class="block text-sm font-medium text-teal-800">Patient Age</label>
+            <input type="number" id="editAge" name="age" min="0" max="120" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div>
+            <label for="editStartTime" class="block text-sm font-medium text-teal-800">Anesthesia Start Time</label>
+            <input type="time" id="editStartTime" name="startTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div>
+            <label for="editStopTime" class="block text-sm font-medium text-teal-800">Anesthesia Stop Time</label>
+            <input type="time" id="editStopTime" name="stopTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div>
+            <label for="editAsaStatus" class="block text-sm font-medium text-teal-800">ASA Status</label>
+            <select id="editAsaStatus" name="asaStatus" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+              <option value="" disabled>Select ASA Status</option>
+              <option value="1">ASA 1</option>
+              <option value="2">ASA 2</option>
+              <option value="3">ASA 3</option>
+              <option value="4">ASA 4</option>
+              <option value="5">ASA 5</option>
+              <option value="6">ASA 6</option>
+              <option value="1E">ASA 1E</option>
+              <option value="2E">ASA 2E</option>
+              <option value="3E">ASA 3E</option>
+              <option value="4E">ASA 4E</option>
+              <option value="5E">ASA 5E</option>
+              <option value="6E">ASA 6E</option>
+            </select>
+          </div>
+          <div>
+            <label for="editCaseType" class="block text-sm font-medium text-teal-800">Type of Case</label>
+            <input type="text" id="editCaseType" name="caseType" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div class="md:col-span-2">
+            <label for="editNotes" class="block text-sm font-medium text-teal-800">Notes</label>
+            <textarea id="editNotes" name="notes" rows="4" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500"></textarea>
+          </div>
+          <div class="md:col-span-2 flex justify-end space-x-2">
+            <button id="saveEdit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save Changes</button>
+            <button id="cancelEdit" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">Cancel</button>
+          </div>
+        </form>
+        <div id="modalButtons" class="mt-4 flex justify-end space-x-2">
+          <button id="editCase" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Edit</button>
+          <button id="exportCase" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Export as CSV</button>
+          <button id="deleteCase" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Delete</button>
+          <button id="closeModal" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Get or set username
+    let username = localStorage.getItem('srnaUsername') || '';
+    let cases = [];
+    let selectedCaseId = null;
+
+    const userPrompt = document.getElementById('userPrompt');
+    const caseForm = document.getElementById('caseForm');
+    const caseList = document.getElementById('caseList');
+    const storageWarning = document.getElementById('storageWarning');
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modalContent');
+    const modalCaseName = document.getElementById('modalCaseName');
+    const editForm = document.getElementById('editForm');
+    const modalButtons = document.getElementById('modalButtons');
+
+    // Check storage usage
+    function checkStorage() {
+      const storageSize = JSON.stringify(localStorage).length;
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (storageSize > maxSize * 0.9) {
+        storageWarning.classList.remove('hidden');
+      } else {
+        storageWarning.classList.add('hidden');
+      }
+    }
+
+    // Show form if username is set, otherwise show username prompt
+    if (username) {
+      userPrompt.classList.add('hidden');
+      caseForm.classList.remove('hidden');
+      caseList.classList.remove('hidden');
+      loadCases();
+    }
+
+    // Handle username submission
+    document.getElementById('setUsername').addEventListener('click', () => {
+      username = document.getElementById('username').value.trim();
+      if (username) {
+        localStorage.setItem('srnaUsername', username);
+        userPrompt.classList.add('hidden');
+        caseForm.classList.remove('hidden');
+        caseList.classList.remove('hidden');
+        loadCases();
+      } else {
+        alert('Please enter a username.');
+      }
+    });
+
+    // Load cases for the current user
+    function loadCases() {
+      cases = JSON.parse(localStorage.getItem(`srnaCases_${username}`)) || [];
+      displayCases();
+      checkStorage();
+    }
+
+    // Handle form submission
+    document.getElementById('caseForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const caseData = {
+        caseName: document.getElementById('caseName').value,
+        date: document.getElementById('date').value || '',
+        startTime: document.getElementById('startTime').value || '',
+        stopTime: document.getElementById('stopTime').value || '',
+        age: document.getElementById('age').value || '',
+        asaStatus: document.getElementById('asaStatus').value || '',
+        caseType: document.getElementById('caseType').value || '',
+        notes: document.getElementById('notes').value || '',
+        id: Date.now(),
+        username: username
+      };
+      cases.push(caseData);
+      localStorage.setItem(`srnaCases_${username}`, JSON.stringify(cases));
+      displayCases();
+      document.getElementById('caseForm').reset();
+      checkStorage();
+    });
+
+    // Display saved cases
+    function displayCases() {
+      const caseList = document.getElementById('cases');
+      caseList.innerHTML = '';
+      cases.forEach((c, index) => {
+        if (c.username === username) {
+          const li = document.createElement('li');
+          li.className = 'p-3 case-item border border-teal-200 rounded-md cursor-pointer';
+          li.innerHTML = `
+            <strong>Case:</strong> ${c.caseName}<br>
+            <strong>Date:</strong> ${c.date || 'Not Provided'}<br>
+            <strong>Start/Stop:</strong> ${c.startTime || 'Not Provided'} - ${c.stopTime || 'Not Provided'}<br>
+            <strong>Age:</strong> ${c.age || 'Not Provided'}<br>
+            <strong>ASA:</strong> ${c.asaStatus || 'Not Provided'}<br>
+            <strong>Case Type:</strong> ${c.caseType || 'Not Provided'}<br>
+            <strong>Notes:</strong> ${c.notes || 'None'}
+          `;
+          li.addEventListener('click', () => showModal(c));
+          caseList.appendChild(li);
+        }
+      });
+    }
+
+    // Show modal with case details
+    function showModal(caseData) {
+      selectedCaseId = caseData.id;
+      modalCaseName.textContent = caseData.caseName;
+      modalContent.innerHTML = `
+        <p><strong>Date:</strong> ${caseData.date || 'Not Provided'}</p>
+        <p><strong>Start/Stop:</strong> ${caseData.startTime || 'Not Provided'} - ${caseData.stopTime || 'Not Provided'}</p>
+        <p><strong>Age:</strong> ${caseData.age || 'Not Provided'}</p>
+        <p><strong>ASA Status:</strong> ${caseData.asaStatus || 'Not Provided'}</p>
+        <p><strong>Case Type:</strong> ${caseData.caseType || 'Not Provided'}</p>
+        <p class="notes"><strong>Notes:</strong> ${caseData.notes || 'None'}</p>
+      `;
+      modalContent.style.display = 'block';
+      editForm.classList.add('hidden');
+      modalButtons.style.display = 'flex';
+      modal.style.display = 'flex';
+    }
+
+    // Show edit form
+    document.getElementById('editCase').addEventListener('click', () => {
+      const caseData = cases.find(c => c.id === selectedCaseId);
+      if (caseData) {
+        document.getElementById('editCaseName').value = caseData.caseName;
+        document.getElementById('editDate').value = caseData.date || '';
+        document.getElementById('editStartTime').value = caseData.startTime || '';
+        document.getElementById('editStopTime').value = caseData.stopTime || '';
+        document.getElementById('editAge').value = caseData.age || '';
+        document.getElementById('editAsaStatus').value = caseData.asaStatus || '';
+        document.getElementById('editCaseType').value = caseData.caseType || '';
+        document.getElementById('editNotes').value = caseData.notes || '';
+        modalContent.style.display = 'none';
+        modalButtons.style.display = 'none';
+        editForm.classList.remove('hidden');
+      }
+    });
+
+    // Save edited case
+    document.getElementById('saveEdit').addEventListener('click', (e) => {
+      e.preventDefault();
+      const updatedCase = {
+        caseName: document.getElementById('editCaseName').value,
+        date: document.getElementById('editDate').value || '',
+        startTime: document.getElementById('editStartTime').value || '',
+        stopTime: document.getElementById('editStopTime').value || '',
+        age: document.getElementById('editAge').value || '',
+        asaStatus: document.getElementById('editAsaStatus').value || '',
+        caseType: document.getElementById('editCaseType').value || '',
+        notes: document.getElementById('editNotes').value || '',
         id: selectedCaseId,
         username: username
       };
@@ -365,7 +712,7 @@
     document.getElementById('exportCase').addEventListener('click', () => {
       const caseData = cases.find(c => c.id === selectedCaseId);
       if (caseData) {
-        const csv = `Case Name,Date,Start Time,Stop Time,Age,ASA Status,Case Type,Notes\n"${caseData.caseName}",${caseData.date},${caseData.startTime},${caseData.stopTime},${caseData.age},${caseData.asaStatus},${caseData.caseType},"${caseData.notes || ''}"`;
+        const csv = `Case Name,Date,Start Time,Stop Time,Age,ASA Status,Case Type,Notes\n"${caseData.caseName}",${caseData.date || ''},${caseData.startTime || ''},${caseData.stopTime || ''},${caseData.age || ''},${caseData.asaStatus || ''},${caseData.caseType || ''},"${caseData.notes || ''}"`;
         const blob = new Blob([csv], { type: 'text/csv' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
