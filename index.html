@@ -126,7 +126,60 @@
       <div class="modal-content">
         <h3 class="text-lg font-semibold text-teal-700 mb-4" id="modalCaseName"></h3>
         <div id="modalContent"></div>
-        <div class="mt-4 flex justify-end space-x-2">
+        <form id="editForm" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label for="editCaseName" class="block text-sm font-medium text-teal-800">Case Name</label>
+            <input type="text" id="editCaseName" name="caseName" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div>
+            <label for="editDate" class="block text-sm font-medium text-teal-800">Date</label>
+            <input type="date" id="editDate" name="date" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div>
+            <label for="editAge" class="block text-sm font-medium text-teal-800">Patient Age</label>
+            <input type="number" id="editAge" name="age" min="0" max="120" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div>
+            <label for="editStartTime" class="block text-sm font-medium text-teal-800">Anesthesia Start Time</label>
+            <input type="time" id="editStartTime" name="startTime" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div>
+            <label for="editStopTime" class="block text-sm font-medium text-teal-800">Anesthesia Stop Time</label>
+            <input type="time" id="editStopTime" name="stopTime" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div>
+            <label for="editAsaStatus" class="block text-sm font-medium text-teal-800">ASA Status</label>
+            <select id="editAsaStatus" name="asaStatus" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+              <option value="" disabled>Select ASA Status</option>
+              <option value="1">ASA 1</option>
+              <option value="2">ASA 2</option>
+              <option value="3">ASA 3</option>
+              <option value="4">ASA 4</option>
+              <option value="5">ASA 5</option>
+              <option value="6">ASA 6</option>
+              <option value="1E">ASA 1E</option>
+              <option value="2E">ASA 2E</option>
+              <option value="3E">ASA 3E</option>
+              <option value="4E">ASA 4E</option>
+              <option value="5E">ASA 5E</option>
+              <option value="6E">ASA 6E</option>
+            </select>
+          </div>
+          <div>
+            <label for="editCaseType" class="block text-sm font-medium text-teal-800">Type of Case</label>
+            <input type="text" id="editCaseType" name="caseType" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          </div>
+          <div class="md:col-span-2">
+            <label for="editNotes" class="block text-sm font-medium text-teal-800">Notes</label>
+            <textarea id="editNotes" name="notes" rows="4" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500"></textarea>
+          </div>
+          <div class="md:col-span-2 flex justify-end space-x-2">
+            <button id="saveEdit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save Changes</button>
+            <button id="cancelEdit" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">Cancel</button>
+          </div>
+        </form>
+        <div id="modalButtons" class="mt-4 flex justify-end space-x-2">
+          <button id="editCase" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Edit</button>
           <button id="exportCase" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Export as CSV</button>
           <button id="deleteCase" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Delete</button>
           <button id="closeModal" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">Close</button>
@@ -147,6 +200,8 @@
     const modal = document.getElementById('modal');
     const modalContent = document.getElementById('modalContent');
     const modalCaseName = document.getElementById('modalCaseName');
+    const editForm = document.getElementById('editForm');
+    const modalButtons = document.getElementById('modalButtons');
 
     // Check storage usage
     function checkStorage() {
@@ -245,8 +300,60 @@
         <p><strong>Case Type:</strong> ${caseData.caseType}</p>
         <p class="notes"><strong>Notes:</strong> ${caseData.notes || 'None'}</p>
       `;
+      modalContent.style.display = 'block';
+      editForm.classList.add('hidden');
+      modalButtons.style.display = 'flex';
       modal.style.display = 'flex';
     }
+
+    // Show edit form
+    document.getElementById('editCase').addEventListener('click', () => {
+      const caseData = cases.find(c => c.id === selectedCaseId);
+      if (caseData) {
+        document.getElementById('editCaseName').value = caseData.caseName;
+        document.getElementById('editDate').value = caseData.date;
+        document.getElementById('editStartTime').value = caseData.startTime;
+        document.getElementById('editStopTime').value = caseData.stopTime;
+        document.getElementById('editAge').value = caseData.age;
+        document.getElementById('editAsaStatus').value = caseData.asaStatus;
+        document.getElementById('editCaseType').value = caseData.caseType;
+        document.getElementById('editNotes').value = caseData.notes || '';
+        modalContent.style.display = 'none';
+        modalButtons.style.display = 'none';
+        editForm.classList.remove('hidden');
+      }
+    });
+
+    // Save edited case
+    document.getElementById('saveEdit').addEventListener('click', (e) => {
+      e.preventDefault();
+      const updatedCase = {
+        caseName: document.getElementById('editCaseName').value,
+        date: document.getElementById('editDate').value,
+        startTime: document.getElementById('editStartTime').value,
+        stopTime: document.getElementById('editStopTime').value,
+        age: document.getElementById('editAge').value,
+        asaStatus: document.getElementById('editAsaStatus').value,
+        caseType: document.getElementById('editCaseType').value,
+        notes: document.getElementById('editNotes').value,
+        id: selectedCaseId,
+        username: username
+      };
+      cases = cases.map(c => c.id === selectedCaseId ? updatedCase : c);
+      localStorage.setItem(`srnaCases_${username}`, JSON.stringify(cases));
+      displayCases();
+      modal.style.display = 'none';
+      selectedCaseId = null;
+      checkStorage();
+    });
+
+    // Cancel edit
+    document.getElementById('cancelEdit').addEventListener('click', () => {
+      const caseData = cases.find(c => c.id === selectedCaseId);
+      if (caseData) {
+        showModal(caseData);
+      }
+    });
 
     // Close modal
     document.getElementById('closeModal').addEventListener('click', () => {
