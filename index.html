@@ -64,6 +64,30 @@
       width: 90%;
       padding: 24px;
     }
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+    }
+    .tab.active {
+      border-bottom: 2px solid #1d4ed8;
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .highlight {
+      background: #d1fae5;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .placeholder {
+      color: #9ca3af;
+      font-style: italic;
+    }
   </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
@@ -77,60 +101,282 @@
     <h1 class="text-3xl font-bold text-center text-teal-700 mb-8">SRNA Case Tracker</h1>
     <div id="storageWarning" class="hidden mb-4 p-2 bg-yellow-100 text-yellow-800 rounded-md">Warning: Storage is almost full. Consider exporting and clearing cases.</div>
     <div id="privacyDisclaimer" class="mb-4 p-2 bg-blue-100 text-blue-800 rounded-md">Do not enter patient-identifiable information to comply with HIPAA.</div>
-    <form id="caseForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div>
-        <label for="date" class="block text-sm font-medium text-teal-800">Date</label>
-        <input type="date" id="date" name="date" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+    <div class="flex border-b mb-4">
+      <div class="tab active" data-tab="caseTracker">Case Tracker</div>
+      <div class="tab" data-tab="drugList">Drug List</div>
+      <div class="tab" data-tab="calculations">Calculations</div>
+      <div class="tab" data-tab="keyPoints">Key Points</div>
+    </div>
+    <div id="caseTracker" class="tab-content active">
+      <form id="caseForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="date" class="block text-sm font-medium text-teal-800">Date</label>
+          <input type="date" id="date" name="date" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+        </div>
+        <div>
+          <label for="age" class="block text-sm font-medium text-teal-800">Age</label>
+          <input type="number" id="age" name="age" min="0" max="120" placeholder="e.g., 45" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+        </div>
+        <div>
+          <label for="startTime" class="block text-sm font-medium text-teal-800">Start Time</label>
+          <input type="time" id="startTime" name="startTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+        </div>
+        <div>
+          <label for="stopTime" class="block text-sm font-medium text-teal-800">Stop Time</label>
+          <input type="time" id="stopTime" name="stopTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+        </div>
+        <div class="md:col-span-2">
+          <label for="caseName" class="block text-sm font-medium text-teal-800">Case Name</label>
+          <input type="text" id="caseName" name="caseName" placeholder="e.g., Appendectomy - 3/1/25" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+        </div>
+        <div>
+          <label for="asaStatus" class="block text-sm font-medium text-teal-800">ASA Status</label>
+          <select id="asaStatus" name="asaStatus" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            <option value="" disabled selected>Select ASA Status</option>
+            <option value="1">ASA 1</option>
+            <option value="2">ASA 2</option>
+            <option value="3">ASA 3</option>
+            <option value="4">ASA 4</option>
+            <option value="5">ASA 5</option>
+            <option value="6">ASA 6</option>
+            <option value="1E">ASA 1E</option>
+            <option value="2E">ASA 2E</option>
+            <option value="3E">ASA 3E</option>
+            <option value="4E">ASA 4E</option>
+            <option value="5E">ASA 5E</option>
+            <option value="6E">ASA 6E</option>
+          </select>
+        </div>
+        <div>
+          <label for="caseType" class="block text-sm font-medium text-teal-800">Case Type</label>
+          <input type="text" id="caseType" name="caseType" placeholder="e.g., General, OB, Neuro, Trauma" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+        </div>
+        <div class="md:col-span-2">
+          <label for="notes" class="block text-sm font-medium text-teal-800">Notes</label>
+          <textarea id="notes" name="notes" rows="4" placeholder="e.g., Anesthesia Procedures (Art-line, CVC, POCUS), Anesthesia Type (General, Regional, MAC)" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500"></textarea>
+        </div>
+        <div class="md:col-span-2">
+          <button type="submit" class="w-full btn-primary text-white p-3 rounded-md">Save Case</button>
+        </div>
+      </form>
+      <div id="caseList" class="mt-8">
+        <h2 class="text-xl font-semibold text-teal-700 mb-4">Saved Cases</h2>
+        <ul id="cases" class="space-y-2"></ul>
       </div>
-      <div>
-        <label for="age" class="block text-sm font-medium text-teal-800">Patient Age</label>
-        <input type="number" id="age" name="age" min="0" max="120" placeholder="e.g., 45" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+      <button id="clearCases" class="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Clear All Cases</button>
+    </div>
+    <div id="drugList" class="tab-content">
+      <h2 class="text-xl font-semibold text-teal-700 mb-4">Anesthesia Drugs</h2>
+      <div class="mb-4">
+        <label for="ptWeight" class="block text-sm font-medium text-teal-800">Weight (kg)</label>
+        <input type="number" id="ptWeight" min="0" placeholder="e.g., 70" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
       </div>
-      <div>
-        <label for="startTime" class="block text-sm font-medium text-teal-800">Anesthesia Start Time</label>
-        <input type="time" id="startTime" name="startTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+      <h3 class="text-lg font-medium text-teal-800 mb-2">Induction</h3>
+      <ul class="space-y-2 mb-4">
+        <li><strong>Propofol:</strong> 1.5-2.5 mg/kg IV <span id="propofolDose" class="highlight"></span></li>
+        <li><strong>Etomidate:</strong> 0.2-0.3 mg/kg IV <span id="etomidateDose" class="highlight"></span></li>
+        <li><strong>Lidocaine:</strong> 1-1.5 mg/kg IV <span id="lidocaineInductionDose" class="highlight"></span></li>
+        <li><strong>Ketamine:</strong> 1-2 mg/kg IV <span id="ketamineDose" class="highlight"></span></li>
+        <li><strong>Fentanyl:</strong> 1-2 mcg/kg IV <span id="fentanylInductionDose" class="highlight"></span></li>
+        <li><strong>Succinylcholine:</strong> 1-1.5 mg/kg IV <span id="succinylcholineDose" class="highlight"></span></li>
+        <li><strong>Rocuronium:</strong> 0.6-1.2 mg/kg IV <span id="rocuroniumInductionDose" class="highlight"></span></li>
+      </ul>
+      <h3 class="text-lg font-medium text-teal-800 mb-2">Sedation</h3>
+      <ul class="space-y-2 mb-4">
+        <li><strong>Midazolam:</strong> 0.02-0.04 mg/kg IV <span id="midazolamDose" class="highlight"></span></li>
+        <li><strong>Precedex:</strong> Loading: 0.5-1 mcg/kg IV over 10 min; Maintenance: 0.2-0.7 mcg/kg/hr <span id="precedexDose" class="highlight"></span></li>
+      </ul>
+      <h3 class="text-lg font-medium text-teal-800 mb-2">Reversal</h3>
+      <ul class="space-y-2 mb-4">
+        <li><strong>Naloxone:</strong> 0.04-0.4 mg IV <span id="naloxoneDose" class="highlight"></span></li>
+        <li><strong>Neostigmine:</strong> 0.04-0.07 mg/kg IV (with Glycopyrrolate) <span id="neostigmineDose" class="highlight"></span></li>
+        <li><strong>Sugammadex:</strong> 2-4 mg/kg IV <span id="sugammadexDose" class="highlight"></span></li>
+      </ul>
+      <h3 class="text-lg font-medium text-teal-800 mb-2">Vasoactive Uppers</h3>
+      <ul class="space-y-2 mb-4">
+        <li><strong>Glycopyrrolate:</strong> 0.2 mg per 1 mg Neostigmine IV <span id="glycopyrrolateDose" class="highlight"></span></li>
+        <li><strong>Atropine:</strong> 0.01-0.02 mg/kg IV <span id="atropineDose" class="highlight"></span></li>
+        <li><strong>Phenylephrine:</strong> Bolus: 50-200 mcg IV; Infusion: 0.1-0.5 mcg/kg/min <span id="phenylephrineDose" class="highlight"></span></li>
+        <li><strong>Ephedrine:</strong> 5-10 mg IV <span id="ephedrineDose" class="highlight"></span></li>
+        <li><strong>Norepinephrine:</strong> 0.01-0.1 mcg/kg/min <span id="norepinephrineDose" class="highlight"></span></li>
+      </ul>
+      <h3 class="text-lg font-medium text-teal-800 mb-2">Vasoactive Downers</h3>
+      <ul class="space-y-2 mb-4">
+        <li><strong>Esmolol:</strong> Bolus: 0.5 mg/kg IV; Infusion: 50-200 mcg/kg/min <span id="esmololDose" class="highlight"></span></li>
+        <li><strong>Metoprolol:</strong> 1-5 mg IV <span id="metoprololDose" class="highlight"></span></li>
+        <li><strong>Hydralazine:</strong> 5-20 mg IV <span id="hydralazineDose" class="highlight"></span></li>
+        <li><strong>Nitroglycerin:</strong> 5-20 mcg/min <span id="nitroglycerinDose" class="highlight"></span></li>
+      </ul>
+      <h3 class="text-lg font-medium text-teal-800 mb-2">Antiemetics</h3>
+      <ul class="space-y-2">
+        <li><strong>Dexamethasone:</strong> 4-8 mg IV <span id="decadronDose" class="highlight"></span></li>
+        <li><strong>Ondansetron:</strong> 4-8 mg IV <span id="zofranDose" class="highlight"></span></li>
+        <li><strong>Haloperidol:</strong> 0.5-2 mg IV <span id="haldolDose" class="highlight"></span></li>
+      </ul>
+      <p class="mt-4 text-sm text-gray-600">Note: Dosages are guidelines. Adjust for age, comorbidities, and protocols.</p>
+    </div>
+    <div id="calculations" class="tab-content">
+      <h2 class="text-xl font-semibold text-teal-700 mb-4">Calculations</h2>
+      <div class="mb-6 p-4 bg-gray-100 rounded-md">
+        <h3 class="text-lg font-medium text-teal-800 mb-2">Patient Data</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label for="calcHeightUnit" class="block text-sm font-medium text-teal-800">Height Unit</label>
+            <select id="calcHeightUnit" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+              <option value="cm">cm</option>
+              <option value="in">inches</option>
+              <option value="ftin">feet/inches</option>
+            </select>
+            <div id="heightCm" class="mt-2">
+              <label for="calcHeightCm" class="block text-sm font-medium text-teal-800">Height (cm)</label>
+              <input type="number" id="calcHeightCm" min="0" placeholder="e.g., 170" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            </div>
+            <div id="heightIn" class="mt-2 hidden">
+              <label for="calcHeightIn" class="block text-sm font-medium text-teal-800">Height (inches)</label>
+              <input type="number" id="calcHeightIn" min="0" placeholder="e.g., 67" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            </div>
+            <div id="heightFtIn" class="mt-2 hidden">
+              <label for="calcHeightFt" class="block text-sm font-medium text-teal-800">Feet</label>
+              <input type="number" id="calcHeightFt" min="0" placeholder="e.g., 5" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+              <label for="calcHeightInFt" class="block text-sm font-medium text-teal-800 mt-2">Inches</label>
+              <input type="number" id="calcHeightInFt" min="0" max="11" placeholder="e.g., 11" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            </div>
+          </div>
+          <div>
+            <label for="calcWeightUnit" class="block text-sm font-medium text-teal-800">Weight Unit</label>
+            <select id="calcWeightUnit" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+              <option value="kg">kg</option>
+              <option value="lb">lb</option>
+            </select>
+            <div id="weightKg" class="mt-2">
+              <label for="calcWeightKg" class="block text-sm font-medium text-teal-800">Weight (kg)</label>
+              <input type="number" id="calcWeightKg" min="0" placeholder="e.g., 70" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            </div>
+            <div id="weightLb" class="mt-2 hidden">
+              <label for="calcWeightLb" class="block text-sm font-medium text-teal-800">Weight (lb)</label>
+              <input type="number" id="calcWeightLb" min="0" placeholder="e.g., 154" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            </div>
+          </div>
+          <div>
+            <label for="calcGender" class="block text-sm font-medium text-teal-800">Gender</label>
+            <select id="calcGender" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+            </select>
+          </div>
+        </div>
+        <div class="mt-2 text-teal-800">
+          <p id="ebvResult" class="inline"><span class="placeholder">EBV: Enter weight and gender</span></p><br>
+          <p id="ibwResult" class="inline"><span class="placeholder">IBW: Enter height and gender</span></p><br>
+          <p id="airwayRecommendations">
+            <span id="tvRecommendation" class="placeholder">Tidal Volume: Enter weight</span><br>
+            <span id="ettRecommendation" class="placeholder">ETT Size: Enter weight and gender</span><br>
+            <span id="lmaRecommendation" class="placeholder">LMA Size: Enter weight</span>
+          </p>
+        </div>
       </div>
-      <div>
-        <label for="stopTime" class="block text-sm font-medium text-teal-800">Anesthesia Stop Time</label>
-        <input type="time" id="stopTime" name="stopTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+      <div class="grid grid-cols-1 gap-4">
+        <div>
+          <h3 class="text-lg font-medium text-teal-800">Allowable Blood Loss</h3>
+          <label for="ebv" class="block text-sm font-medium text-teal-800">EBV (mL)</label>
+          <input type="number" id="ebv" min="0" placeholder="e.g., 5000" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          <label for="initialHct" class="block text-sm font-medium text-teal-800 mt-2">Initial Hct (%)</label>
+          <input type="number" id="initialHct" min="0" placeholder="e.g., 40" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          <label for="targetHct" class="block text-sm font-medium text-teal-800 mt-2">Target Hct (%)</label>
+          <input type="number" id="targetHct" min="0" placeholder="e.g., 30" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          <p id="ablResult" class="mt-2 text-teal-800"><span class="placeholder">ABL: Enter EBV and Hct values</span></p>
+        </div>
+        <div>
+          <h3 class="text-lg font-medium text-teal-800">Maximum Local Anesthetic</h3>
+          <label for="weightLocal" class="block text-sm font-medium text-teal-800">Weight (kg)</label>
+          <input type="number" id="weightLocal" min="0" placeholder="e.g., 70" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          <label for="anesthetic" class="block text-sm font-medium text-teal-800 mt-2">Anesthetic</label>
+          <select id="anesthetic" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            <option value="" disabled selected>Select Anesthetic</option>
+            <option value="lidocaine">Lidocaine</option>
+            <option value="bupivacaine">Bupivacaine</option>
+            <option value="ropivacaine">Ropivacaine</option>
+            <option value="mepivacaine">Mepivacaine</option>
+          </select>
+          <label for="concentration" class="block text-sm font-medium text-teal-800 mt-2">Concentration (%)</label>
+          <select id="concentration" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            <option value="" disabled selected>Select Concentration</option>
+          </select>
+          <label for="epi" class="block text-sm font-medium text-teal-800 mt-2">Epinephrine?</label>
+          <select id="epi" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+          <p id="localResult" class="mt-2 text-teal-800"><span class="placeholder">Max Volume: Enter all fields</span></p>
+        </div>
+        <div>
+          <h3 class="text-lg font-medium text-teal-800">Fluid and NPO Deficit</h3>
+          <label for="weightFluid" class="block text-sm font-medium text-teal-800">Weight (kg)</label>
+          <input type="number" id="weightFluid" min="0" placeholder="e.g., 70" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          <label for="npoHours" class="block text-sm font-medium text-teal-800 mt-2">NPO Hours</label>
+          <input type="number" id="npoHours" min="0" placeholder="e.g., 8" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+          <p id="fluidNpoResult" class="mt-2 text-teal-800"><span class="placeholder">Fluid: Enter weight and NPO hours</span></p>
+        </div>
       </div>
-      <div class="md:col-span-2">
-        <label for="caseName" class="block text-sm font-medium text-teal-800">Case Name</label>
-        <input type="text" id="caseName" name="caseName" placeholder="e.g., Appendectomy - 3/1/25" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-      </div>
-      <div>
-        <label for="asaStatus" class="block text-sm font-medium text-teal-800">ASA Status</label>
-        <select id="asaStatus" name="asaStatus" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-          <option value="" disabled selected>Select ASA Status</option>
-          <option value="1">ASA 1</option>
-          <option value="2">ASA 2</option>
-          <option value="3">ASA 3</option>
-          <option value="4">ASA 4</option>
-          <option value="5">ASA 5</option>
-          <option value="6">ASA 6</option>
-          <option value="1E">ASA 1E</option>
-          <option value="2E">ASA 2E</option>
-          <option value="3E">ASA 3E</option>
-          <option value="4E">ASA 4E</option>
-          <option value="5E">ASA 5E</option>
-          <option value="6E">ASA 6E</option>
-        </select>
-      </div>
-      <div>
-        <label for="caseType" class="block text-sm font-medium text-teal-800">Type of Case</label>
-        <input type="text" id="caseType" name="caseType" placeholder="e.g., General, OB, Neuro, Trauma, etc." class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-      </div>
-      <div class="md:col-span-2">
-        <label for="notes" class="block text-sm font-medium text-teal-800">Notes</label>
-        <textarea id="notes" name="notes" rows="4" placeholder="e.g., Anesthesia Procedures (Art-line, CVC, POCUS), Anesthesia Type (General, Regional, MAC, Induction)" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500"></textarea>
-      </div>
-      <div class="md:col-span-2">
-        <button type="submit" class="w-full btn-primary text-white p-3 rounded-md">Save Case</button>
-      </div>
-    </form>
-    <div id="caseList" class="mt-8">
-      <h2 class="text-xl font-semibold text-teal-700 mb-4">Saved Cases</h2>
-      <ul id="cases" class="space-y-2"></ul>
+    </div>
+    <div id="keyPoints" class="tab-content">
+      <h2 class="text-xl font-semibold text-teal-700 mb-4">Key Points for CRNAs</h2>
+      <h3 class="text-lg font-medium text-teal-800 mb-2">Anesthesia Mnemonics</h3>
+      <ul class="space-y-2 mb-4">
+        <li><strong>MS MAIDS (OR Setup Checklist):</strong>
+          <ul class="ml-4 space-y-1">
+            <li>Machine: Check anesthesia machine, vaporizers, circuit</li>
+            <li>Suction: Ensure working suction catheter</li>
+            <li>Monitors: Apply pulse oximeter, BP cuff, ECG</li>
+            <li>Airway: Prepare laryngoscope, ETT, LMA</li>
+            <li>IV: Confirm patent IV access</li>
+            <li>Drugs: Verify emergency drugs (e.g., succinylcholine, epinephrine)</li>
+            <li>Special: Check case-specific equipment (e.g., regional block kit)</li>
+          </ul>
+        </li>
+        <li><strong>V3 STOP FAST (Pre-Induction/Induction Checklist):</strong>
+          <ul class="ml-4 space-y-1">
+            <li>Vein: Confirm IV patency</li>
+            <li>Vapor: Set volatile agent (e.g., sevoflurane)</li>
+            <li>Vitals: Ensure monitors are on (BP, pulse ox)</li>
+            <li>Suction: Verify suction catheter ready</li>
+            <li>Tube: Prepare ETT or LMA</li>
+            <li>Oxygen: Pre-oxygenate patient</li>
+            <li>Position: Position patient correctly</li>
+            <li>Fast Asleep: Confirm adequate anesthesia depth</li>
+            <li>Airway: Secure airway (intubation or LMA placement)</li>
+            <li>Surgery: Confirm readiness for incision</li>
+            <li>Temperature: Monitor and maintain warming</li>
+          </ul>
+        </li>
+      </ul>
+      <h3 class="text-lg font-medium text-teal-800 mb-2">LMA Size Chart</h3>
+      <ul class="space-y-2 mb-4">
+        <li>Size 1: &lt;5 kg (neonates), 1-1.5 mL cuff</li>
+        <li>Size 2: 10-20 kg (children), 7-10 mL cuff</li>
+        <li>Size 3: 30-50 kg (small adults), 15-20 mL cuff</li>
+        <li>Size 4: 50-70 kg (adults), 20-30 mL cuff</li>
+        <li>Size 5: &gt;70 kg (large adults), 30-40 mL cuff</li>
+      </ul>
+      <h3 class="text-lg font-medium text-teal-800 mb-2">ETT Size Chart</h3>
+      <ul class="space-y-2 mb-4">
+        <li>Neonates (0-1 mo): 3.0-3.5 mm</li>
+        <li>Children: (Age/4) + 4 mm (uncuffed) or +3.5 mm (cuffed)</li>
+        <li>Adults: 7.0-8.0 mm (female), 8.0-9.0 mm (male)</li>
+        <li>Depth: 3 × ETT size at teeth (e.g., 7.5 mm ETT at 22.5 cm)</li>
+      </ul>
+      <h3 class="text-lg font-medium text-teal-800 mb-2">Pediatric Basics</h3>
+      <ul class="space-y-2 mb-4">
+        <li>Fluids: 4-2-1 rule (4 mL/kg/hr for first 10 kg, 2 mL/kg/hr for next 10 kg, 1 mL/kg/hr thereafter)</li>
+        <li>Propofol: 2-3 mg/kg IV (induction)</li>
+        <li>Epinephrine (PALS): 0.01 mg/kg IV/IO (1:10,000) for cardiac arrest</li>
+      </ul>
+      <h3 class="text-lg font-medium text-teal-800 mb-2">Crisis Management</h3>
+      <ul class="space-y-2">
+        <li>Malignant Hyperthermia: Dantrolene 2.5 mg/kg IV, call MH hotline</li>
+        <li>Anaphylaxis: Epinephrine 10-20 mcg IV bolus</li>
+        <li>MAC Awareness: Monitor end-tidal agent (e.g., Sevoflurane 2-3%)</li>
+      </ul>
     </div>
     <div id="modal" class="modal">
       <div class="modal-content">
@@ -146,15 +392,15 @@
             <input type="date" id="editDate" name="date" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
           </div>
           <div>
-            <label for="editAge" class="block text-sm font-medium text-teal-800">Patient Age</label>
+            <label for="editAge" class="block text-sm font-medium text-teal-800">Age</label>
             <input type="number" id="editAge" name="age" min="0" max="120" placeholder="e.g., 45" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
           </div>
           <div>
-            <label for="editStartTime" class="block text-sm font-medium text-teal-800">Anesthesia Start Time</label>
+            <label for="editStartTime" class="block text-sm font-medium text-teal-800">Start Time</label>
             <input type="time" id="editStartTime" name="startTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
           </div>
           <div>
-            <label for="editStopTime" class="block text-sm font-medium text-teal-800">Anesthesia Stop Time</label>
+            <label for="editStopTime" class="block text-sm font-medium text-teal-800">Stop Time</label>
             <input type="time" id="editStopTime" name="stopTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
           </div>
           <div>
@@ -176,12 +422,12 @@
             </select>
           </div>
           <div>
-            <label for="editCaseType" class="block text-sm font-medium text-teal-800">Type of Case</label>
-            <input type="text" id="editCaseType" name="caseType" placeholder="e.g., General, OB, Neuro, Trauma, etc." class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+            <label for="editCaseType" class="block text-sm font-medium text-teal-800">Case Type</label>
+            <input type="text" id="editCaseType" name="caseType" placeholder="e.g., General, OB, Neuro, Trauma" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
           </div>
           <div class="md:col-span-2">
             <label for="editNotes" class="block text-sm font-medium text-teal-800">Notes</label>
-            <textarea id="editNotes" name="notes" rows="4" placeholder="e.g., Anesthesia Procedures (Art-line, CVC, POCUS), Anesthesia Type (General, Regional, MAC, Induction)" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500"></textarea>
+            <textarea id="editNotes" name="notes" rows="4" placeholder="e.g., Anesthesia Procedures (Art-line, CVC, POCUS), Anesthesia Type (General, Regional, MAC)" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500"></textarea>
           </div>
           <div class="md:col-span-2 flex justify-end space-x-2">
             <button id="saveEdit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save Changes</button>
@@ -225,7 +471,7 @@
       }
     }
 
-    // Show main app if username is set, otherwise show username page
+    // Show main app if username is set
     if (username) {
       usernamePage.classList.add('hidden');
       mainApp.classList.remove('hidden');
@@ -246,6 +492,18 @@
       } else {
         alert('Please enter a username.');
       }
+    });
+
+    // Tab navigation
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
     });
 
     // Load cases for the current user
@@ -270,7 +528,6 @@
         id: Date.now(),
         username: username
       };
-      // Check if at least one field besides caseName is filled
       if (!caseData.date && !caseData.startTime && !caseData.stopTime && !caseData.age && !caseData.asaStatus && !caseData.caseType && !caseData.notes) {
         alert('Please enter at least one additional field besides Case Name.');
         return;
@@ -356,7 +613,6 @@
         id: selectedCaseId,
         username: username
       };
-      // Check if at least one field besides caseName is filled
       if (!updatedCase.date && !updatedCase.startTime && !updatedCase.stopTime && !updatedCase.age && !updatedCase.asaStatus && !updatedCase.caseType && !updatedCase.notes) {
         alert('Please enter at least one additional field besides Case Name.');
         return;
@@ -412,10 +668,245 @@
       }
     });
 
+    // Clear all cases
+    document.getElementById('clearCases').addEventListener('click', () => {
+      if (confirm('Are you sure you want to clear all cases? This action cannot be undone.')) {
+        cases = [];
+        localStorage.removeItem(`srnaCases_${username}`);
+        displayCases();
+        checkStorage();
+      }
+    });
+
+    // Drug dosage calculation
+    document.getElementById('ptWeight').addEventListener('input', () => {
+      const weight = parseFloat(document.getElementById('ptWeight').value);
+      if (weight > 0) {
+        document.getElementById('propofolDose').textContent = `(Induction: ${ (weight * 1.5).toFixed(1) }-${ (weight * 2.5).toFixed(1) } mg)`;
+        document.getElementById('etomidateDose').textContent = `(Induction: ${ (weight * 0.2).toFixed(1) }-${ (weight * 0.3).toFixed(1) } mg)`;
+        document.getElementById('lidocaineInductionDose').textContent = `(Adjunct: ${ (weight * 1).toFixed(1) }-${ (weight * 1.5).toFixed(1) } mg)`;
+        document.getElementById('ketamineDose').textContent = `(Induction: ${ (weight * 1).toFixed(1) }-${ (weight * 2).toFixed(1) } mg)`;
+        document.getElementById('fentanylInductionDose').textContent = `(Bolus: ${ (weight * 1).toFixed(1) }-${ (weight * 2).toFixed(1) } mcg)`;
+        document.getElementById('succinylcholineDose').textContent = `(Intubation: ${ (weight * 1).toFixed(1) }-${ (weight * 1.5).toFixed(1) } mg)`;
+        document.getElementById('rocuroniumInductionDose').textContent = `(Intubation: ${ (weight * 0.6).toFixed(1) }-${ (weight * 1.2).toFixed(1) } mg)`;
+        document.getElementById('midazolamDose').textContent = `(Sedation: ${ (weight * 0.02).toFixed(1) }-${ (weight * 0.04).toFixed(1) } mg)`;
+        document.getElementById('precedexDose').textContent = `(Loading: ${ (weight * 0.5).toFixed(1) }-${ (weight * 1).toFixed(1) } mcg; Maintenance: ${ (weight * 0.2).toFixed(1) }-${ (weight * 0.7).toFixed(1) } mcg/hr)`;
+        document.getElementById('naloxoneDose').textContent = `(0.04-0.4 mg)`;
+        document.getElementById('neostigmineDose').textContent = `(0.04-0.07 mg/kg: ${ (weight * 0.04).toFixed(1) }-${ (weight * 0.07).toFixed(1) } mg)`;
+        document.getElementById('sugammadexDose').textContent = `(Routine: ${ (weight * 2).toFixed(1) }-${ (weight * 4).toFixed(1) } mg)`;
+        document.getElementById('glycopyrrolateDose').textContent = `(0.2 mg per 1 mg Neostigmine)`;
+        document.getElementById('atropineDose').textContent = `(Bradycardia: ${ (weight * 0.01).toFixed(1) }-${ (weight * 0.02).toFixed(1) } mg)`;
+        document.getElementById('phenylephrineDose').textContent = `(Bolus: 50-200 mcg; Infusion: ${ (weight * 0.1).toFixed(1) }-${ (weight * 0.5).toFixed(1) } mcg/min)`;
+        document.getElementById('ephedrineDose').textContent = `(Bolus: 5-10 mg)`;
+        document.getElementById('norepinephrineDose').textContent = `(Infusion: ${ (weight * 0.01).toFixed(1) }-${ (weight * 0.1).toFixed(1) } mcg/min)`;
+        document.getElementById('esmololDose').textContent = `(Bolus: ${ (weight * 0.5).toFixed(1) } mg; Infusion: ${ (weight * 50).toFixed(1) }-${ (weight * 200).toFixed(1) } mcg/min)`;
+        document.getElementById('metoprololDose').textContent = `(1-5 mg)`;
+        document.getElementById('hydralazineDose').textContent = `(5-20 mg)`;
+        document.getElementById('nitroglycerinDose').textContent = `(Infusion: 5-20 mcg/min)`;
+        document.getElementById('decadronDose').textContent = `(4-8 mg)`;
+        document.getElementById('zofranDose').textContent = `(4-8 mg)`;
+        document.getElementById('haldolDose').textContent = `(0.5-2 mg)`;
+      } else {
+        document.querySelectorAll('[id$="Dose"]').forEach(el => el.textContent = '');
+      }
+    });
+
+    // Handle height unit toggle
+    document.getElementById('calcHeightUnit').addEventListener('change', () => {
+      const unit = document.getElementById('calcHeightUnit').value;
+      document.getElementById('heightCm').classList.add('hidden');
+      document.getElementById('heightIn').classList.add('hidden');
+      document.getElementById('heightFtIn').classList.add('hidden');
+      if (unit === 'cm') {
+        document.getElementById('heightCm').classList.remove('hidden');
+      } else if (unit === 'in') {
+        document.getElementById('heightIn').classList.remove('hidden');
+      } else if (unit === 'ftin') {
+        document.getElementById('heightFtIn').classList.remove('hidden');
+      }
+      updateCalculations();
+    });
+
+    // Handle weight unit toggle
+    document.getElementById('calcWeightUnit').addEventListener('change', () => {
+      const unit = document.getElementById('calcWeightUnit').value;
+      document.getElementById('weightKg').classList.add('hidden');
+      document.getElementById('weightLb').classList.add('hidden');
+      if (unit === 'kg') {
+        document.getElementById('weightKg').classList.remove('hidden');
+      } else if (unit === 'lb') {
+        document.getElementById('weightLb').classList.remove('hidden');
+      }
+      updateCalculations();
+    });
+
+    // Update concentration options based on anesthetic
+    const concentrationOptions = {
+      lidocaine: ['0.5', '1', '2'],
+      bupivacaine: ['0.125', '0.25', '0.5'],
+      ropivacaine: ['0.2', '0.5', '1'],
+      mepivacaine: ['1', '1.5', '2']
+    };
+
+    document.getElementById('anesthetic').addEventListener('change', () => {
+      const anesthetic = document.getElementById('anesthetic').value;
+      const concentrationSelect = document.getElementById('concentration');
+      concentrationSelect.innerHTML = '<option value="" disabled selected>Select Concentration</option>';
+      if (anesthetic && concentrationOptions[anesthetic]) {
+        concentrationOptions[anesthetic].forEach(conc => {
+          const option = document.createElement('option');
+          option.value = conc;
+          option.textContent = `${conc}%`;
+          concentrationSelect.appendChild(option);
+        });
+      }
+      updateCalculations();
+    });
+
+    // Patient data and calculations
+    function updateCalculations() {
+      const heightUnit = document.getElementById('calcHeightUnit').value;
+      const heightCm = heightUnit === 'cm' ? parseFloat(document.getElementById('calcHeightCm').value) : 
+                       heightUnit === 'in' ? parseFloat(document.getElementById('calcHeightIn').value) * 2.54 : 
+                       (parseFloat(document.getElementById('calcHeightFt').value || 0) * 12 + parseFloat(document.getElementById('calcHeightInFt').value || 0)) * 2.54;
+      const weightUnit = document.getElementById('calcWeightUnit').value;
+      const weightKg = weightUnit === 'kg' ? parseFloat(document.getElementById('calcWeightKg').value) : 
+                       parseFloat(document.getElementById('calcWeightLb').value) / 2.20462;
+      const gender = document.getElementById('calcGender').value;
+
+      // Sync weights
+      if (weightKg > 0) {
+        document.getElementById('weightLocal').value = weightKg.toFixed(1);
+        document.getElementById('weightFluid').value = weightKg.toFixed(1);
+      } else {
+        document.getElementById('weightLocal').value = '';
+        document.getElementById('weightFluid').value = '';
+      }
+
+      // EBV
+      let ebvResult = '<span class="placeholder">EBV: Enter weight and gender</span>';
+      if (weightKg > 0 && gender) {
+        const ebv = gender === 'male' ? weightKg * 75 : weightKg * 65;
+        ebvResult = `EBV: ${ebv.toFixed(0)} mL`;
+        document.getElementById('ebv').value = ebv.toFixed(0);
+      } else {
+        document.getElementById('ebv').value = '';
+      }
+      document.getElementById('ebvResult').innerHTML = ebvResult;
+
+      // IBW
+      let ibwResult = '<span class="placeholder">IBW: Enter height and gender</span>';
+      if (heightCm > 0 && gender) {
+        const heightInInches = heightCm / 2.54;
+        const ibw = gender === 'male' ? 50 + 2.3 * (heightInInches - 60) : 45.5 + 2.3 * (heightInInches - 60);
+        ibwResult = `IBW: ${ibw.toFixed(1)} kg`;
+      }
+      document.getElementById('ibwResult').innerHTML = ibwResult;
+
+      // Tidal Volume, ETT, LMA
+      let tvRecommendation = '<span class="placeholder">Tidal Volume: Enter weight</span>';
+      let ettRecommendation = '<span class="placeholder">ETT Size: Enter weight and gender</span>';
+      let lmaRecommendation = '<span class="placeholder">LMA Size: Enter weight</span>';
+      if (weightKg > 0) {
+        let weightForTv = weightKg;
+        if (heightCm > 0 && gender) {
+          const heightInInches = heightCm / 2.54;
+          weightForTv = gender === 'male' ? 50 + 2.3 * (heightInInches - 60) : 45.5 + 2.3 * (heightInInches - 60);
+        }
+        const tvLow = weightForTv * 6;
+        const tvHigh = weightForTv * 8;
+        tvRecommendation = `Tidal Volume: ${tvLow.toFixed(1)}-${tvHigh.toFixed(1)} mL`;
+        if (weightKg < 5) lmaRecommendation = 'LMA Size: 1 (neonates)';
+        else if (weightKg <= 20) lmaRecommendation = 'LMA Size: 2 (children)';
+        else if (weightKg <= 50) lmaRecommendation = 'LMA Size: 3 (small adults)';
+        else if (weightKg <= 70) lmaRecommendation = 'LMA Size: 4 (adults)';
+        else lmaRecommendation = 'LMA Size: 5 (large adults)';
+        if (weightKg < 20) {
+          ettRecommendation = `ETT Size: ~${((weightKg / 4) + 3.5).toFixed(1)} mm (cuffed)`;
+        } else if (gender) {
+          ettRecommendation = `ETT Size: ${gender === 'male' ? '8.0-9.0 mm' : '7.0-8.0 mm'}`;
+        }
+      }
+      document.getElementById('tvRecommendation').innerHTML = tvRecommendation;
+      document.getElementById('ettRecommendation').innerHTML = ettRecommendation;
+      document.getElementById('lmaRecommendation').innerHTML = lmaRecommendation;
+
+      // Allowable Blood Loss
+      const ebv = parseFloat(document.getElementById('ebv').value);
+      const initialHct = parseFloat(document.getElementById('initialHct').value);
+      const targetHct = parseFloat(document.getElementById('targetHct').value);
+      let ablResult = '<span class="placeholder">ABL: Enter EBV and Hct values</span>';
+      if (ebv > 0 && initialHct > 0 && targetHct > 0 && initialHct > targetHct) {
+        const abl = ebv * (initialHct - targetHct) / initialHct;
+        ablResult = `ABL: ${abl.toFixed(1)} mL`;
+      }
+      document.getElementById('ablResult').innerHTML = ablResult;
+
+      // Maximum Local Anesthetic
+      const weightLocal = parseFloat(document.getElementById('weightLocal').value);
+      const anesthetic = document.getElementById('anesthetic').value;
+      const concentration = parseFloat(document.getElementById('concentration').value) / 100;
+      const epi = document.getElementById('epi').value;
+      let localResult = '<span class="placeholder">Max Volume: Enter all fields</span>';
+      if (weightLocal > 0 && anesthetic && concentration > 0) {
+        const maxDoses = {
+          lidocaine: { plain: 4.5, epi: 7 },
+          bupivacaine: { plain: 2.5, epi: 3 },
+          ropivacaine: { plain: 3, epi: 3 },
+          mepivacaine: { plain: 5, epi: 7 }
+        };
+        const maxDose = epi === 'yes' ? maxDoses[anesthetic].epi * weightLocal : maxDoses[anesthetic].plain * weightLocal;
+        const maxVolume = maxDose / (concentration * 10);
+        localResult = `Max Dose: ${maxDose.toFixed(1)} mg, Max Volume: ${maxVolume.toFixed(1)} mL`;
+      }
+      document.getElementById('localResult').innerHTML = localResult;
+
+      // Fluid and NPO Deficit
+      const weightFluid = parseFloat(document.getElementById('weightFluid').value);
+      const npoHours = parseFloat(document.getElementById('npoHours').value);
+      let fluidNpoResult = '<span class="placeholder">Fluid: Enter weight and NPO hours</span>';
+      if (weightFluid > 0 && npoHours >= 0) {
+        let maintenance = 0;
+        if (weightFluid <= 10) {
+          maintenance = weightFluid * 4;
+        } else if (weightFluid <= 20) {
+          maintenance = 10 * 4 + (weightFluid - 10) * 2;
+        } else {
+          maintenance = 10 * 4 + 10 * 2 + (weightFluid - 20) * 1;
+        }
+        const deficit = maintenance * npoHours;
+        fluidNpoResult = `Maintenance: ${maintenance.toFixed(1)} mL/hr, Deficit: ${deficit.toFixed(1)} mL`;
+      }
+      document.getElementById('fluidNpoResult').innerHTML = fluidNpoResult;
+    }
+
+    // Event listeners for calculations
+    document.getElementById('calcHeightCm').addEventListener('input', updateCalculations);
+    document.getElementById('calcHeightIn').addEventListener('input', updateCalculations);
+    document.getElementById('calcHeightFt').addEventListener('input', updateCalculations);
+    document.getElementById('calcHeightInFt').addEventListener('input', updateCalculations);
+    document.getElementById('calcWeightKg').addEventListener('input', updateCalculations);
+    document.getElementById('calcWeightLb').addEventListener('input', updateCalculations);
+    document.getElementById('calcGender').addEventListener('change', updateCalculations);
+    document.getElementById('calcHeightUnit').addEventListener('change', updateCalculations);
+    document.getElementById('calcWeightUnit').addEventListener('change', updateCalculations);
+    document.getElementById('ebv').addEventListener('input', updateCalculations);
+    document.getElementById('initialHct').addEventListener('input', updateCalculations);
+    document.getElementById('targetHct').addEventListener('input', updateCalculations);
+    document.getElementById('weightLocal').addEventListener('input', updateCalculations);
+    document.getElementById('anesthetic').addEventListener('change', updateCalculations);
+    document.getElementById('concentration').addEventListener('change', updateCalculations);
+    document.getElementById('epi').addEventListener('change', updateCalculations);
+    document.getElementById('weightFluid').addEventListener('input', updateCalculations);
+    document.getElementById('npoHours').addEventListener('input', updateCalculations);
+
     // Load cases on page load
     if (username) {
       loadCases();
     }
+
+    // Initialize concentration dropdown
+    document.getElementById('anesthetic').dispatchEvent(new Event('change'));
   </script>
 </body>
 </html>
