@@ -28,6 +28,34 @@
     .btn-primary:hover {
       background: #1e40af;
     }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: white;
+      padding: 24px;
+      border-radius: 0.5rem;
+      max-width: 600px;
+      width: 90%;
+    }
+    .modal-content p {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+    .modal-content .notes {
+      border: 1px solid #4b5563;
+      padding: 10px;
+      border-radius: 0.25rem;
+      background: #f8fafc;
+    }
   </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
@@ -38,10 +66,15 @@
       <input type="text" id="username" name="username" placeholder="e.g., YourName123" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
       <button id="setUsername" class="mt-2 w-full btn-primary text-white p-3 rounded-md">Set Username</button>
     </div>
+    <div id="storageWarning" class="hidden mb-4 p-2 bg-yellow-100 text-yellow-800 rounded-md">Warning: Storage is almost full. Consider exporting and clearing cases.</div>
     <form id="caseForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
       <div>
         <label for="date" class="block text-sm font-medium text-teal-800">Date</label>
         <input type="date" id="date" name="date" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+      </div>
+      <div>
+        <label for="age" class="block text-sm font-medium text-teal-800">Patient Age</label>
+        <input type="number" id="age" name="age" min="0" max="120" placeholder="e.g., 45" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
       </div>
       <div>
         <label for="startTime" class="block text-sm font-medium text-teal-800">Anesthesia Start Time</label>
@@ -51,9 +84,9 @@
         <label for="stopTime" class="block text-sm font-medium text-teal-800">Anesthesia Stop Time</label>
         <input type="time" id="stopTime" name="stopTime" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
       </div>
-      <div>
-        <label for="age" class="block text-sm font-medium text-teal-800">Patient Age</label>
-        <input type="number" id="age" name="age" min="0" max="120" placeholder="e.g., 45" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+      <div class="md:col-span-2">
+        <label for="caseName" class="block text-sm font-medium text-teal-800">Case Name</label>
+        <input type="text" id="caseName" name="caseName" placeholder="e.g., Appendectomy - 3/1/25" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
       </div>
       <div>
         <label for="asaStatus" class="block text-sm font-medium text-teal-800">ASA Status</label>
@@ -89,15 +122,42 @@
       <h2 class="text-xl font-semibold text-teal-700 mb-4">Saved Cases</h2>
       <ul id="cases" class="space-y-2"></ul>
     </div>
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <h3 class="text-lg font-semibold text-teal-700 mb-4" id="modalCaseName"></h3>
+        <div id="modalContent"></div>
+        <div class="mt-4 flex justify-end space-x-2">
+          <button id="exportCase" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Export as CSV</button>
+          <button id="deleteCase" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Delete</button>
+          <button id="closeModal" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">Close</button>
+        </div>
+      </div>
+    </div>
   </div>
   <script>
     // Get or set username
     let username = localStorage.getItem('srnaUsername') || '';
     let cases = [];
+    let selectedCaseId = null;
 
     const userPrompt = document.getElementById('userPrompt');
     const caseForm = document.getElementById('caseForm');
     const caseList = document.getElementById('caseList');
+    const storageWarning = document.getElementById('storageWarning');
+    const modal = document.getElementById('modal');
+    const modalContent = document.getElementById('modalContent');
+    const modalCaseName = document.getElementById('modalCaseName');
+
+    // Check storage usage
+    function checkStorage() {
+      const storageSize = JSON.stringify(localStorage).length;
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (storageSize > maxSize * 0.9) {
+        storageWarning.classList.remove('hidden');
+      } else {
+        storageWarning.classList.add('hidden');
+      }
+    }
 
     // Show form if username is set, otherwise show username prompt
     if (username) {
@@ -125,12 +185,14 @@
     function loadCases() {
       cases = JSON.parse(localStorage.getItem(`srnaCases_${username}`)) || [];
       displayCases();
+      checkStorage();
     }
 
     // Handle form submission
     document.getElementById('caseForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const caseData = {
+        caseName: document.getElementById('caseName').value,
         date: document.getElementById('date').value,
         startTime: document.getElementById('startTime').value,
         stopTime: document.getElementById('stopTime').value,
@@ -138,13 +200,14 @@
         asaStatus: document.getElementById('asaStatus').value,
         caseType: document.getElementById('caseType').value,
         notes: document.getElementById('notes').value,
-        id: Date.now(), // Simple unique ID
-        username: username // Tie case to user
+        id: Date.now(),
+        username: username
       };
       cases.push(caseData);
       localStorage.setItem(`srnaCases_${username}`, JSON.stringify(cases));
       displayCases();
       document.getElementById('caseForm').reset();
+      checkStorage();
     });
 
     // Display saved cases
@@ -154,8 +217,9 @@
       cases.forEach((c, index) => {
         if (c.username === username) {
           const li = document.createElement('li');
-          li.className = 'p-3 case-item border border-teal-200 rounded-md';
+          li.className = 'p-3 case-item border border-teal-200 rounded-md cursor-pointer';
           li.innerHTML = `
+            <strong>Case:</strong> ${c.caseName}<br>
             <strong>Date:</strong> ${c.date}<br>
             <strong>Start/Stop:</strong> ${c.startTime} - ${c.stopTime}<br>
             <strong>Age:</strong> ${c.age}<br>
@@ -163,9 +227,65 @@
             <strong>Case Type:</strong> ${c.caseType}<br>
             <strong>Notes:</strong> ${c.notes || 'None'}
           `;
+          li.addEventListener('click', () => showModal(c));
           caseList.appendChild(li);
         }
       });
+    }
+
+    // Show modal with case details
+    function showModal(caseData) {
+      selectedCaseId = caseData.id;
+      modalCaseName.textContent = caseData.caseName;
+      modalContent.innerHTML = `
+        <p><strong>Date:</strong> ${caseData.date}</p>
+        <p><strong>Start/Stop:</strong> ${caseData.startTime} - ${caseData.stopTime}</p>
+        <p><strong>Age:</strong> ${caseData.age}</p>
+        <p><strong>ASA Status:</strong> ${caseData.asaStatus}</p>
+        <p><strong>Case Type:</strong> ${caseData.caseType}</p>
+        <p class="notes"><strong>Notes:</strong> ${caseData.notes || 'None'}</p>
+      `;
+      modal.style.display = 'flex';
+    }
+
+    // Close modal
+    document.getElementById('closeModal').addEventListener('click', () => {
+      modal.style.display = 'none';
+      selectedCaseId = null;
+    });
+
+    // Export case as CSV
+    document.getElementById('exportCase').addEventListener('click', () => {
+      const caseData = cases.find(c => c.id === selectedCaseId);
+      if (caseData) {
+        const csv = `Case Name,Date,Start Time,Stop Time,Age,ASA Status,Case Type,Notes\n"${caseData.caseName}",${caseData.date},${caseData.startTime},${caseData.stopTime},${caseData.age},${caseData.asaStatus},${caseData.caseType},"${caseData.notes || ''}"`;
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `case_${caseData.id}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+      modal.style.display = 'none';
+      selectedCaseId = null;
+    });
+
+    // Delete case
+    document.getElementById('deleteCase').addEventListener('click', () => {
+      if (confirm('Are you sure you want to delete this case?')) {
+        cases = cases.filter(c => c.id !== selectedCaseId);
+        localStorage.setItem(`srnaCases_${username}`, JSON.stringify(cases));
+        displayCases();
+        modal.style.display = 'none';
+        selectedCaseId = null;
+        checkStorage();
+      }
+    });
+
+    // Load cases on page load
+    if (username) {
+      loadCases();
     }
   </script>
 </body>
