@@ -56,19 +56,28 @@
       border-radius: 0.25rem;
       background: #f8fafc;
     }
+    .username-container {
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 90%;
+      padding: 24px;
+    }
   </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
-  <div class="w-full max-w-4xl p-6 form-container">
+  <div id="usernamePage" class="username-container">
+    <h1 class="text-2xl font-bold text-center text-teal-700 mb-6">SRNA Case Tracker</h1>
+    <label for="username" class="block text-sm font-medium text-teal-800">Enter Your Username</label>
+    <input type="text" id="username" name="username" placeholder="e.g., YourName123" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+    <button id="setUsername" class="mt-4 w-full btn-primary text-white p-3 rounded-md">Set Username</button>
+  </div>
+  <div id="mainApp" class="w-full max-w-4xl p-6 form-container hidden">
     <h1 class="text-3xl font-bold text-center text-teal-700 mb-8">SRNA Case Tracker</h1>
-    <div id="userPrompt" class="mb-6">
-      <label for="username" class="block text-sm font-medium text-teal-800">Enter Your Username</label>
-      <input type="text" id="username" name="username" placeholder="e.g., YourName123" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-      <button id="setUsername" class="mt-2 w-full btn-primary text-white p-3 rounded-md">Set Username</button>
-    </div>
     <div id="storageWarning" class="hidden mb-4 p-2 bg-yellow-100 text-yellow-800 rounded-md">Warning: Storage is almost full. Consider exporting and clearing cases.</div>
-    <div id="privacyDisclaimer" class="hidden mb-4 p-2 bg-blue-100 text-blue-800 rounded-md">Do not enter patient-identifiable information to comply with HIPAA.</div>
-    <form id="caseForm" class="grid grid-cols-1 md:grid-cols-2 gap-4 hidden">
+    <div id="privacyDisclaimer" class="mb-4 p-2 bg-blue-100 text-blue-800 rounded-md">Do not enter patient-identifiable information to comply with HIPAA.</div>
+    <form id="caseForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div>
         <label for="date" class="block text-sm font-medium text-teal-800">Date</label>
         <input type="date" id="date" name="date" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
@@ -119,7 +128,7 @@
         <button type="submit" class="w-full btn-primary text-white p-3 rounded-md">Save Case</button>
       </div>
     </form>
-    <div id="caseList" class="mt-8 hidden">
+    <div id="caseList" class="mt-8">
       <h2 class="text-xl font-semibold text-teal-700 mb-4">Saved Cases</h2>
       <ul id="cases" class="space-y-2"></ul>
     </div>
@@ -194,11 +203,11 @@
     let cases = [];
     let selectedCaseId = null;
 
-    const userPrompt = document.getElementById('userPrompt');
+    const usernamePage = document.getElementById('usernamePage');
+    const mainApp = document.getElementById('mainApp');
     const caseForm = document.getElementById('caseForm');
     const caseList = document.getElementById('caseList');
     const storageWarning = document.getElementById('storageWarning');
-    const privacyDisclaimer = document.getElementById('privacyDisclaimer');
     const modal = document.getElementById('modal');
     const modalContent = document.getElementById('modalContent');
     const modalCaseName = document.getElementById('modalCaseName');
@@ -216,13 +225,14 @@
       }
     }
 
-    // Show form and disclaimer if username is set, otherwise show username prompt
+    // Show main app if username is set, otherwise show username page
     if (username) {
-      userPrompt.classList.add('hidden');
-      privacyDisclaimer.classList.remove('hidden');
-      caseForm.classList.remove('hidden');
-      caseList.classList.remove('hidden');
+      usernamePage.classList.add('hidden');
+      mainApp.classList.remove('hidden');
       loadCases();
+    } else {
+      usernamePage.classList.remove('hidden');
+      mainApp.classList.add('hidden');
     }
 
     // Handle username submission
@@ -230,10 +240,8 @@
       username = document.getElementById('username').value.trim();
       if (username) {
         localStorage.setItem('srnaUsername', username);
-        userPrompt.classList.add('hidden');
-        privacyDisclaimer.classList.remove('hidden');
-        caseForm.classList.remove('hidden');
-        caseList.classList.remove('hidden');
+        usernamePage.classList.add('hidden');
+        mainApp.classList.remove('hidden');
         loadCases();
       } else {
         alert('Please enter a username.');
