@@ -43,11 +43,11 @@
       background: white;
       padding: 24px;
       border-radius: 0.5rem;
-      max-width: 300px;
+      max-width: 600px;
       width: 90%;
     }
     .modal-content p {
-      font-size: 1rem;
+      font-size: 1.1rem;
       margin-bottom: 0.5rem;
     }
     .modal-content .notes {
@@ -55,6 +55,14 @@
       padding: 10px;
       border-radius: 0.25rem;
       background: #f8fafc;
+    }
+    .username-container {
+      background: white;
+      border-radius: 0.75rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 90%;
+      padding: 24px;
     }
     .tab {
       padding: 10px 20px;
@@ -80,40 +88,22 @@
       color: #9ca3af;
       font-style: italic;
     }
-    .pearls-btn {
-      color: #1d4ed8;
-      cursor: pointer;
-      text-decoration: underline;
-    }
-    .pearls-btn:hover {
-      color: #1e40af;
-    }
-    .go-deeper {
-      color: #1d4ed8;
-      text-decoration: underline;
-      cursor: pointer;
-    }
-    .go-deeper:hover {
-      color: #1e40af;
-    }
-    .comparison-table th, .comparison-table td {
-      border: 1px solid #e5e7eb;
-      padding: 8px;
-      text-align: left;
-    }
-    .comparison-table tr:nth-child(even) {
-      background: #f8fafc;
-    }
   </style>
 </head>
 <body class="flex items-center justify-center min-h-screen">
-  <div id="mainApp" class="w-full max-w-4xl p-6 form-container">
+  <div id="usernamePage" class="username-container">
+    <h1 class="text-2xl font-bold text-center text-teal-700 mb-6">SRNA Case Tracker</h1>
+    <label for="username" class="block text-sm font-medium text-teal-800">Enter Your Username</label>
+    <input type="text" id="username" name="username" placeholder="e.g., YourName123" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
+    <button id="setUsername" class="mt-4 w-full btn-primary text-white p-3 rounded-md">Set Username</button>
+  </div>
+  <div id="mainApp" class="w-full max-w-4xl p-6 form-container hidden">
     <h1 class="text-3xl font-bold text-center text-teal-700 mb-8">SRNA Case Tracker</h1>
+    <div id="storageWarning" class="hidden mb-4 p-2 bg-yellow-100 text-yellow-800 rounded-md">Warning: Storage is almost full. Consider exporting and clearing cases.</div>
     <div id="privacyDisclaimer" class="mb-4 p-2 bg-blue-100 text-blue-800 rounded-md">Do not enter patient-identifiable information to comply with HIPAA.</div>
     <div class="flex border-b mb-4">
       <div class="tab active" data-tab="caseTracker">Case Tracker</div>
       <div class="tab" data-tab="drugList">Drug List</div>
-      <div class="tab" data-tab="drugPearls">Drug Pearls</div>
       <div class="tab" data-tab="calculations">Calculations</div>
       <div class="tab" data-tab="keyPoints">Key Points</div>
     </div>
@@ -183,88 +173,47 @@
       </div>
       <h3 class="text-lg font-medium text-teal-800 mb-2">Induction</h3>
       <ul class="space-y-2 mb-4">
-        <li><strong>Propofol:</strong> 1.5-2.5 mg/kg IV <span id="propofolDose" class="highlight"></span> <span class="pearls-btn" data-drug="propofol">[Pearls]</span></li>
-        <li><strong>Etomidate:</strong> 0.2-0.3 mg/kg IV <span id="etomidateDose" class="highlight"></span> <span class="pearls-btn" data-drug="etomidate">[Pearls]</span></li>
-        <li><strong>Lidocaine:</strong> 1-1.5 mg/kg IV <span id="lidocaineInductionDose" class="highlight"></span> <span class="pearls-btn" data-drug="lidocaine">[Pearls]</span></li>
-        <li><strong>Ketamine:</strong> 1-2 mg/kg IV <span id="ketamineDose" class="highlight"></span> <span class="pearls-btn" data-drug="ketamine">[Pearls]</span></li>
-        <li><strong>Fentanyl:</strong> 1-2 mcg/kg IV <span id="fentanylInductionDose" class="highlight"></span> <span class="pearls-btn" data-drug="fentanyl">[Pearls]</span></li>
-        <li><strong>Succinylcholine:</strong> 1-1.5 mg/kg IV <span id="succinylcholineDose" class="highlight"></span> <span class="pearls-btn" data-drug="succinylcholine">[Pearls]</span></li>
-        <li><strong>Rocuronium:</strong> 0.6-1.2 mg/kg IV <span id="rocuroniumInductionDose" class="highlight"></span> <span class="pearls-btn" data-drug="rocuronium">[Pearls]</span></li>
+        <li><strong>Propofol:</strong> 1.5-2.5 mg/kg IV <span id="propofolDose" class="highlight"></span></li>
+        <li><strong>Etomidate:</strong> 0.2-0.3 mg/kg IV <span id="etomidateDose" class="highlight"></span></li>
+        <li><strong>Lidocaine:</strong> 1-1.5 mg/kg IV <span id="lidocaineInductionDose" class="highlight"></span></li>
+        <li><strong>Ketamine:</strong> 1-2 mg/kg IV <span id="ketamineDose" class="highlight"></span></li>
+        <li><strong>Fentanyl:</strong> 1-2 mcg/kg IV <span id="fentanylInductionDose" class="highlight"></span></li>
+        <li><strong>Succinylcholine:</strong> 1-1.5 mg/kg IV <span id="succinylcholineDose" class="highlight"></span></li>
+        <li><strong>Rocuronium:</strong> 0.6-1.2 mg/kg IV <span id="rocuroniumInductionDose" class="highlight"></span></li>
       </ul>
       <h3 class="text-lg font-medium text-teal-800 mb-2">Sedation</h3>
       <ul class="space-y-2 mb-4">
-        <li><strong>Midazolam:</strong> 0.02-0.04 mg/kg IV <span id="midazolamDose" class="highlight"></span> <span class="pearls-btn" data-drug="midazolam">[Pearls]</span></li>
-        <li><strong>Precedex:</strong> Loading: 0.5-1 mcg/kg IV over 10 min; Maintenance: 0.2-0.7 mcg/kg/hr <span id="precedexDose" class="highlight"></span> <span class="pearls-btn" data-drug="precedex">[Pearls]</span></li>
+        <li><strong>Midazolam:</strong> 0.02-0.04 mg/kg IV <span id="midazolamDose" class="highlight"></span></li>
+        <li><strong>Precedex:</strong> Loading: 0.5-1 mcg/kg IV over 10 min; Maintenance: 0.2-0.7 mcg/kg/hr <span id="precedexDose" class="highlight"></span></li>
       </ul>
       <h3 class="text-lg font-medium text-teal-800 mb-2">Reversal</h3>
       <ul class="space-y-2 mb-4">
-        <li><strong>Naloxone:</strong> 0.04-0.4 mg IV <span id="naloxoneDose" class="highlight"></span> <span class="pearls-btn" data-drug="naloxone">[Pearls]</span></li>
-        <li><strong>Neostigmine:</strong> 0.04-0.07 mg/kg IV (with Glycopyrrolate) <span id="neostigmineDose" class="highlight"></span> <span class="pearls-btn" data-drug="neostigmine">[Pearls]</span></li>
-        <li><strong>Sugammadex:</strong> 2-4 mg/kg IV <span id="sugammadexDose" class="highlight"></span> <span class="pearls-btn" data-drug="sugammadex">[Pearls]</span></li>
+        <li><strong>Naloxone:</strong> 0.04-0.4 mg IV <span id="naloxoneDose" class="highlight"></span></li>
+        <li><strong>Neostigmine:</strong> 0.04-0.07 mg/kg IV (with Glycopyrrolate) <span id="neostigmineDose" class="highlight"></span></li>
+        <li><strong>Sugammadex:</strong> 2-4 mg/kg IV <span id="sugammadexDose" class="highlight"></span></li>
       </ul>
       <h3 class="text-lg font-medium text-teal-800 mb-2">Vasoactive Uppers</h3>
       <ul class="space-y-2 mb-4">
-        <li><strong>Glycopyrrolate:</strong> 0.2 mg per 1 mg Neostigmine IV <span id="glycopyrrolateDose" class="highlight"></span> <span class="pearls-btn" data-drug="glycopyrrolate">[Pearls]</span></li>
-        <li><strong>Atropine:</strong> 0.01-0.02 mg/kg IV <span id="atropineDose" class="highlight"></span> <span class="pearls-btn" data-drug="atropine">[Pearls]</span></li>
-        <li><strong>Phenylephrine:</strong> Bolus: 50-200 mcg IV; Infusion: 0.1-0.5 mcg/kg/min <span id="phenylephrineDose" class="highlight"></span> <span class="pearls-btn" data-drug="phenylephrine">[Pearls]</span></li>
-        <li><strong>Ephedrine:</strong> 5-10 mg IV <span id="ephedrineDose" class="highlight"></span> <span class="pearls-btn" data-drug="ephedrine">[Pearls]</span></li>
-        <li><strong>Norepinephrine:</strong> 0.01-0.1 mcg/kg/min <span id="norepinephrineDose" class="highlight"></span> <span class="pearls-btn" data-drug="norepinephrine">[Pearls]</span></li>
+        <li><strong>Glycopyrrolate:</strong> 0.2 mg per 1 mg Neostigmine IV <span id="glycopyrrolateDose" class="highlight"></span></li>
+        <li><strong>Atropine:</strong> 0.01-0.02 mg/kg IV <span id="atropineDose" class="highlight"></span></li>
+        <li><strong>Phenylephrine:</strong> Bolus: 50-200 mcg IV; Infusion: 0.1-0.5 mcg/kg/min <span id="phenylephrineDose" class="highlight"></span></li>
+        <li><strong>Ephedrine:</strong> 5-10 mg IV <span id="ephedrineDose" class="highlight"></span></li>
+        <li><strong>Norepinephrine:</strong> 0.01-0.1 mcg/kg/min <span id="norepinephrineDose" class="highlight"></span></li>
       </ul>
       <h3 class="text-lg font-medium text-teal-800 mb-2">Vasoactive Downers</h3>
       <ul class="space-y-2 mb-4">
-        <li><strong>Esmolol:</strong> Bolus: 0.5 mg/kg IV; Infusion: 50-200 mcg/kg/min <span id="esmololDose" class="highlight"></span> <span class="pearls-btn" data-drug="esmolol">[Pearls]</span></li>
-        <li><strong>Metoprolol:</strong> 1-5 mg IV <span id="metoprololDose" class="highlight"></span> <span class="pearls-btn" data-drug="metoprolol">[Pearls]</span></li>
-        <li><strong>Hydralazine:</strong> 5-20 mg IV <span id="hydralazineDose" class="highlight"></span> <span class="pearls-btn" data-drug="hydralazine">[Pearls]</span></li>
-        <li><strong>Nitroglycerin:</strong> 5-20 mcg/min <span id="nitroglycerinDose" class="highlight"></span> <span class="pearls-btn" data-drug="nitroglycerin">[Pearls]</span></li>
+        <li><strong>Esmolol:</strong> Bolus: 0.5 mg/kg IV; Infusion: 50-200 mcg/kg/min <span id="esmololDose" class="highlight"></span></li>
+        <li><strong>Metoprolol:</strong> 1-5 mg IV <span id="metoprololDose" class="highlight"></span></li>
+        <li><strong>Hydralazine:</strong> 5-20 mg IV <span id="hydralazineDose" class="highlight"></span></li>
+        <li><strong>Nitroglycerin:</strong> 5-20 mcg/min <span id="nitroglycerinDose" class="highlight"></span></li>
       </ul>
       <h3 class="text-lg font-medium text-teal-800 mb-2">Antiemetics</h3>
       <ul class="space-y-2">
-        <li><strong>Dexamethasone:</strong> 4-8 mg IV <span id="decadronDose" class="highlight"></span> <span class="pearls-btn" data-drug="dexamethasone">[Pearls]</span></li>
-        <li><strong>Ondansetron:</strong> 4-8 mg IV <span id="zofranDose" class="highlight"></span> <span class="pearls-btn" data-drug="ondansetron">[Pearls]</span></li>
-        <li><strong>Haloperidol:</strong> 0.5-2 mg IV <span id="haldolDose" class="highlight"></span> <span class="pearls-btn" data-drug="haloperidol">[Pearls]</span></li>
+        <li><strong>Dexamethasone:</strong> 4-8 mg IV <span id="decadronDose" class="highlight"></span></li>
+        <li><strong>Ondansetron:</strong> 4-8 mg IV <span id="zofranDose" class="highlight"></span></li>
+        <li><strong>Haloperidol:</strong> 0.5-2 mg IV <span id="haldolDose" class="highlight"></span></li>
       </ul>
       <p class="mt-4 text-sm text-gray-600">Note: Dosages are guidelines. Adjust for age, comorbidities, and protocols.</p>
-    </div>
-    <div id="drugPearls" class="tab-content">
-      <h2 class="text-xl font-semibold text-teal-700 mb-4">Drug Pearls</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div>
-          <label for="drug1Search" class="block text-sm font-medium text-teal-800">Search Drug 1</label>
-          <input type="text" id="drug1Search" list="drugList" placeholder="e.g., Propofol" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        </div>
-        <div>
-          <label for="drug2Search" class="block text-sm font-medium text-teal-800">Search Drug 2 (Optional)</label>
-          <input type="text" id="drug2Search" list="drugList" placeholder="e.g., Sugammadex" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        </div>
-        <datalist id="drugList">
-          <option value="propofol">Propofol</option>
-          <option value="etomidate">Etomidate</option>
-          <option value="lidocaine">Lidocaine</option>
-          <option value="ketamine">Ketamine</option>
-          <option value="fentanyl">Fentanyl</option>
-          <option value="succinylcholine">Succinylcholine</option>
-          <option value="rocuronium">Rocuronium</option>
-          <option value="midazolam">Midazolam</option>
-          <option value="precedex">Precedex</option>
-          <option value="naloxone">Naloxone</option>
-          <option value="neostigmine">Neostigmine</option>
-          <option value="sugammadex">Sugammadex</option>
-          <option value="glycopyrrolate">Glycopyrrolate</option>
-          <option value="atropine">Atropine</option>
-          <option value="phenylephrine">Phenylephrine</option>
-          <option value="ephedrine">Ephedrine</option>
-          <option value="norepinephrine">Norepinephrine</option>
-          <option value="esmolol">Esmolol</option>
-          <option value="metoprolol">Metoprolol</option>
-          <option value="hydralazine">Hydralazine</option>
-          <option value="nitroglycerin">Nitroglycerin</option>
-          <option value="dexamethasone">Dexamethasone</option>
-          <option value="ondansetron">Ondansetron</option>
-          <option value="haloperidol">Haloperidol</option>
-        </datalist>
-      </div>
-      <button id="exportPearls" class="mb-4 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Export Comparison as CSV</button>
-      <div id="pearlsComparison" class="mt-4"></div>
     </div>
     <div id="calculations" class="tab-content">
       <h2 class="text-xl font-semibold text-teal-700 mb-4">Calculations</h2>
@@ -433,7 +382,7 @@
       <div class="modal-content">
         <h3 class="text-lg font-semibold text-teal-700 mb-4" id="modalCaseName"></h3>
         <div id="modalContent"></div>
-        <form id="editForm" class="hidden grid grid-cols-1 gap-4">
+        <form id="editForm" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <label for="editCaseName" class="block text-sm font-medium text-teal-800">Case Name</label>
             <input type="text" id="editCaseName" name="caseName" placeholder="e.g., Appendectomy - 3/1/25" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
@@ -476,11 +425,11 @@
             <label for="editCaseType" class="block text-sm font-medium text-teal-800">Case Type</label>
             <input type="text" id="editCaseType" name="caseType" placeholder="e.g., General, OB, Neuro, Trauma" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
           </div>
-          <div>
+          <div class="md:col-span-2">
             <label for="editNotes" class="block text-sm font-medium text-teal-800">Notes</label>
             <textarea id="editNotes" name="notes" rows="4" placeholder="e.g., Anesthesia Procedures (Art-line, CVC, POCUS), Anesthesia Type (General, Regional, MAC)" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500"></textarea>
           </div>
-          <div class="flex justify-end space-x-2">
+          <div class="md:col-span-2 flex justify-end space-x-2">
             <button id="saveEdit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save Changes</button>
             <button id="cancelEdit" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">Cancel</button>
           </div>
@@ -495,218 +444,99 @@
     </div>
   </div>
   <script>
-    let cases = JSON.parse(localStorage.getItem('cases')) || [];
+    // Get or set username
+    let username = localStorage.getItem('srnaUsername') || '';
+    let cases = [];
     let selectedCaseId = null;
+
+    const usernamePage = document.getElementById('usernamePage');
+    const mainApp = document.getElementById('mainApp');
+    const caseForm = document.getElementById('caseForm');
+    const caseList = document.getElementById('caseList');
+    const storageWarning = document.getElementById('storageWarning');
     const modal = document.getElementById('modal');
-    const modalCaseName = document.getElementById('modalCaseName');
     const modalContent = document.getElementById('modalContent');
+    const modalCaseName = document.getElementById('modalCaseName');
     const editForm = document.getElementById('editForm');
     const modalButtons = document.getElementById('modalButtons');
 
-    // Drug pearls data
-    const drugPearls = {
-      propofol: {
-        pearl: "Risk of hypotension; mix with lidocaine to reduce injection pain.",
-        onset: "15-30 seconds",
-        duration: "3-10 minutes",
-        excretion: "Hepatic",
-        use: "Induction, short-term sedation",
-        contraindications: "Egg/soy allergy, hypovolemia"
-      },
-      etomidate: {
-        pearl: "Minimal CV depression; risk of adrenal suppression.",
-        onset: "30-60 seconds",
-        duration: "3-5 minutes",
-        excretion: "Hepatic",
-        use: "Induction in unstable patients",
-        contraindications: "Adrenal insufficiency"
-      },
-      lidocaine: {
-        pearl: "Reduces propofol pain; monitor for LAST.",
-        onset: "1-2 minutes",
-        duration: "10-20 minutes",
-        excretion: "Hepatic",
-        use: "Adjunct for induction, local anesthesia",
-        contraindications: "Heart block, LAST history"
-      },
-      ketamine: {
-        pearl: "Preserves respiratory drive; may increase BP/HR.",
-        onset: "30-60 seconds",
-        duration: "5-10 minutes",
-        excretion: "Hepatic",
-        use: "Induction in trauma, hypotension",
-        contraindications: "Severe hypertension, psychosis"
-      },
-      fentanyl: {
-        pearl: "Potent opioid; titrate to avoid respiratory depression.",
-        onset: "1-2 minutes",
-        duration: "30-60 minutes",
-        excretion: "Hepatic",
-        use: "Intraoperative analgesia",
-        contraindications: "Respiratory depression"
-      },
-      succinylcholine: {
-        pearl: "Rapid onset; risk of hyperkalemia in burns/trauma.",
-        onset: "30-60 seconds",
-        duration: "5-10 minutes",
-        excretion: "Plasma",
-        use: "Rapid sequence intubation",
-        contraindications: "Hyperkalemia, MH history"
-      },
-      rocuronium: {
-        pearl: "Reversible with sugammadex; non-depolarizing.",
-        onset: "1-2 minutes",
-        duration: "30-60 minutes",
-        excretion: "Hepatic",
-        use: "Intubation, muscle relaxation",
-        contraindications: "None major"
-      },
-      midazolam: {
-        pearl: "Anterograde amnesia; titrate slowly.",
-        onset: "1-5 minutes",
-        duration: "1-6 hours",
-        excretion: "Hepatic",
-        use: "Preoperative sedation",
-        contraindications: "Acute glaucoma"
-      },
-      precedex: {
-        pearl: "No respiratory depression; monitor for bradycardia.",
-        onset: "5-10 minutes",
-        duration: "1-2 hours",
-        excretion: "Hepatic",
-        use: "ICU/procedural sedation",
-        contraindications: "Heart block, hypotension"
-      },
-      naloxone: {
-        pearl: "Reverses opioids; may precipitate withdrawal.",
-        onset: "1-2 minutes",
-        duration: "30-60 minutes",
-        excretion: "Hepatic",
-        use: "Opioid overdose",
-        contraindications: "Opioid dependency"
-      },
-      neostigmine: {
-        pearl: "Use with glycopyrrolate to prevent bradycardia.",
-        onset: "5-15 minutes",
-        duration: "1-2 hours",
-        excretion: "Renal",
-        use: "Reversal of non-depolarizing blockers",
-        contraindications: "Asthma, heart block"
-      },
-      sugammadex: {
-        pearl: "Rapid reversal; monitor for hypersensitivity.",
-        onset: "2-3 minutes",
-        duration: "Sustained",
-        excretion: "Renal",
-        use: "Reversal of rocuronium/vecuronium",
-        contraindications: "Hypersensitivity"
-      },
-      glycopyrrolate: {
-        pearl: "Less CNS effects than atropine; use with neostigmine.",
-        onset: "1-2 minutes",
-        duration: "2-4 hours",
-        excretion: "Renal",
-        use: "Prevent bradycardia",
-        contraindications: "Glaucoma, myasthenia gravis"
-      },
-      atropine: {
-        pearl: "Effective for bradycardia; may cause delirium.",
-        onset: "1-2 minutes",
-        duration: "1-2 hours",
-        excretion: "Hepatic",
-        use: "Bradycardia, hypersalivation",
-        contraindications: "Glaucoma"
-      },
-      phenylephrine: {
-        pearl: "Alpha-agonist; may cause reflex bradycardia.",
-        onset: "1-2 minutes",
-        duration: "10-20 minutes",
-        excretion: "Hepatic",
-        use: "Hypotension",
-        contraindications: "Severe hypertension"
-      },
-      ephedrine: {
-        pearl: "Mixed alpha/beta agonist; increases HR/BP.",
-        onset: "1-2 minutes",
-        duration: "10-60 minutes",
-        excretion: "Renal",
-        use: "Hypotension",
-        contraindications: "MAOI use"
-      },
-      norepinephrine: {
-        pearl: "Potent vasopressor; monitor for ischemia.",
-        onset: "Immediate",
-        duration: "Short (infusion)",
-        excretion: "Hepatic",
-        use: "Septic shock, hypotension",
-        contraindications: "Peripheral ischemia"
-      },
-      esmolol: {
-        pearl: "Short-acting beta-blocker; ideal for acute tachycardia.",
-        onset: "1-2 minutes",
-        duration: "10-20 minutes",
-        excretion: "Hepatic",
-        use: "Intraoperative tachycardia",
-        contraindications: "Asthma, heart block"
-      },
-      metoprolol: {
-        pearl: "Longer-acting beta-blocker; use cautiously in asthma.",
-        onset: "5-10 minutes",
-        duration: "3-6 hours",
-        excretion: "Hepatic",
-        use: "Rate control, hypertension",
-        contraindications: "Asthma, bradycardia"
-      },
-      hydralazine: {
-        pearl: "Arterial vasodilator; may cause reflex tachycardia.",
-        onset: "10-20 minutes",
-        duration: "2-6 hours",
-        excretion: "Hepatic",
-        use: "Hypertension",
-        contraindications: "Coronary artery disease"
-      },
-      nitroglycerin: {
-        pearl: "Venodilator; monitor for hypotension.",
-        onset: "1-3 minutes",
-        duration: "30-60 minutes",
-        excretion: "Hepatic",
-        use: "Angina, heart failure",
-        contraindications: "Hypotension, PDE-5 inhibitors"
-      },
-      dexamethasone: {
-        pearl: "Reduces PONV; may increase blood glucose.",
-        onset: "1-2 hours",
-        duration: "24-72 hours",
-        excretion: "Hepatic",
-        use: "PONV prophylaxis",
-        contraindications: "Uncontrolled diabetes"
-      },
-      ondansetron: {
-        pearl: "Effective for PONV; may prolong QT interval.",
-        onset: "15-30 minutes",
-        duration: "4-8 hours",
-        excretion: "Hepatic",
-        use: "PONV treatment",
-        contraindications: "Long QT syndrome"
-      },
-      haloperidol: {
-        pearl: "For refractory nausea; monitor for EPS.",
-        onset: "10-20 minutes",
-        duration: "12-24 hours",
-        excretion: "Hepatic",
-        use: "Refractory PONV, agitation",
-        contraindications: "Parkinson’s, EPS history"
+    // Check storage usage
+    function checkStorage() {
+      const storageSize = JSON.stringify(localStorage).length;
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (storageSize > maxSize * 0.9) {
+        storageWarning.classList.remove('hidden');
+      } else {
+        storageWarning.classList.add('hidden');
       }
-    };
+    }
+
+    // Show main app if username is set
+    if (username) {
+      usernamePage.classList.add('hidden');
+      mainApp.classList.remove('hidden');
+      loadCases();
+    } else {
+      usernamePage.classList.remove('hidden');
+      mainApp.classList.add('hidden');
+    }
+
+    // Handle username submission
+    document.getElementById('setUsername').addEventListener('click', () => {
+      username = document.getElementById('username').value.trim();
+      if (username) {
+        localStorage.setItem('srnaUsername', username);
+        usernamePage.classList.add('hidden');
+        mainApp.classList.remove('hidden');
+        loadCases();
+      } else {
+        alert('Please enter a username.');
+      }
+    });
 
     // Tab navigation
-    document.querySelectorAll('.tab').forEach(tab => {
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => {
       tab.addEventListener('click', () => {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
         tab.classList.add('active');
         document.getElementById(tab.dataset.tab).classList.add('active');
       });
+    });
+
+    // Load cases for the current user
+    function loadCases() {
+      cases = JSON.parse(localStorage.getItem(`srnaCases_${username}`)) || [];
+      displayCases();
+      checkStorage();
+    }
+
+    // Handle form submission
+    document.getElementById('caseForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const caseData = {
+        caseName: document.getElementById('caseName').value,
+        date: document.getElementById('date').value || '',
+        startTime: document.getElementById('startTime').value || '',
+        stopTime: document.getElementById('stopTime').value || '',
+        age: document.getElementById('age').value || '',
+        asaStatus: document.getElementById('asaStatus').value || '',
+        caseType: document.getElementById('caseType').value || '',
+        notes: document.getElementById('notes').value || '',
+        id: Date.now(),
+        username: username
+      };
+      if (!caseData.date && !caseData.startTime && !caseData.stopTime && !caseData.age && !caseData.asaStatus && !caseData.caseType && !caseData.notes) {
+        alert('Please enter at least one additional field besides Case Name.');
+        return;
+      }
+      cases.push(caseData);
+      localStorage.setItem(`srnaCases_${username}`, JSON.stringify(cases));
+      displayCases();
+      document.getElementById('caseForm').reset();
+      checkStorage();
     });
 
     // Display saved cases
@@ -714,212 +544,56 @@
       const caseList = document.getElementById('cases');
       caseList.innerHTML = '';
       cases.forEach((c, index) => {
-        const li = document.createElement('li');
-        li.className = 'p-3 case-item border border-teal-200 rounded-md cursor-pointer';
-        li.innerHTML = `
-          <strong>Case:</strong> ${c.caseName}<br>
-          <strong>Date:</strong> ${c.date || 'Not Provided'}<br>
-          <strong>Start/Stop:</strong> ${c.startTime || 'Not Provided'} - ${c.stopTime || 'Not Provided'}<br>
-          <strong>Age:</strong> ${c.age || 'Not Provided'}<br>
-          <strong>ASA:</strong> ${c.asaStatus || 'Not Provided'}<br>
-          <strong>Type:</strong> ${c.caseType || 'Not Provided'}<br>
-          <strong>Notes:</strong> ${c.notes ? `<div class="notes mt-2">${c.notes}</div>` : 'None'}
-        `;
-        li.addEventListener('click', () => showModal(c, index));
-        caseList.appendChild(li);
+        if (c.username === username) {
+          const li = document.createElement('li');
+          li.className = 'p-3 case-item border border-teal-200 rounded-md cursor-pointer';
+          li.innerHTML = `
+            <strong>Case:</strong> ${c.caseName}<br>
+            <strong>Date:</strong> ${c.date || 'Not Provided'}<br>
+            <strong>Start/Stop:</strong> ${c.startTime || 'Not Provided'} - ${c.stopTime || 'Not Provided'}<br>
+            <strong>Age:</strong> ${c.age || 'Not Provided'}<br>
+            <strong>ASA:</strong> ${c.asaStatus || 'Not Provided'}<br>
+            <strong>Case Type:</strong> ${c.caseType || 'Not Provided'}<br>
+            <strong>Notes:</strong> ${c.notes || 'None'}
+          `;
+          li.addEventListener('click', () => showModal(c));
+          caseList.appendChild(li);
+        }
       });
-      caseList.classList.toggle('hidden', cases.length === 0);
     }
 
-    // Show modal for case details
-    function showModal(caseData, index) {
-      selectedCaseId = index;
+    // Show modal with case details
+    function showModal(caseData) {
+      selectedCaseId = caseData.id;
       modalCaseName.textContent = caseData.caseName;
       modalContent.innerHTML = `
         <p><strong>Date:</strong> ${caseData.date || 'Not Provided'}</p>
-        <p><strong>Age:</strong> ${caseData.age || 'Not Provided'}</p>
         <p><strong>Start/Stop:</strong> ${caseData.startTime || 'Not Provided'} - ${caseData.stopTime || 'Not Provided'}</p>
+        <p><strong>Age:</strong> ${caseData.age || 'Not Provided'}</p>
         <p><strong>ASA Status:</strong> ${caseData.asaStatus || 'Not Provided'}</p>
         <p><strong>Case Type:</strong> ${caseData.caseType || 'Not Provided'}</p>
-        <p><strong>Notes:</strong></p>
-        <div class="notes">${caseData.notes || 'None'}</div>
+        <p class="notes"><strong>Notes:</strong> ${caseData.notes || 'None'}</p>
       `;
-      modalButtons.classList.remove('hidden');
+      modalContent.style.display = 'block';
       editForm.classList.add('hidden');
+      modalButtons.style.display = 'flex';
       modal.style.display = 'flex';
     }
 
-    // Show modal for drug pearls
-    function showDrugModal(drug) {
-      const data = drugPearls[drug];
-      if (data) {
-        modalCaseName.textContent = drug.charAt(0).toUpperCase() + drug.slice(1);
-        modalContent.innerHTML = `
-          <p><strong>Pearl:</strong> ${data.pearl}</p>
-          <p><strong>Onset:</strong> ${data.onset}</p>
-          <p><strong>Duration:</strong> ${data.duration}</p>
-          <p><strong>Excretion:</strong> ${data.excretion}</p>
-          <p><strong>Contraindications:</strong> ${data.contraindications}</p>
-          <p><span class="go-deeper" data-drug="${drug}">Go Deeper</span></p>
-        `;
-        modalButtons.classList.add('hidden');
-        editForm.classList.add('hidden');
-        modal.style.display = 'flex';
-      }
-    }
-
-    // Handle pearls button clicks
-    document.querySelectorAll('.pearls-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        showDrugModal(btn.dataset.drug);
-      });
-    });
-
-    // Handle "Go Deeper" link
-    modal.addEventListener('click', (e) => {
-      if (e.target.classList.contains('go-deeper')) {
-        const drug = e.target.dataset.drug;
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelector('.tab[data-tab="drugPearls"]').classList.add('active');
-        document.getElementById('drugPearls').classList.add('active');
-        document.getElementById('drug1Search').value = drug;
-        updatePearlsComparison();
-        modal.style.display = 'none';
-      }
-    });
-
-    // Update pearls comparison table
-    function updatePearlsComparison() {
-      const drug1 = document.getElementById('drug1Search').value.toLowerCase();
-      const drug2 = document.getElementById('drug2Search').value.toLowerCase();
-      const pearlsComparison = document.getElementById('pearlsComparison');
-      pearlsComparison.innerHTML = '';
-      if (!drug1 || !drugPearls[drug1]) return;
-
-      const headers = ['Property', drug1.charAt(0).toUpperCase() + drug1.slice(1)];
-      const rows = [
-        ['Pearl', drugPearls[drug1].pearl],
-        ['Onset', drugPearls[drug1].onset],
-        ['Duration', drugPearls[drug1].duration],
-        ['Excretion', drugPearls[drug1].excretion],
-        ['Use', drugPearls[drug1].use],
-        ['Contraindications', drugPearls[drug1].contraindications]
-      ];
-
-      if (drug2 && drugPearls[drug2]) {
-        headers.push(drug2.charAt(0).toUpperCase() + drug2.slice(1));
-        rows[0].push(drugPearls[drug2].pearl);
-        rows[1].push(drugPearls[drug2].onset);
-        rows[2].push(drugPearls[drug2].duration);
-        rows[3].push(drugPearls[drug2].excretion);
-        rows[4].push(drugPearls[drug2].use);
-        rows[5].push(drugPearls[drug2].contraindications);
-      }
-
-      const table = document.createElement('table');
-      table.className = 'comparison-table w-full';
-      const thead = document.createElement('thead');
-      const headerRow = document.createElement('tr');
-      headers.forEach(header => {
-        const th = document.createElement('th');
-        th.textContent = header;
-        headerRow.appendChild(th);
-      });
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
-
-      const tbody = document.createElement('tbody');
-      rows.forEach(row => {
-        const tr = document.createElement('tr');
-        row.forEach(cell => {
-          const td = document.createElement('td');
-          td.textContent = cell;
-          tr.appendChild(td);
-        });
-        tbody.appendChild(tr);
-      });
-      table.appendChild(tbody);
-      pearlsComparison.appendChild(table);
-    }
-
-    // Export pearls comparison as CSV
-    document.getElementById('exportPearls').addEventListener('click', () => {
-      const drug1 = document.getElementById('drug1Search').value.toLowerCase();
-      const drug2 = document.getElementById('drug2Search').value.toLowerCase();
-      if (!drug1 || !drugPearls[drug1]) {
-        alert('Please select at least one drug.');
-        return;
-      }
-
-      const headers = ['Property', drug1.charAt(0).toUpperCase() + drug1.slice(1)];
-      const rows = [
-        ['Pearl', drugPearls[drug1].pearl],
-        ['Onset', drugPearls[drug1].onset],
-        ['Duration', drugPearls[drug1].duration],
-        ['Excretion', drugPearls[drug1].excretion],
-        ['Use', drugPearls[drug1].use],
-        ['Contraindications', drugPearls[drug1].contraindications]
-      ];
-
-      if (drug2 && drugPearls[drug2]) {
-        headers.push(drug2.charAt(0).toUpperCase() + drug2.slice(1));
-        rows[0].push(drugPearls[drug2].pearl);
-        rows[1].push(drugPearls[drug2].onset);
-        rows[2].push(drugPearls[drug2].duration);
-        rows[3].push(drugPearls[drug2].excretion);
-        rows[4].push(drugPearls[drug2].use);
-        rows[5].push(drugPearls[drug2].contraindications);
-      }
-
-      const csv = [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
-      const blob = new Blob([csv], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `drug_comparison_${drug1}${drug2 ? '_' + drug2 : ''}.csv`;
-      a.click();
-      URL.revokeObjectURL(url);
-    });
-
-    // Update pearls comparison on search input
-    document.getElementById('drug1Search').addEventListener('input', updatePearlsComparison);
-    document.getElementById('drug2Search').addEventListener('input', updatePearlsComparison);
-
-    // Handle case form submission
-    document.getElementById('caseForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const newCase = {
-        caseName: document.getElementById('caseName').value.trim(),
-        date: document.getElementById('date').value,
-        age: document.getElementById('age').value,
-        startTime: document.getElementById('startTime').value,
-        stopTime: document.getElementById('stopTime').value,
-        asaStatus: document.getElementById('asaStatus').value,
-        caseType: document.getElementById('caseType').value,
-        notes: document.getElementById('notes').value,
-        createdAt: new Date().toISOString()
-      };
-      cases.push(newCase);
-      localStorage.setItem('cases', JSON.stringify(cases));
-      displayCases();
-      document.getElementById('caseForm').reset();
-    });
-
-    // Populate edit form
+    // Show edit form
     document.getElementById('editCase').addEventListener('click', () => {
-      const caseData = cases[selectedCaseId];
+      const caseData = cases.find(c => c.id === selectedCaseId);
       if (caseData) {
         document.getElementById('editCaseName').value = caseData.caseName;
         document.getElementById('editDate').value = caseData.date || '';
-        document.getElementById('editAge').value = caseData.age || '';
         document.getElementById('editStartTime').value = caseData.startTime || '';
         document.getElementById('editStopTime').value = caseData.stopTime || '';
+        document.getElementById('editAge').value = caseData.age || '';
         document.getElementById('editAsaStatus').value = caseData.asaStatus || '';
         document.getElementById('editCaseType').value = caseData.caseType || '';
         document.getElementById('editNotes').value = caseData.notes || '';
-        modalContent.classList.add('hidden');
-        modalButtons.classList.add('hidden');
+        modalContent.style.display = 'none';
+        modalButtons.style.display = 'none';
         editForm.classList.remove('hidden');
       }
     });
@@ -928,139 +602,312 @@
     document.getElementById('saveEdit').addEventListener('click', (e) => {
       e.preventDefault();
       const updatedCase = {
-        caseName: document.getElementById('editCaseName').value.trim(),
-        date: document.getElementById('editDate').value,
-        age: document.getElementById('editAge').value,
-        startTime: document.getElementById('editStartTime').value,
-        stopTime: document.getElementById('editStopTime').value,
-        asaStatus: document.getElementById('editAsaStatus').value,
-        caseType: document.getElementById('editCaseType').value,
-        notes: document.getElementById('editNotes').value,
-        createdAt: cases[selectedCaseId].createdAt
+        caseName: document.getElementById('editCaseName').value,
+        date: document.getElementById('editDate').value || '',
+        startTime: document.getElementById('editStartTime').value || '',
+        stopTime: document.getElementById('editStopTime').value || '',
+        age: document.getElementById('editAge').value || '',
+        asaStatus: document.getElementById('editAsaStatus').value || '',
+        caseType: document.getElementById('editCaseType').value || '',
+        notes: document.getElementById('editNotes').value || '',
+        id: selectedCaseId,
+        username: username
       };
-      cases[selectedCaseId] = updatedCase;
-      localStorage.setItem('cases', JSON.stringify(cases));
+      if (!updatedCase.date && !updatedCase.startTime && !updatedCase.stopTime && !updatedCase.age && !updatedCase.asaStatus && !updatedCase.caseType && !updatedCase.notes) {
+        alert('Please enter at least one additional field besides Case Name.');
+        return;
+      }
+      cases = cases.map(c => c.id === selectedCaseId ? updatedCase : c);
+      localStorage.setItem(`srnaCases_${username}`, JSON.stringify(cases));
       displayCases();
       modal.style.display = 'none';
-      modalContent.classList.remove('hidden');
+      selectedCaseId = null;
+      checkStorage();
     });
 
     // Cancel edit
     document.getElementById('cancelEdit').addEventListener('click', () => {
-      modalContent.classList.remove('hidden');
-      modalButtons.classList.remove('hidden');
-      editForm.classList.add('hidden');
-    });
-
-    // Export case as CSV
-    document.getElementById('exportCase').addEventListener('click', () => {
-      const caseData = cases[selectedCaseId];
+      const caseData = cases.find(c => c.id === selectedCaseId);
       if (caseData) {
-        const csv = [
-          ['Case Name', 'Date', 'Age', 'Start Time', 'Stop Time', 'ASA Status', 'Case Type', 'Notes'],
-          [
-            caseData.caseName,
-            caseData.date || 'Not Provided',
-            caseData.age || 'Not Provided',
-            caseData.startTime || 'Not Provided',
-            caseData.stopTime || 'Not Provided',
-            caseData.asaStatus || 'Not Provided',
-            caseData.caseType || 'Not Provided',
-            caseData.notes || 'None'
-          ]
-        ].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${caseData.caseName}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-      }
-    });
-
-    // Delete case
-    document.getElementById('deleteCase').addEventListener('click', () => {
-      if (confirm('Are you sure you want to delete this case?')) {
-        cases.splice(selectedCaseId, 1);
-        localStorage.setItem('cases', JSON.stringify(cases));
-        displayCases();
-        modal.style.display = 'none';
+        showModal(caseData);
       }
     });
 
     // Close modal
     document.getElementById('closeModal').addEventListener('click', () => {
       modal.style.display = 'none';
+      selectedCaseId = null;
     });
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
+
+    // Export case as CSV
+    document.getElementById('exportCase').addEventListener('click', () => {
+      const caseData = cases.find(c => c.id === selectedCaseId);
+      if (caseData) {
+        const csv = `Case Name,Date,Start Time,Stop Time,Age,ASA Status,Case Type,Notes\n"${caseData.caseName}",${caseData.date || ''},${caseData.startTime || ''},${caseData.stopTime || ''},${caseData.age || ''},${caseData.asaStatus || ''},${caseData.caseType || ''},"${caseData.notes || ''}"`;
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `case_${caseData.id}.csv`;
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+      modal.style.display = 'none';
+      selectedCaseId = null;
+    });
+
+    // Delete case
+    document.getElementById('deleteCase').addEventListener('click', () => {
+      if (confirm('Are you sure you want to delete this case?')) {
+        cases = cases.filter(c => c.id !== selectedCaseId);
+        localStorage.setItem(`srnaCases_${username}`, JSON.stringify(cases));
+        displayCases();
         modal.style.display = 'none';
+        selectedCaseId = null;
+        checkStorage();
       }
     });
 
     // Clear all cases
     document.getElementById('clearCases').addEventListener('click', () => {
-      if (confirm('Are you sure you want to clear all cases?')) {
+      if (confirm('Are you sure you want to clear all cases? This action cannot be undone.')) {
         cases = [];
-        localStorage.setItem('cases', JSON.stringify(cases));
+        localStorage.removeItem(`srnaCases_${username}`);
         displayCases();
+        checkStorage();
       }
     });
 
-    // Calculate drug doses
+    // Drug dosage calculation
     document.getElementById('ptWeight').addEventListener('input', () => {
       const weight = parseFloat(document.getElementById('ptWeight').value);
-      if (!weight) {
-        document.querySelectorAll('.highlight').forEach(span => span.textContent = '');
-        return;
+      if (weight > 0) {
+        document.getElementById('propofolDose').textContent = `(Induction: ${ (weight * 1.5).toFixed(1) }-${ (weight * 2.5).toFixed(1) } mg)`;
+        document.getElementById('etomidateDose').textContent = `(Induction: ${ (weight * 0.2).toFixed(1) }-${ (weight * 0.3).toFixed(1) } mg)`;
+        document.getElementById('lidocaineInductionDose').textContent = `(Adjunct: ${ (weight * 1).toFixed(1) }-${ (weight * 1.5).toFixed(1) } mg)`;
+        document.getElementById('ketamineDose').textContent = `(Induction: ${ (weight * 1).toFixed(1) }-${ (weight * 2).toFixed(1) } mg)`;
+        document.getElementById('fentanylInductionDose').textContent = `(Bolus: ${ (weight * 1).toFixed(1) }-${ (weight * 2).toFixed(1) } mcg)`;
+        document.getElementById('succinylcholineDose').textContent = `(Intubation: ${ (weight * 1).toFixed(1) }-${ (weight * 1.5).toFixed(1) } mg)`;
+        document.getElementById('rocuroniumInductionDose').textContent = `(Intubation: ${ (weight * 0.6).toFixed(1) }-${ (weight * 1.2).toFixed(1) } mg)`;
+        document.getElementById('midazolamDose').textContent = `(Sedation: ${ (weight * 0.02).toFixed(1) }-${ (weight * 0.04).toFixed(1) } mg)`;
+        document.getElementById('precedexDose').textContent = `(Loading: ${ (weight * 0.5).toFixed(1) }-${ (weight * 1).toFixed(1) } mcg; Maintenance: ${ (weight * 0.2).toFixed(1) }-${ (weight * 0.7).toFixed(1) } mcg/hr)`;
+        document.getElementById('naloxoneDose').textContent = `(0.04-0.4 mg)`;
+        document.getElementById('neostigmineDose').textContent = `(0.04-0.07 mg/kg: ${ (weight * 0.04).toFixed(1) }-${ (weight * 0.07).toFixed(1) } mg)`;
+        document.getElementById('sugammadexDose').textContent = `(Routine: ${ (weight * 2).toFixed(1) }-${ (weight * 4).toFixed(1) } mg)`;
+        document.getElementById('glycopyrrolateDose').textContent = `(0.2 mg per 1 mg Neostigmine)`;
+        document.getElementById('atropineDose').textContent = `(Bradycardia: ${ (weight * 0.01).toFixed(1) }-${ (weight * 0.02).toFixed(1) } mg)`;
+        document.getElementById('phenylephrineDose').textContent = `(Bolus: 50-200 mcg; Infusion: ${ (weight * 0.1).toFixed(1) }-${ (weight * 0.5).toFixed(1) } mcg/min)`;
+        document.getElementById('ephedrineDose').textContent = `(Bolus: 5-10 mg)`;
+        document.getElementById('norepinephrineDose').textContent = `(Infusion: ${ (weight * 0.01).toFixed(1) }-${ (weight * 0.1).toFixed(1) } mcg/min)`;
+        document.getElementById('esmololDose').textContent = `(Bolus: ${ (weight * 0.5).toFixed(1) } mg; Infusion: ${ (weight * 50).toFixed(1) }-${ (weight * 200).toFixed(1) } mcg/min)`;
+        document.getElementById('metoprololDose').textContent = `(1-5 mg)`;
+        document.getElementById('hydralazineDose').textContent = `(5-20 mg)`;
+        document.getElementById('nitroglycerinDose').textContent = `(Infusion: 5-20 mcg/min)`;
+        document.getElementById('decadronDose').textContent = `(4-8 mg)`;
+        document.getElementById('zofranDose').textContent = `(4-8 mg)`;
+        document.getElementById('haldolDose').textContent = `(0.5-2 mg)`;
+      } else {
+        document.querySelectorAll('[id$="Dose"]').forEach(el => el.textContent = '');
       }
-      document.getElementById('propofolDose').textContent = `${(1.5 * weight).toFixed(1)}-${(2.5 * weight).toFixed(1)} mg`;
-      document.getElementById('etomidateDose').textContent = `${(0.2 * weight).toFixed(1)}-${(0.3 * weight).toFixed(1)} mg`;
-      document.getElementById('lidocaineInductionDose').textContent = `${(1 * weight).toFixed(1)}-${(1.5 * weight).toFixed(1)} mg`;
-      document.getElementById('ketamineDose').textContent = `${(1 * weight).toFixed(1)}-${(2 * weight).toFixed(1)} mg`;
-      document.getElementById('fentanylInductionDose').textContent = `${(1 * weight).toFixed(1)}-${(2 * weight).toFixed(1)} mcg`;
-      document.getElementById('succinylcholineDose').textContent = `${(1 * weight).toFixed(1)}-${(1.5 * weight).toFixed(1)} mg`;
-      document.getElementById('rocuroniumInductionDose').textContent = `${(0.6 * weight).toFixed(1)}-${(1.2 * weight).toFixed(1)} mg`;
-      document.getElementById('midazolamDose').textContent = `${(0.02 * weight).toFixed(1)}-${(0.04 * weight).toFixed(1)} mg`;
-      document.getElementById('precedexDose').textContent = `Load: ${(0.5 * weight).toFixed(1)}-${(1 * weight).toFixed(1)} mcg; Maint: ${(0.2 * weight).toFixed(1)}-${(0.7 * weight).toFixed(1)} mcg/hr`;
-      document.getElementById('naloxoneDose').textContent = `0.04-0.4 mg`;
-      document.getElementById('neostigmineDose').textContent = `${(0.04 * weight).toFixed(1)}-${(0.07 * weight).toFixed(1)} mg`;
-      document.getElementById('sugammadexDose').textContent = `${(2 * weight).toFixed(1)}-${(4 * weight).toFixed(1)} mg`;
-      document.getElementById('glycopyrrolateDose').textContent = `0.2 mg per 1 mg neostigmine`;
-      document.getElementById('atropineDose').textContent = `${(0.01 * weight).toFixed(1)}-${(0.02 * weight).toFixed(1)} mg`;
-      document.getElementById('phenylephrineDose').textContent = `Bolus: 50-200 mcg; Inf: ${(0.1 * weight).toFixed(1)}-${(0.5 * weight).toFixed(1)} mcg/min`;
-      document.getElementById('ephedrineDose').textContent = `5-10 mg`;
-      document.getElementById('norepinephrineDose').textContent = `${(0.01 * weight).toFixed(2)}-${(0.1 * weight).toFixed(2)} mcg/min`;
-      document.getElementById('esmololDose').textContent = `Bolus: ${(0.5 * weight).toFixed(1)} mg; Inf: ${(50 * weight).toFixed(0)}-${(200 * weight).toFixed(0)} mcg/min`;
-      document.getElementById('metoprololDose').textContent = `1-5 mg`;
-      document.getElementById('hydralazineDose').textContent = `5-20 mg`;
-      document.getElementById('nitroglycerinDose').textContent = `5-20 mcg/min`;
-      document.getElementById('decadronDose').textContent = `4-8 mg`;
-      document.getElementById('zofranDose').textContent = `4-8 mg`;
-      document.getElementById('haldolDose').textContent = `0.5-2 mg`;
     });
 
-    // Calculations
-    const calcHeightUnit = document.getElementById('calcHeightUnit');
-    const heightCm = document.getElementById('heightCm');
-    const heightIn = document.getElementById('heightIn');
-    const heightFtIn = document.getElementById('heightFtIn');
-    const calcWeightUnit = document.getElementById('calcWeightUnit');
-    const weightKg = document.getElementById('weightKg');
-    const weightLb = document.getElementById('weightLb');
-    const calcGender = document.getElementById('calcGender');
-    const ebvResult = document.getElementById('ebvResult');
-    const ibwResult = document.getElementById('ibwResult');
-    const tvRecommendation = document.getElementById('tvRecommendation');
-    const ettRecommendation = document.getElementById('ettRecommendation');
-    const lmaRecommendation = document.getElementById('lmaRecommendation');
-    const ebvInput = document.getElementById('ebv');
-    const initialHct = document.getElementById('initialHct');
-    const targetHct = document.getElementById('targetHct');
-    const ablResult = document.getElementById('ablResult');
-    const weightLocal = document.getElementById('weightLocal');
-    const anesthetic = document.getElementById('anesthetic');
-    const concentration = document.getElementById('concentration');
-    const epi = document.getElementById('epi');
-    const localResult = document.getElement
+    // Handle height unit toggle
+    document.getElementById('calcHeightUnit').addEventListener('change', () => {
+      const unit = document.getElementById('calcHeightUnit').value;
+      document.getElementById('heightCm').classList.add('hidden');
+      document.getElementById('heightIn').classList.add('hidden');
+      document.getElementById('heightFtIn').classList.add('hidden');
+      if (unit === 'cm') {
+        document.getElementById('heightCm').classList.remove('hidden');
+      } else if (unit === 'in') {
+        document.getElementById('heightIn').classList.remove('hidden');
+      } else if (unit === 'ftin') {
+        document.getElementById('heightFtIn').classList.remove('hidden');
+      }
+      updateCalculations();
+    });
+
+    // Handle weight unit toggle
+    document.getElementById('calcWeightUnit').addEventListener('change', () => {
+      const unit = document.getElementById('calcWeightUnit').value;
+      document.getElementById('weightKg').classList.add('hidden');
+      document.getElementById('weightLb').classList.add('hidden');
+      if (unit === 'kg') {
+        document.getElementById('weightKg').classList.remove('hidden');
+      } else if (unit === 'lb') {
+        document.getElementById('weightLb').classList.remove('hidden');
+      }
+      updateCalculations();
+    });
+
+    // Update concentration options based on anesthetic
+    const concentrationOptions = {
+      lidocaine: ['0.5', '1', '2'],
+      bupivacaine: ['0.125', '0.25', '0.5'],
+      ropivacaine: ['0.2', '0.5', '1'],
+      mepivacaine: ['1', '1.5', '2']
+    };
+
+    document.getElementById('anesthetic').addEventListener('change', () => {
+      const anesthetic = document.getElementById('anesthetic').value;
+      const concentrationSelect = document.getElementById('concentration');
+      concentrationSelect.innerHTML = '<option value="" disabled selected>Select Concentration</option>';
+      if (anesthetic && concentrationOptions[anesthetic]) {
+        concentrationOptions[anesthetic].forEach(conc => {
+          const option = document.createElement('option');
+          option.value = conc;
+          option.textContent = `${conc}%`;
+          concentrationSelect.appendChild(option);
+        });
+      }
+      updateCalculations();
+    });
+
+    // Patient data and calculations
+    function updateCalculations() {
+      const heightUnit = document.getElementById('calcHeightUnit').value;
+      const heightCm = heightUnit === 'cm' ? parseFloat(document.getElementById('calcHeightCm').value) : 
+                       heightUnit === 'in' ? parseFloat(document.getElementById('calcHeightIn').value) * 2.54 : 
+                       (parseFloat(document.getElementById('calcHeightFt').value || 0) * 12 + parseFloat(document.getElementById('calcHeightInFt').value || 0)) * 2.54;
+      const weightUnit = document.getElementById('calcWeightUnit').value;
+      const weightKg = weightUnit === 'kg' ? parseFloat(document.getElementById('calcWeightKg').value) : 
+                       parseFloat(document.getElementById('calcWeightLb').value) / 2.20462;
+      const gender = document.getElementById('calcGender').value;
+
+      // Sync weights
+      if (weightKg > 0) {
+        document.getElementById('weightLocal').value = weightKg.toFixed(1);
+        document.getElementById('weightFluid').value = weightKg.toFixed(1);
+      } else {
+        document.getElementById('weightLocal').value = '';
+        document.getElementById('weightFluid').value = '';
+      }
+
+      // EBV
+      let ebvResult = '<span class="placeholder">EBV: Enter weight and gender</span>';
+      if (weightKg > 0 && gender) {
+        const ebv = gender === 'male' ? weightKg * 75 : weightKg * 65;
+        ebvResult = `EBV: ${ebv.toFixed(0)} mL`;
+        document.getElementById('ebv').value = ebv.toFixed(0);
+      } else {
+        document.getElementById('ebv').value = '';
+      }
+      document.getElementById('ebvResult').innerHTML = ebvResult;
+
+      // IBW
+      let ibwResult = '<span class="placeholder">IBW: Enter height and gender</span>';
+      if (heightCm > 0 && gender) {
+        const heightInInches = heightCm / 2.54;
+        const ibw = gender === 'male' ? 50 + 2.3 * (heightInInches - 60) : 45.5 + 2.3 * (heightInInches - 60);
+        ibwResult = `IBW: ${ibw.toFixed(1)} kg`;
+      }
+      document.getElementById('ibwResult').innerHTML = ibwResult;
+
+      // Tidal Volume, ETT, LMA
+      let tvRecommendation = '<span class="placeholder">Tidal Volume: Enter weight</span>';
+      let ettRecommendation = '<span class="placeholder">ETT Size: Enter weight and gender</span>';
+      let lmaRecommendation = '<span class="placeholder">LMA Size: Enter weight</span>';
+      if (weightKg > 0) {
+        let weightForTv = weightKg;
+        if (heightCm > 0 && gender) {
+          const heightInInches = heightCm / 2.54;
+          weightForTv = gender === 'male' ? 50 + 2.3 * (heightInInches - 60) : 45.5 + 2.3 * (heightInInches - 60);
+        }
+        const tvLow = weightForTv * 6;
+        const tvHigh = weightForTv * 8;
+        tvRecommendation = `Tidal Volume: ${tvLow.toFixed(1)}-${tvHigh.toFixed(1)} mL`;
+        if (weightKg < 5) lmaRecommendation = 'LMA Size: 1 (neonates)';
+        else if (weightKg <= 20) lmaRecommendation = 'LMA Size: 2 (children)';
+        else if (weightKg <= 50) lmaRecommendation = 'LMA Size: 3 (small adults)';
+        else if (weightKg <= 70) lmaRecommendation = 'LMA Size: 4 (adults)';
+        else lmaRecommendation = 'LMA Size: 5 (large adults)';
+        if (weightKg < 20) {
+          ettRecommendation = `ETT Size: ~${((weightKg / 4) + 3.5).toFixed(1)} mm (cuffed)`;
+        } else if (gender) {
+          ettRecommendation = `ETT Size: ${gender === 'male' ? '8.0-9.0 mm' : '7.0-8.0 mm'}`;
+        }
+      }
+      document.getElementById('tvRecommendation').innerHTML = tvRecommendation;
+      document.getElementById('ettRecommendation').innerHTML = ettRecommendation;
+      document.getElementById('lmaRecommendation').innerHTML = lmaRecommendation;
+
+      // Allowable Blood Loss
+      const ebv = parseFloat(document.getElementById('ebv').value);
+      const initialHct = parseFloat(document.getElementById('initialHct').value);
+      const targetHct = parseFloat(document.getElementById('targetHct').value);
+      let ablResult = '<span class="placeholder">ABL: Enter EBV and Hct values</span>';
+      if (ebv > 0 && initialHct > 0 && targetHct > 0 && initialHct > targetHct) {
+        const abl = ebv * (initialHct - targetHct) / initialHct;
+        ablResult = `ABL: ${abl.toFixed(1)} mL`;
+      }
+      document.getElementById('ablResult').innerHTML = ablResult;
+
+      // Maximum Local Anesthetic
+      const weightLocal = parseFloat(document.getElementById('weightLocal').value);
+      const anesthetic = document.getElementById('anesthetic').value;
+      const concentration = parseFloat(document.getElementById('concentration').value) / 100;
+      const epi = document.getElementById('epi').value;
+      let localResult = '<span class="placeholder">Max Volume: Enter all fields</span>';
+      if (weightLocal > 0 && anesthetic && concentration > 0) {
+        const maxDoses = {
+          lidocaine: { plain: 4.5, epi: 7 },
+          bupivacaine: { plain: 2.5, epi: 3 },
+          ropivacaine: { plain: 3, epi: 3 },
+          mepivacaine: { plain: 5, epi: 7 }
+        };
+        const maxDose = epi === 'yes' ? maxDoses[anesthetic].epi * weightLocal : maxDoses[anesthetic].plain * weightLocal;
+        const maxVolume = maxDose / (concentration * 10);
+        localResult = `Max Dose: ${maxDose.toFixed(1)} mg, Max Volume: ${maxVolume.toFixed(1)} mL`;
+      }
+      document.getElementById('localResult').innerHTML = localResult;
+
+      // Fluid and NPO Deficit
+      const weightFluid = parseFloat(document.getElementById('weightFluid').value);
+      const npoHours = parseFloat(document.getElementById('npoHours').value);
+      let fluidNpoResult = '<span class="placeholder">Fluid: Enter weight and NPO hours</span>';
+      if (weightFluid > 0 && npoHours >= 0) {
+        let maintenance = 0;
+        if (weightFluid <= 10) {
+          maintenance = weightFluid * 4;
+        } else if (weightFluid <= 20) {
+          maintenance = 10 * 4 + (weightFluid - 10) * 2;
+        } else {
+          maintenance = 10 * 4 + 10 * 2 + (weightFluid - 20) * 1;
+        }
+        const deficit = maintenance * npoHours;
+        fluidNpoResult = `Maintenance: ${maintenance.toFixed(1)} mL/hr, Deficit: ${deficit.toFixed(1)} mL`;
+      }
+      document.getElementById('fluidNpoResult').innerHTML = fluidNpoResult;
+    }
+
+    // Event listeners for calculations
+    document.getElementById('calcHeightCm').addEventListener('input', updateCalculations);
+    document.getElementById('calcHeightIn').addEventListener('input', updateCalculations);
+    document.getElementById('calcHeightFt').addEventListener('input', updateCalculations);
+    document.getElementById('calcHeightInFt').addEventListener('input', updateCalculations);
+    document.getElementById('calcWeightKg').addEventListener('input', updateCalculations);
+    document.getElementById('calcWeightLb').addEventListener('input', updateCalculations);
+    document.getElementById('calcGender').addEventListener('change', updateCalculations);
+    document.getElementById('calcHeightUnit').addEventListener('change', updateCalculations);
+    document.getElementById('calcWeightUnit').addEventListener('change', updateCalculations);
+    document.getElementById('ebv').addEventListener('input', updateCalculations);
+    document.getElementById('initialHct').addEventListener('input', updateCalculations);
+    document.getElementById('targetHct').addEventListener('input', updateCalculations);
+    document.getElementById('weightLocal').addEventListener('input', updateCalculations);
+    document.getElementById('anesthetic').addEventListener('change', updateCalculations);
+    document.getElementById('concentration').addEventListener('change', updateCalculations);
+    document.getElementById('epi').addEventListener('change', updateCalculations);
+    document.getElementById('weightFluid').addEventListener('input', updateCalculations);
+    document.getElementById('npoHours').addEventListener('input', updateCalculations);
+
+    // Load cases on page load
+    if (username) {
+      loadCases();
+    }
+
+    // Initialize concentration dropdown
+    document.getElementById('anesthetic').dispatchEvent(new Event('change'));
+  </script>
+</body>
+</html>
+
