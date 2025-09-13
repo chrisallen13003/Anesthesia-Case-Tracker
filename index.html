@@ -1,1593 +1,702 @@
+
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SRNA Case Tracker</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      background: linear-gradient(to bottom, #e6f3fa, #f0f9fa);
-    }
-    .form-container {
-      background: white;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .case-item:nth-child(even) {
-      background: #f1f5f9;
-    }
-    .case-item:hover {
-      background: #e2e8f0;
-      transition: background 0.2s;
-    }
-    .btn-primary {
-      background: #1d4ed8;
-      transition: background 0.3s;
-    }
-    .btn-primary:hover {
-      background: #1e40af;
-    }
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      align-items: center;
-      justify-content: center;
-    }
-    .modal-content {
-      background: white;
-      padding: 24px;
-      border-radius: 0.5rem;
-      max-width: 600px;
-      width: 90%;
-    }
-    .modal-content p {
-      font-size: 1.1rem;
-      margin-bottom: 0.5rem;
-    }
-    .modal-content .notes {
-      border: 1px solid #4b5563;
-      padding: 10px;
-      border-radius: 0.25rem;
-      background: #f8fafc;
-    }
-    .username-container {
-      background: white;
-      border-radius: 0.75rem;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      max-width: 400px;
-      width: 90%;
-      padding: 24px;
-    }
-    .tab {
-      padding: 10px 20px;
-      cursor: pointer;
-      border-bottom: 2px solid transparent;
-    }
-    .tab.active {
-      border-bottom: 2px solid #1d4ed8;
-      font-weight: bold;
-    }
-    .tab-content {
-      display: none;
-    }
-    .tab-content.active {
-      display: block;
-    }
-    .highlight {
-      background: #d1fae5;
-      padding: 2px 6px;
-      border-radius: 4px;
-    }
-    .placeholder {
-      color: #9ca3af;
-      font-style: italic;
-    }
-    .collapsible-header {
-      cursor: pointer;
-      background: #e2e8f0;
-      padding: 12px;
-      border-radius: 0.25rem;
-      font-weight: 600;
-      margin-top: 8px;
-    }
-    .collapsible-content {
-      display: none;
-      padding: 12px;
-      background: #f8fafc;
-      border-radius: 0.25rem;
-    }
-    .collapsible-content.active {
-      display: block;
-    }
-    .info-btn {
-      background: #a3e635;
-      color: #3f6212;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      margin-left: 8px;
-      cursor: pointer;
-    }
-    .popup-modal {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      align-items: center;
-      justify-content: center;
-      z-index: 50;
-    }
-    .popup-content {
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      max-width: 400px;
-      width: 90%;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .search-input {
-      width: 100%;
-      padding: 8px;
-      margin-bottom: 16px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
-    .calculator-box {
-      border: 2px solid #e2e8f0;
-      border-radius: 0.5rem;
-      padding: 16px;
-      margin-bottom: 16px;
-      background: #f8fafc;
-    }
-  </style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Anesthesia Companion — v36 (Adult)</title>
+<style>
+  :root{
+    --bg:#0b1220; --surface:#0f172aee; --surface-ghost:#0f172a66; --border:#334155;
+    --text:#e2e8f0; --muted:#cbd5e1; --muted-2:#94a3b8; --primary:#2563eb; --primary-600:#1d4ed8;
+    --accent:#22c55e; --warn:#f59e0b; --danger:#e11d48; --highlight:#ffef9f;
+  }
+  [data-theme="light"]{
+    --bg:#f8fafc; --surface:#ffffff; --surface-ghost:#eef2f7; --border:#cbd5e1;
+    --text:#0f172a; --muted:#334155; --muted-2:#475569; --primary:#0ea5e9; --primary-600:#0284c7;
+    --accent:#16a34a; --warn:#b45309; --danger:#b91c1c; --highlight:#fff6b3;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{margin:0;font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+       background:var(--bg);color:var(--text)}
+  a{color:var(--primary)}
+  header{position:sticky;top:0;z-index:20;background:rgba(0,0,0,.15);
+         backdrop-filter: blur(8px); border-bottom:1px solid var(--border)}
+  .wrap{max-width:1200px;margin:0 auto;padding:12px 16px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .brand{font-weight:900;letter-spacing:.02em}
+  .tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1 1 600px}
+  .tab{border:1px solid var(--border);border-radius:9999px;padding:.6rem .9rem;font-weight:800;text-align:center;
+       background:var(--surface-ghost); color:var(--text); cursor:pointer; user-select:none}
+  .tab.active{background:var(--primary); border-color:var(--primary); color:#fff; box-shadow:0 8px 18px rgba(37,99,235,.35)}
+  .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .btn{border-radius:9999px;padding:.55rem .9rem;border:1px solid var(--border);background:var(--surface-ghost);
+       color:var(--text);font-weight:800;cursor:pointer}
+  .btn-primary{border-color:var(--primary-600);background:var(--primary);color:#fff}
+  .btn-danger{border-color:var(--danger);background:var(--danger);color:#fff}
+  main{max-width:1200px;margin:0 auto;padding:16px}
+  .section{display:none}
+  .section.active{display:block}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;
+        box-shadow:0 8px 24px rgba(0,0,0,.25); margin-bottom:16px}
+  .ghost{background:var(--surface-ghost);border:1px solid var(--border);border-radius:14px;padding:16px}
+  .h2{font-size:1.6rem;font-weight:900;letter-spacing:-.01em;margin:0 0 8px}
+  .small{font-size:.95rem;color:var(--muted)}
+  .divider{height:1px;background:var(--border);margin:10px 0}
+  label{font-weight:700;font-size:.9rem;margin-top:6px;display:block;color:var(--muted)}
+  .input, select, textarea{width:100%;border:1px solid var(--border);border-radius:9999px;padding:.65rem .9rem;
+                           background:var(--surface);color:var(--text)}
+  textarea{border-radius:12px}
+  select, select option{background:var(--surface);color:var(--text)}
+  .badge{display:inline-block;border-radius:9999px;padding:.25rem .6rem;font-weight:800;font-size:.8rem}
+  .badge-soft{background:var(--border);color:var(--text)}
+  .badge-accent{background:linear-gradient(90deg,var(--accent),var(--primary));color:#fff}
+  .chip{display:inline-block;border:1px solid var(--border);border-radius:9999px;padding:.15rem .5rem;margin-right:.25rem}
+  .grid{display:grid;gap:10px}
+  @media (min-width:768px){ .g-3{grid-template-columns:repeat(3,1fr)} .g-2{grid-template-columns:repeat(2,1fr)}}
+  .cat-header{background:var(--surface-ghost);border:2px solid var(--border);border-radius:10px;padding:.5rem .8rem;
+              font-weight:900;display:flex;justify-content:space-between;align-items:center;cursor:pointer}
+  .drug-row{display:flex;justify-content:space-between;gap:.75rem;align-items:center;padding:.6rem .75rem;
+            border-bottom:1px solid var(--border)}
+  .dose-base{color:var(--muted);font-size:.95rem}
+  .mask{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+  .mask.active{display:flex}
+  .modal{background:var(--surface);border:1px solid var(--border);border-radius:14px;max-width:800px;width:92vw;
+         max-height:90vh;overflow:auto;box-shadow:0 10px 30px rgba(0,0,0,.35)}
+  .modal .header{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+  .modal .body{padding:14px}
+  .tabs-mini{display:flex;gap:8px;margin-bottom:10px}
+  .tabs-mini .btn{padding:.4rem .7rem}
+  .case-card{border:1px solid var(--border);background:var(--surface-ghost);border-radius:12px;padding:.6rem .75rem;cursor:pointer}
+  .muted{color:var(--muted-2);font-size:.9rem}
+  @media (max-width:640px){ .tabs{grid-template-columns:repeat(2,1fr)} }
+  body[data-theme="dark"] input[type="date"]::-webkit-calendar-picker-indicator,
+  body[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator{ filter: invert(1) brightness(1.4); }
+  footer{max-width:1200px;margin:12px auto 20px;color:var(--muted-2);font-size:.85rem}
+  .hl{background:var(--highlight);padding:0 .25rem;border-radius:8px;color:#000}
+</style>
 </head>
-<body class="flex items-center justify-center min-h-screen">
-  <div id="usernamePage" class="username-container">
-    <h1 class="text-2xl font-bold text-center text-teal-700 mb-6">SRNA Case Tracker</h1>
-    <label for="username" class="block text-sm font-medium text-teal-800">Enter Your Username</label>
-    <input type="text" id="username" name="username" placeholder="e.g., YourName123" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-    <button id="setUsername" class="mt-4 w-full btn-primary text-white p-3 rounded-md">Set Username</button>
-  </div>
-  <div id="mainApp" class="w-full max-w-4xl p-6 form-container hidden">
-    <h1 class="text-3xl font-bold text-center text-teal-700 mb-8">SRNA Case Tracker</h1>
-    <div id="storageWarning" class="hidden mb-4 p-2 bg-yellow-100 text-yellow-800 rounded-md">Warning: Storage is almost full. Consider exporting and clearing cases.</div>
-    <div id="privacyDisclaimer" class="mb-4 p-2 bg-blue-100 text-blue-800 rounded-md">Do not enter patient-identifiable information to comply with HIPAA.</div>
-    <div class="flex border-b mb-4">
-      <div class="tab active" data-tab="caseTracker">Case Tracker</div>
-      <div class="tab" data-tab="drugList">Drug List</div>
-      <div class="tab" data-tab="medicationPearls">Medication Pearls</div>
-      <div class="tab" data-tab="calculations">Calculations</div>
-      <div class="tab" data-tab="clinicalPearls">Clinical Pearls</div>
-    </div>
-    <div id="caseTracker" class="tab-content active">
-      <form id="caseForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-          <label for="date" class="block text-sm font-medium text-teal-800">Date</label>
-          <input type="date" id="date" name="date" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        </div>
-        <div>
-          <label for="age" class="block text-sm font-medium text-teal-800">Age</label>
-          <input type="number" id="age" name="age" min="0" max="120" placeholder="e.g., 45" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        </div>
-        <div>
-          <label for="startTime" class="block text-sm font-medium text-teal-800">Start Time</label>
-          <input type="time" id="startTime" name="startTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        </div>
-        <div>
-          <label for="stopTime" class="block text-sm font-medium text-teal-800">Stop Time</label>
-          <input type="time" id="stopTime" name="stopTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        </div>
-        <div class="md:col-span-2">
-          <label for="caseName" class="block text-sm font-medium text-teal-800">Case Name</label>
-          <input type="text" id="caseName" name="caseName" placeholder="e.g., Appendectomy - 3/1/25" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        </div>
-        <div>
-          <label for="asaStatus" class="block text-sm font-medium text-teal-800">ASA Status</label>
-          <select id="asaStatus" name="asaStatus" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-            <option value="" disabled selected>Select ASA Status</option>
-            <option value="1">ASA 1</option>
-            <option value="2">ASA 2</option>
-            <option value="3">ASA 3</option>
-            <option value="4">ASA 4</option>
-            <option value="5">ASA 5</option>
-            <option value="6">ASA 6</option>
-            <option value="1E">ASA 1E</option>
-            <option value="2E">ASA 2E</option>
-            <option value="3E">ASA 3E</option>
-            <option value="4E">ASA 4E</option>
-            <option value="5E">ASA 5E</option>
-            <option value="6E">ASA 6E</option>
-          </select>
-        </div>
-        <div>
-          <label for="caseType" class="block text-sm font-medium text-teal-800">Case Type</label>
-          <input type="text" id="caseType" name="caseType" placeholder="e.g., General, OB, Neuro, Trauma" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        </div>
-        <div class="md:col-span-2">
-          <label for="notes" class="block text-sm font-medium text-teal-800">Notes</label>
-          <textarea id="notes" name="notes" rows="4" placeholder="e.g., Anesthesia Procedures (Art-line, CVC, POCUS), Anesthesia Type (General, Regional, MAC)" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500"></textarea>
-        </div>
-        <div class="md:col-span-2">
-          <button type="submit" class="w-full btn-primary text-white p-3 rounded-md">Save Case</button>
-        </div>
-      </form>
-      <div id="caseList" class="mt-8">
-        <h2 class="text-xl font-semibold text-teal-700 mb-4">Saved Cases</h2>
-        <ul id="cases" class="space-y-2"></ul>
-      </div>
-      <button id="clearCases" class="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Clear All Cases</button>
-    </div>
-    <div id="drugList" class="tab-content">
-      <h2 class="text-xl font-semibold text-teal-700 mb-4">Anesthesia Drugs</h2>
-      <div class="mb-4">
-        <label for="ptWeight" class="block text-sm font-medium text-teal-800">Weight (kg)</label>
-        <input type="number" id="ptWeight" min="0" placeholder="e.g., 70" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-      </div>
-      <h3 class="text-lg font-medium text-teal-800 mb-2">Induction</h3>
-      <ul class="space-y-2 mb-4">
-        <li><strong>Propofol:</strong> 1.5-2.5 mg/kg IV <span id="propofolDose" class="highlight"></span> <span class="info-btn" data-drug="Propofol">i</span></li>
-        <li><strong>Etomidate:</strong> 0.2-0.3 mg/kg IV <span id="etomidateDose" class="highlight"></span> <span class="info-btn" data-drug="Etomidate">i</span></li>
-        <li><strong>Lidocaine:</strong> 1-1.5 mg/kg IV <span id="lidocaineInductionDose" class="highlight"></span> <span class="info-btn" data-drug="Lidocaine">i</span></li>
-        <li><strong>Ketamine:</strong> 1-2 mg/kg IV <span id="ketamineDose" class="highlight"></span> <span class="info-btn" data-drug="Ketamine">i</span></li>
-        <li><strong>Fentanyl:</strong> 1-2 mcg/kg IV <span id="fentanylInductionDose" class="highlight"></span> <span class="info-btn" data-drug="Fentanyl">i</span></li>
-        <li><strong>Succinylcholine:</strong> 1-1.5 mg/kg IV <span id="succinylcholineDose" class="highlight"></span> <span class="info-btn" data-drug="Succinylcholine">i</span></li>
-        <li><strong>Rocuronium:</strong> 0.6-1.2 mg/kg IV <span id="rocuroniumInductionDose" class="highlight"></span> <span class="info-btn" data-drug="Rocuronium">i</span></li>
-      </ul>
-      <h3 class="text-lg font-medium text-teal-800 mb-2">Sedation</h3>
-      <ul class="space-y-2 mb-4">
-        <li><strong>Midazolam:</strong> 0.02-0.04 mg/kg IV <span id="midazolamDose" class="highlight"></span> <span class="info-btn" data-drug="Midazolam">i</span></li>
-        <li><strong>Precedex:</strong> Loading: 0.5-1 mcg/kg IV over 10 min; Maintenance: 0.2-0.7 mcg/kg/hr <span id="precedexDose" class="highlight"></span> <span class="info-btn" data-drug="Precedex">i</span></li>
-      </ul>
-      <h3 class="text-lg font-medium text-teal-800 mb-2">Reversal</h3>
-      <ul class="space-y-2 mb-4">
-        <li><strong>Naloxone:</strong> 0.04-0.4 mg IV <span id="naloxoneDose" class="highlight"></span> <span class="info-btn" data-drug="Naloxone">i</span></li>
-        <li><strong>Neostigmine:</strong> 0.04-0.07 mg/kg IV (with Glycopyrrolate) <span id="neostigmineDose" class="highlight"></span> <span class="info-btn" data-drug="Neostigmine">i</span></li>
-        <li><strong>Sugammadex:</strong> 2-4 mg/kg IV <span id="sugammadexDose" class="highlight"></span> <span class="info-btn" data-drug="Sugammadex">i</span></li>
-      </ul>
-      <h3 class="text-lg font-medium text-teal-800 mb-2">Vasoactive Uppers</h3>
-      <ul class="space-y-2 mb-4">
-        <li><strong>Glycopyrrolate:</strong> 0.2 mg per 1 mg Neostigmine IV <span id="glycopyrrolateDose" class="highlight"></span> <span class="info-btn" data-drug="Glycopyrrolate">i</span></li>
-        <li><strong>Atropine:</strong> 0.01-0.02 mg/kg IV <span id="atropineDose" class="highlight"></span> <span class="info-btn" data-drug="Atropine">i</span></li>
-        <li><strong>Phenylephrine:</strong> Bolus: 50-200 mcg IV; Infusion: 0.1-0.5 mcg/kg/min <span id="phenylephrineDose" class="highlight"></span> <span class="info-btn" data-drug="Phenylephrine">i</span></li>
-        <li><strong>Ephedrine:</strong> 5-10 mg IV <span id="ephedrineDose" class="highlight"></span> <span class="info-btn" data-drug="Ephedrine">i</span></li>
-        <li><strong>Norepinephrine:</strong> 0.01-0.1 mcg/kg/min <span id="norepinephrineDose" class="highlight"></span> <span class="info-btn" data-drug="Norepinephrine">i</span></li>
-      </ul>
-      <h3 class="text-lg font-medium text-teal-800 mb-2">Vasoactive Downers</h3>
-      <ul class="space-y-2 mb-4">
-        <li><strong>Esmolol:</strong> Bolus: 0.5 mg/kg IV; Infusion: 50-200 mcg/kg/min <span id="esmololDose" class="highlight"></span> <span class="info-btn" data-drug="Esmolol">i</span></li>
-        <li><strong>Metoprolol:</strong> 1-5 mg IV <span id="metoprololDose" class="highlight"></span> <span class="info-btn" data-drug="Metoprolol">i</span></li>
-        <li><strong>Hydralazine:</strong> 5-20 mg IV <span id="hydralazineDose" class="highlight"></span> <span class="info-btn" data-drug="Hydralazine">i</span></li>
-        <li><strong>Nitroglycerin:</strong> 5-20 mcg/min <span id="nitroglycerinDose" class="highlight"></span> <span class="info-btn" data-drug="Nitroglycerin">i</span></li>
-      </ul>
-      <h3 class="text-lg font-medium text-teal-800 mb-2">Antiemetics</h3>
-      <ul class="space-y-2">
-        <li><strong>Dexamethasone:</strong> 4-8 mg IV <span id="decadronDose" class="highlight"></span> <span class="info-btn" data-drug="Dexamethasone">i</span></li>
-        <li><strong>Ondansetron:</strong> 4-8 mg IV <span id="zofranDose" class="highlight"></span> <span class="info-btn" data-drug="Ondansetron">i</span></li>
-        <li><strong>Haloperidol:</strong> 0.5-2 mg IV <span id="haldolDose" class="highlight"></span> <span class="info-btn" data-drug="Haloperidol">i</span></li>
-      </ul>
-      <p class="mt-4 text-sm text-gray-600">Note: Dosages are guidelines. Adjust for age, comorbidities, and protocols.</p>
-    </div>
-    <div id="medicationPearls" class="tab-content">
-      <h2 class="text-xl font-semibold text-teal-700 mb-4">Medication Pearls</h2>
-      <input type="text" id="medicationSearch" class="search-input" placeholder="Search medications...">
-      <div id="medicationList"></div>
-    </div>
-    <div id="calculations" class="tab-content">
-      <h2 class="text-xl font-semibold text-teal-700 mb-4">Calculations</h2>
-      <div class="calculator-box">
-        <h3 class="text-lg font-medium text-teal-800 mb-2">Patient Data & Airway</h3>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label for="calcHeight" class="block text-sm font-medium text-teal-800">Height (cm or inches)</label>
-            <input type="number" id="calcHeight" min="0" placeholder="e.g., 170 or 67" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-          </div>
-          <div>
-            <label for="calcWeight" class="block text-sm font-medium text-teal-800">Weight (kg or lb)</label>
-            <input type="number" id="calcWeight" min="0" placeholder="e.g., 70 or 154" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-          </div>
-          <div>
-            <label for="calcGender" class="block text-sm font-medium text-teal-800">Gender</label>
-            <select id="calcGender" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-              <option value="" disabled selected>Select Gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
-        </div>
-        <div class="mt-4 text-teal-800">
-          <p id="ebvResult" class="inline"><span class="placeholder">EBV: Enter weight and gender</span></p><br>
-          <p id="ibwResult" class="inline"><span class="placeholder">IBW: Enter height and gender</span></p><br>
-          <p id="airwayRecommendations">
-            <span id="tvRecommendation" class="placeholder">Tidal Volume: Enter weight and height</span><br>
-            <span id="ettRecommendation" class="placeholder">ETT Size: Enter weight and gender</span><br>
-            <span id="lmaRecommendation" class="placeholder">LMA Size: Enter weight</span>
-          </p>
-        </div>
-      </div>
-      <div class="calculator-box">
-        <h3 class="text-lg font-medium text-teal-800">Allowable Blood Loss</h3>
-        <label for="ebv" class="block text-sm font-medium text-teal-800">EBV (mL)</label>
-        <input type="number" id="ebv" min="0" placeholder="e.g., 5000" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        <label for="initialHct" class="block text-sm font-medium text-teal-800 mt-2">Initial Hct (%)</label>
-        <input type="number" id="initialHct" min="0" placeholder="e.g., 40" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        <label for="targetHct" class="block text-sm font-medium text-teal-800 mt-2">Target Hct (%)</label>
-        <input type="number" id="targetHct" min="0" placeholder="e.g., 30" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        <p id="ablResult" class="mt-2 text-teal-800"><span class="placeholder">ABL: Enter EBV and Hct values</span></p>
-      </div>
-      <div class="calculator-box">
-        <h3 class="text-lg font-medium text-teal-800">Maximum Local Anesthetic</h3>
-        <label for="weightLocal" class="block text-sm font-medium text-teal-800">Weight (kg)</label>
-        <input type="number" id="weightLocal" min="0" placeholder="e.g., 70" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        <label for="anesthetic" class="block text-sm font-medium text-teal-800 mt-2">Anesthetic</label>
-        <select id="anesthetic" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-          <option value="" disabled selected>Select Anesthetic</option>
-        </select>
-        <label for="concentration" class="block text-sm font-medium text-teal-800 mt-2">Concentration (%)</label>
-        <select id="concentration" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-          <option value="" disabled selected>Select Concentration</option>
-        </select>
-        <label for="epi" class="block text-sm font-medium text-teal-800 mt-2">Epinephrine?</label>
-        <select id="epi" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-          <option value="no">No</option>
-          <option value="yes">Yes</option>
-        </select>
-        <p id="localResult" class="mt-2 text-teal-800"><span class="placeholder">Max Volume: Enter all fields</span></p>
-      </div>
-      <div class="calculator-box">
-        <h3 class="text-lg font-medium text-teal-800">Fluid and NPO Deficit</h3>
-        <label for="weightFluid" class="block text-sm font-medium text-teal-800">Weight (kg)</label>
-        <input type="number" id="weightFluid" min="0" placeholder="e.g., 70" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        <label for="npoHours" class="block text-sm font-medium text-teal-800 mt-2">NPO Hours</label>
-        <input type="number" id="npoHours" min="0" placeholder="e.g., 8" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-        <p id="fluidNpoResult" class="mt-2 text-teal-800"><span class="placeholder">Fluid: Enter weight and NPO hours</span></p>
-      </div>
-    </div>
-    <div id="clinicalPearls" class="tab-content">
-      <h2 class="text-xl font-semibold text-teal-700 mb-4">Clinical Pearls for CRNAs</h2>
-      <div class="collapsible-container">
-        <div class="collapsible-header">Anesthesia Mnemonics</div>
-        <div class="collapsible-content">
-          <ul class="space-y-2 mb-4">
-            <li><strong>MS MAIDS (OR Setup Checklist):</strong>
-              <ul class="ml-4 space-y-1">
-                <li>Machine: Check anesthesia machine, vaporizers, circuit</li>
-                <li>Suction: Ensure working suction catheter</li>
-                <li>Monitors: Apply pulse oximeter, BP cuff, ECG</li>
-                <li>Airway: Prepare laryngoscope, ETT, LMA</li>
-                <li>IV: Confirm patent IV access</li>
-                <li>Drugs: Verify emergency drugs (e.g., succinylcholine, epinephrine)</li>
-                <li>Special: Check case-specific equipment (e.g., regional block kit)</li>
-              </ul>
-            </li>
-            <li><strong>V3 STOP FAST (Pre-Induction/Induction Checklist):</strong>
-              <ul class="ml-4 space-y-1">
-                <li>Vein: Confirm IV patency</li>
-                <li>Vapor: Set volatile agent (e.g., sevoflurane)</li>
-                <li>Vitals: Ensure monitors are on (BP, pulse ox)</li>
-                <li>Suction: Verify suction catheter ready</li>
-                <li>Tube: Prepare ETT or LMA</li>
-                <li>Oxygen: Pre-oxygenate patient</li>
-                <li>Position: Position patient correctly</li>
-                <li>Fast Asleep: Confirm adequate anesthesia depth</li>
-                <li>Airway: Secure airway (intubation or LMA placement)</li>
-                <li>Surgery: Confirm readiness for incision</li>
-                <li>Temperature: Monitor and maintain warming</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="collapsible-container">
-        <div class="collapsible-header">Airway Management</div>
-        <div class="collapsible-content">
-          <h3 class="text-lg font-medium text-teal-800 mb-2">LMA Size Chart</h3>
-          <ul class="space-y-2 mb-4">
-            <li>Size 1: <5 kg (neonates), 1-1.5 mL cuff</li>
-            <li>Size 2: 10-20 kg (children), 7-10 mL cuff</li>
-            <li>Size 3: 30-50 kg (small adults), 15-20 mL cuff</li>
-            <li>Size 4: 50-70 kg (adults), 20-30 mL cuff</li>
-            <li>Size 5: >70 kg (large adults), 30-40 mL cuff</li>
-          </ul>
-          <h3 class="text-lg font-medium text-teal-800 mb-2">ETT Size Chart</h3>
-          <ul class="space-y-2 mb-4">
-            <li>Neonates (0-1 mo): 3.0-3.5 mm</li>
-            <li>Children: (Age/4) + 4 mm (uncuffed) or +3.5 mm (cuffed)</li>
-            <li>Adults: 7.0-8.0 mm (female), 8.0-9.0 mm (male)</li>
-            <li>Depth: 3 × ETT size at teeth (e.g., 7.5 mm ETT at 22.5 cm)</li>
-          </ul>
-        </div>
-      </div>
-      <div class="collapsible-container">
-        <div class="collapsible-header">Fluid & Blood Products</div>
-        <div class="collapsible-content">
-          <h3 class="text-lg font-medium text-teal-800 mb-2">Crystalloids vs. Colloids</h3>
-          <ul class="space-y-2 mb-4">
-            <li><strong>Crystalloids:</strong> D5W, LR, NS. Volume expands interstitial space, requires 3:1 ratio to expand intravascular volume. Use for maintenance and initial resuscitation.</li>
-            <li><strong>Colloids:</strong> Albumin, Hetastarch. Volume expands intravascular space, requires 1:1 ratio. Use for severe hypovolemia or to maintain oncotic pressure.</li>
-          </ul>
-          <h3 class="text-lg font-medium text-teal-800 mb-2">Transfusion Triggers</h3>
-          <ul class="space-y-2">
-            <li>Usually transfuse for Hgb < 7 g/dL in hemodynamically stable patients.</li>
-            <li>Hgb < 8 g/dL for patients with coronary artery disease or significant blood loss.</li>
-            <li>Hgb < 10 g/dL for active bleeding or specific patient comorbidities.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="collapsible-container">
-        <div class="collapsible-header">Common Infusions & Pressors</div>
-        <div class="collapsible-content">
-          <ul class="space-y-2">
-            <li><strong>Norepinephrine (Levophed):</strong> First-line for septic shock. Primarily an alpha-1 agonist, potent vasoconstrictor.</li>
-            <li><strong>Epinephrine:</strong> Beta-1, Beta-2, and alpha-1 agonist. Use for anaphylaxis, cardiac arrest, and refractory shock.</li>
-            <li><strong>Vasopressin:</strong> V1 agonist. Used as a second-line pressor for refractory hypotension, especially in septic shock.</li>
-            <li><strong>Propofol:</strong> IV sedative-hypnotic. Used for induction and maintenance of anesthesia. May cause significant hypotension.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="collapsible-container">
-        <div class="collapsible-header">Patient Positioning</div>
-        <div class="collapsible-content">
-          <ul class="space-y-2 mb-4">
-            <li><strong>Supine Position:</strong> Most common. Ensure head and neck are neutral, arms are abducted less than 90 degrees, and heels are padded to prevent pressure sores.</li>
-            <li><strong>Prone Position:</strong> Used for back or spinal surgery. Requires careful padding of the face, chest, and knees. Ensure no pressure on eyes, ears, or abdomen. Monitor for hypotension due to decreased venous return.</li>
-            <li><strong>Lateral Position:</strong> Used for chest or kidney surgery. Requires careful padding of the dependent arm and leg. Ensure the neck is neutral and a roll is placed under the axilla to prevent brachial plexus injury.</li>
-            <li><strong>Lithotomy Position:</strong> Used for gynecological or urological procedures. Ensure legs are raised and lowered simultaneously to prevent hip and back injuries. Padded stirrups are crucial to prevent peroneal nerve injury.</li>
-          </ul>
-        </div>
-      </div>
-      <div class="collapsible-container">
-        <div class="collapsible-header">Emergencies & Complications</div>
-        <div class="collapsible-content">
-          <ul class="space-y-2 mb-4">
-            <li><strong>Malignant Hyperthermia (MH):</strong> A rare, life-threatening hypermetabolic state triggered by volatile anesthetics (e.g., sevoflurane) or succinylcholine.
-              <ul class="ml-4 list-disc list-inside">
-                <li>Signs: **Unexpected increase in end-tidal CO2**, tachycardia, muscle rigidity, and hyperthermia (late sign).</li>
-                <li>Treatment: Stop triggering agents, call for help, give **Dantrolene (2.5 mg/kg IV)**, hyperventilate with 100% O2, cool the patient, treat acidosis and hyperkalemia.</li>
-              </ul>
-            </li>
-            <li><strong>Anaphylaxis:</strong> A severe, life-threatening allergic reaction.
-              <ul class="ml-4 list-disc list-inside">
-                <li>Signs: Hypotension, tachycardia, bronchospasm, urticaria.</li>
-                <li>Treatment: Stop all drugs, call for help, give **Epinephrine (10-20 mcg IV)** boluses, increase fluid resuscitation, and administer antihistamines and corticosteroids.</li>
-              </ul>
-            </li>
-            <li><strong>Laryngospasm:</strong> Involuntary spasm of the vocal cords.
-              <ul class="ml-4 list-disc list-inside">
-                <li>Signs: Inspiratory stridor, paradoxical chest wall movement, desaturation.</li>
-                <li>Treatment: Apply positive pressure ventilation with 100% O2. If unsuccessful, give a small dose of Propofol (0.25-0.5 mg/kg) or Succinylcholine (0.1-0.2 mg/kg).</li>
-              </ul>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="collapsible-container">
-        <div class="collapsible-header">Peds Anesthesia</div>
-        <div class="collapsible-content">
-          <ul class="space-y-2 mb-4">
-            <li><strong>Fluid Management:</strong> Peds patients have higher metabolic rates. Use the 4-2-1 rule:
-              <ul class="ml-4 list-disc list-inside">
-                <li>**4 mL/kg/hr** for the first 10 kg</li>
-                <li>**2 mL/kg/hr** for the next 10 kg</li>
-                <li>**1 mL/kg/hr** for each kg over 20 kg</li>
-              </ul>
-            </li>
-            <li><strong>Drug Dosages:</strong> Doses are weight-based. Be meticulous with calculations and dilutions.</li>
-            <li><strong>Hypothermia:</strong> Peds patients are prone to hypothermia due to a larger body surface area-to-weight ratio. Use warming blankets and fluid warmers.</li>
-            <li><strong>Airway:</strong> The pediatric airway is smaller and more anterior. A straight blade (Miller) is often preferred for a better view of the glottis.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-    <div id="modal" class="modal">
-      <div class="modal-content">
-        <h3 class="text-lg font-semibold text-teal-700 mb-4" id="modalCaseName"></h3>
-        <div id="modalContent"></div>
-        <form id="editForm" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label for="editCaseName" class="block text-sm font-medium text-teal-800">Case Name</label>
-            <input type="text" id="editCaseName" name="caseName" placeholder="e.g., Appendectomy - 3/1/25" required class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-          </div>
-          <div>
-            <label for="editDate" class="block text-sm font-medium text-teal-800">Date</label>
-            <input type="date" id="editDate" name="date" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-          </div>
-          <div>
-            <label for="editAge" class="block text-sm font-medium text-teal-800">Age</label>
-            <input type="number" id="editAge" name="age" min="0" max="120" placeholder="e.g., 45" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-          </div>
-          <div>
-            <label for="editStartTime" class="block text-sm font-medium text-teal-800">Start Time</label>
-            <input type="time" id="editStartTime" name="startTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-          </div>
-          <div>
-            <label for="editStopTime" class="block text-sm font-medium text-teal-800">Stop Time</label>
-            <input type="time" id="editStopTime" name="stopTime" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-          </div>
-          <div>
-            <label for="editAsaStatus" class="block text-sm font-medium text-teal-800">ASA Status</label>
-            <select id="editAsaStatus" name="asaStatus" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-              <option value="" disabled>Select ASA Status</option>
-              <option value="1">ASA 1</option>
-              <option value="2">ASA 2</option>
-              <option value="3">ASA 3</option>
-              <option value="4">ASA 4</option>
-              <option value="5">ASA 5</option>
-              <option value="6">ASA 6</option>
-              <option value="1E">ASA 1E</option>
-              <option value="2E">ASA 2E</option>
-              <option value="3E">ASA 3E</option>
-              <option value="4E">ASA 4E</option>
-              <option value="5E">ASA 5E</option>
-              <option value="6E">ASA 6E</option>
-            </select>
-          </div>
-          <div>
-            <label for="editCaseType" class="block text-sm font-medium text-teal-800">Case Type</label>
-            <input type="text" id="editCaseType" name="caseType" placeholder="e.g., General, OB, Neuro, Trauma" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500">
-          </div>
-          <div class="md:col-span-2">
-            <label for="editNotes" class="block text-sm font-medium text-teal-800">Notes</label>
-            <textarea id="editNotes" name="notes" rows="4" placeholder="e.g., Anesthesia Procedures (Art-line, CVC, POCUS), Anesthesia Type (General, Regional, MAC)" class="mt-1 block w-full p-2 border border-teal-300 rounded-md focus:ring-teal-500 focus:border-teal-500"></textarea>
-          </div>
-          <div class="md:col-span-2 flex justify-end space-x-2">
-            <button id="saveEdit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save Changes</button>
-            <button id="cancelEdit" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">Cancel</button>
-          </div>
-        </form>
-        <div id="modalButtons" class="mt-4 flex justify-end space-x-2">
-          <button id="editCase" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Edit</button>
-          <button id="exportCase" class="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700">Export as CSV</button>
-          <button id="deleteCase" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Delete</button>
-          <button id="closeModal" class="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700">Close</button>
-        </div>
-      </div>
-    </div>
-    <div id="drugInfoModal" class="popup-modal">
-      <div class="popup-content">
-        <div class="flex justify-between items-center mb-4">
-          <h3 id="drugInfoTitle" class="text-xl font-bold"></h3>
-          <button id="closeDrugInfoModal" class="text-gray-500 hover:text-gray-800 text-2xl font-bold">&times;</button>
-        </div>
-        <div id="drugInfoContent"></div>
-      </div>
-    </div>
-  </div>
-  <script>
-    // Get or set username
-    let username = localStorage.getItem('srnaUsername') || '';
-    let cases = [];
-    let selectedCaseId = null;
+<body data-theme="dark">
+<header>
+<div class="wrap">
+<div class="brand">Anesthesia Companion (Adult)</div>
+<div class="tabs">
+<div class="tab active" data-target="tab-case">Case Tracker</div>
+<div class="tab" data-target="tab-meds">Medications</div>
+<div class="tab" data-target="tab-pearls">Clinical Pearls</div>
+<div class="tab" data-target="tab-calcs">Calculators</div>
+</div>
+<div class="right">
+<span class="small">Theme</span>
+<button class="btn" id="themeToggle">Dark / Light</button>
+</div>
+</div>
+</header>
+<main>
+<!-- CASE TRACKER -->
+<section class="section active" id="tab-case">
+<div class="card">
+<h2 class="h2">New Case Entry</h2>
+<div class="divider"></div>
+<div class="grid g-3">
+<div><label>Date</label><input class="input" id="cDate" type="date"/></div>
+<div><label>Anesthesia Start</label><input class="input" id="cStart" type="time"/></div>
+<div><label>Anesthesia End</label><input class="input" id="cEnd" type="time"/></div>
+<div><label>Age</label><input class="input" id="cAge" placeholder="e.g., 64" type="number"/></div>
+<div><label>Sex</label>
+<select class="input" id="cSex"><option value=""></option><option>Male</option><option>Female</option><option>Other</option></select>
+</div>
+<div><label>ASA (with E)</label>
+<select class="input" id="cASA">
+<option></option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option>
+<option>I-E</option><option>II-E</option><option>III-E</option><option>IV-E</option><option>V-E</option>
+</select>
+</div>
+<div style="grid-column: span 2 / span 2"><label>Procedure</label><input class="input" id="cProc" placeholder="e.g., Lap chole"/></div>
+<div><label>Anesthetic</label><input class="input" id="cAnes" placeholder="e.g., General, MAC, Regional"/></div>
+<div><label>Airway</label><input class="input" id="cAirway" placeholder="e.g., ETT, LMA, Mask"/></div>
+<div><label>Case Type</label><input class="input" id="cType" placeholder="e.g., General, OB, Neuro, Trauma"/></div>
+<div style="grid-column: span 3 / span 3"><label>Notes</label><textarea class="input" id="cNotes" placeholder="e.g., Procedures (A-Line, CVC, POCUS), meds, complications, etc." rows="3"></textarea></div>
+</div>
+<div style="display:flex;gap:8px;margin-top:10px">
+<button class="btn-primary" id="saveCase">Save Case</button>
+<button class="btn" id="clearFields">Clear Fields</button>
+</div>
+</div>
+<div class="ghost">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<h3 style="margin:0;font-weight:900">Saved Cases</h3>
+<div class="small" id="sumBar"></div>
+</div>
+<div class="divider"></div>
+<div class="grid" id="caseList" style="grid-template-columns:1fr;gap:10px"></div>
+<div class="divider"></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn" id="exportAll">Export CSV (all)</button>
+<button class="btn-danger" id="clearAll">Clear All</button>
+</div>
+</div>
+<!-- Case Modal -->
+<div class="mask" id="caseMask"><div class="modal">
+<div class="header"><div class="h2" style="font-size:1.2rem">Case Details</div><button class="btn-danger" id="caseClose">Close</button></div>
+<div class="body small" id="caseBody"></div>
+<div class="divider"></div>
+<div class="body" style="display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn" id="caseEdit">Edit</button>
+<button class="btn-primary" id="caseSave" style="display:none">Save Changes</button>
+<button class="btn" id="caseExport">Export</button>
+<button class="btn-danger" id="caseDelete">Delete</button>
+</div>
+</div></div>
+</section>
+<!-- MEDICATIONS -->
+<section class="section" id="tab-meds">
+<div class="card">
+<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+<div><label>Patient Weight (kg)</label><input class="input" id="ptWt" min="0" placeholder="e.g., 70" step="0.1" style="width:140px" type="number"/></div>
+<div style="flex:1 1 240px"><label>Search drugs</label><input class="input" id="searchDrug" placeholder="Start typing a drug name..." type="text"/></div>
+<div style="display:flex;gap:8px">
+<button class="btn-primary" id="btnExpandMeds">Expand All</button>
+<button class="btn" id="btnCollapseMeds">Collapse All</button>
+</div>
+</div>
+<div class="divider"></div>
+<div class="grid" id="medList" style="grid-template-columns:1fr;gap:14px"></div>
+</div>
+</section>
+<!-- CLINICAL PEARLS -->
+<section class="section" id="tab-pearls">
+<div class="card">
+<div style="display:flex;justify-content:space-between;align-items:center">
+<h2 class="h2">Clinical Pearls</h2>
+<div style="display:flex;gap:8px">
+<button class="btn" id="btnExpandPearls">Expand All</button>
+<button class="btn" id="btnCollapsePearls">Collapse All</button>
+</div>
+</div>
+<div class="divider"></div>
+<details class="ghost" open="">
+<summary class="cat-header">Anesthesia Mnemonics</summary>
+<div class="body small">
+<div><span class="chip">MS MAIDS</span> Monitors, Suction, Machine, Airway, IV, Drugs, Special</div>
+<div><span class="chip">AMPLE</span> Allergies, Meds, Past hx, Last meal, Events</div>
+<div><span class="chip">SOAP-ME</span> Suction, Oxygen, Airway, Position, Monitors/Medications, Equipment/ETT</div>
+<div><span class="chip">DRS ABCD</span> Danger, Response, Shout, Airway, Breathing, Circulation, Defib/Drugs</div>
+</div>
+</details>
+<details class="ghost">
+<summary class="cat-header">Airway Management &amp; Laryngospasm</summary>
+<div class="body small">
+<div class="h2" style="font-size:1rem">Difficult Airway (Simplified)</div>
+<ol style="margin-left:18px">
+<li>Prepare: backup devices (VL, bougie, SGA), suction, O₂, help, preoxygenate.</li>
+<li>Optimize first attempt: ramp obese, use VL early, ELM, consider bougie.</li>
+<li>Failed intubation but ventilation adequate: awaken patient or SGA as bridge.</li>
+<li>CICO: call help; emergency front-of-neck access (cricothyrotomy).</li>
+<li>Post-event: document, debrief, plan awake strategy for future.</li>
+</ol>
+<div class="divider"></div>
+<div class="h2" style="font-size:1rem">Laryngospasm</div>
+<ul style="margin-left:18px">
+<li>Jaw thrust, CPAP 10–20 cmH₂O with 100% O₂, remove stimulus.</li>
+<li>Deepen: propofol 0.5–1 mg/kg IV.</li>
+<li>Refractory: succinylcholine 0.5–1 mg/kg IV (2 mg/kg IM).</li>
+</ul>
+<div class="divider"></div><div class="h2" style="font-size:1rem">Extubation Criteria</div><ul style="margin-left:18px"><li><b>Respiratory:</b> TV &gt; 5 mL/kg, VC &gt; 10–15 mL/kg, RR &lt; 30/min, SpO₂ &gt; 90% on FiO₂ ≤ 40%</li><li><b>Protective Reflexes:</b> intact gag/cough, able to follow commands</li><li><b>Neuromuscular Reversal:</b> TOF ≥ 0.9, sustained head lift/hand grip</li><li><b>Hemodynamics:</b> stable BP/HR, normothermia</li></ul></div>
 
-    const usernamePage = document.getElementById('usernamePage');
-    const mainApp = document.getElementById('mainApp');
-    const caseForm = document.getElementById('caseForm');
-    const caseList = document.getElementById('caseList');
-    const storageWarning = document.getElementById('storageWarning');
-    const modal = document.getElementById('modal');
-    const modalContent = document.getElementById('modalContent');
-    const modalCaseName = document.getElementById('modalCaseName');
-    const editForm = document.getElementById('editForm');
-    const modalButtons = document.getElementById('modalButtons');
-    const drugInfoModal = document.getElementById('drugInfoModal');
+</details>
+<details class="ghost">
+<summary class="cat-header">Airway Sizes (Adult)</summary>
+<div class="body small">
+<table style="width:100%;border-collapse:collapse">
+<thead>
+<tr style="background:var(--surface-ghost)">
+<th class="badge-soft" style="text-align:left;border:1px solid var(--border);padding:6px">Device</th>
+<th class="badge-soft" style="text-align:left;border:1px solid var(--border);padding:6px">Rule of Thumb</th>
+<th class="badge-soft" style="text-align:left;border:1px solid var(--border);padding:6px">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="border:1px solid var(--border);padding:6px">ETT (female)</td>
+<td style="border:1px solid var(--border);padding:6px">7.0–7.5 mm</td>
+<td style="border:1px solid var(--border);padding:6px">Depth ~21 cm at teeth</td>
+</tr>
+<tr>
+<td style="border:1px solid var(--border);padding:6px">ETT (male)</td>
+<td style="border:1px solid var(--border);padding:6px">7.5–8.0 mm</td>
+<td style="border:1px solid var(--border);padding:6px">Depth ~23 cm at teeth</td>
+</tr>
+<tr>
+<td style="border:1px solid var(--border);padding:6px">LMA (by weight)</td>
+<td style="border:1px solid var(--border);padding:6px">#3 (30–50 kg), #4 (50–70), #5 (70–100)</td>
+<td style="border:1px solid var(--border);padding:6px">Confirm seal</td>
+</tr>
+</tbody>
+</table>
+</div>
+</details>
+<details class="ghost">
+<summary class="cat-header">Vasoactive Cheat Sheet</summary>
+<div class="body small" style="overflow:auto">
+<table style="width:100%;border-collapse:collapse">
+<thead>
+<tr style="background:var(--surface-ghost)">
+<th style="text-align:left;border:1px solid var(--border);padding:6px">Agent</th>
+<th style="text-align:left;border:1px solid var(--border);padding:6px">Receptors</th>
+<th style="text-align:left;border:1px solid var(--border);padding:6px">CO</th>
+<th style="text-align:left;border:1px solid var(--border);padding:6px">HR</th>
+<th style="text-align:left;border:1px solid var(--border);padding:6px">SVR</th>
+<th style="text-align:left;border:1px solid var(--border);padding:6px">Typical Use</th>
+</tr>
+</thead>
+<tbody>
+<tr><td style="border:1px solid var(--border);padding:6px">Phenylephrine</td><td style="border:1px solid var(--border);padding:6px">α1</td><td style="border:1px solid var(--border);padding:6px">↓/—</td><td style="border:1px solid var(--border);padding:6px">↓ (reflex)</td><td style="border:1px solid var(--border);padding:6px">↑↑</td><td style="border:1px solid var(--border);padding:6px">Post-induction hypotension</td></tr>
+<tr><td style="border:1px solid var(--border);padding:6px">Ephedrine</td><td style="border:1px solid var(--border);padding:6px">Indirect NE + α/β</td><td style="border:1px solid var(--border);padding:6px">↑</td><td style="border:1px solid var(--border);padding:6px">↑</td><td style="border:1px solid var(--border);padding:6px">↑/—</td><td style="border:1px solid var(--border);padding:6px">Hypotension with low HR</td></tr>
+<tr><td style="border:1px solid var(--border);padding:6px">Norepinephrine</td><td style="border:1px solid var(--border);padding:6px">α1 &gt; β1</td><td style="border:1px solid var(--border);padding:6px">↑/—</td><td style="border:1px solid var(--border);padding:6px">↑/—</td><td style="border:1px solid var(--border);padding:6px">↑↑</td><td style="border:1px solid var(--border);padding:6px">Vasoplegia</td></tr>
+<tr><td style="border:1px solid var(--border);padding:6px">Vasopressin</td><td style="border:1px solid var(--border);padding:6px">V1</td><td style="border:1px solid var(--border);padding:6px">—</td><td style="border:1px solid var(--border);padding:6px">—</td><td style="border:1px solid var(--border);padding:6px">↑↑</td><td style="border:1px solid var(--border);padding:6px">Refractory vasoplegia</td></tr>
+<tr><td style="border:1px solid var(--border);padding:6px">Esmolol</td><td style="border:1px solid var(--border);padding:6px">β1 blocker</td><td style="border:1px solid var(--border);padding:6px">↓</td><td style="border:1px solid var(--border);padding:6px">↓</td><td style="border:1px solid var(--border);padding:6px">—</td><td style="border:1px solid var(--border);padding:6px">Blunt tachycardia/HTN</td></tr>
+<tr><td style="border:1px solid var(--border);padding:6px">Hydralazine</td><td style="border:1px solid var(--border);padding:6px">Direct arterial</td><td style="border:1px solid var(--border);padding:6px">↑ (reflex)</td><td style="border:1px solid var(--border);padding:6px">↑</td><td style="border:1px solid var(--border);padding:6px">↓↓</td><td style="border:1px solid var(--border);padding:6px">Afterload reduction</td></tr>
+</tbody>
+</table>
+</div>
+</details>
+<details class="ghost">
+<summary class="cat-header">Emergencies &amp; Complications</summary>
+<div class="body small">
+<div><b>MH:</b> Stop triggers, 100% O₂, dantrolene 2.5 mg/kg IV (repeat), treat hyperK+/acidosis, cool, ICU.</div>
+<div><b>Anaphylaxis:</b> Epi 10–100 mcg IV (titrate) or 0.3–0.5 mg IM; fluids; H1/H2; steroids; bronchodilators.</div>
+<div><b>LAST:</b> Lipid 20% 1.5 mL/kg bolus → 0.25 mL/kg/min; avoid vasopressin/high-dose epi; benzos for seizures.</div>
+<div><b>High Spinal:</b> Ventilatory support; phenylephrine/ephedrine; consider low-dose epinephrine if refractory.</div>
+</div>
+</details>
+</div>
+<details class="ghost"><summary class="cat-header">Blood Component Therapy &amp; TEG Guide</summary><div class="body small">
+<h4>Blood Products</h4>
+<ul>
+<li><b>PRBCs:</b> 1 unit ↑ Hgb ~1 g/dL, ↑ Hct ~3%. Indications: Hgb &lt;7 (healthy), &lt;8 (cardiac/OB/trauma).</li>
+<li><b>FFP:</b> 10–15 mL/kg. Indications: coagulopathy, INR &gt;1.5, reversal of warfarin, bleeding.</li>
+<li><b>Platelets:</b> 1 pack ↑ 30–50k/µL. Indications: &lt;50k with bleeding or prior to invasive procedure.</li>
+<li><b>Cryoprecipitate:</b> 1 bag/10 kg ↑ fibrinogen 50–75 mg/dL. Indications: fibrinogen &lt;100–150 mg/dL.</li>
+</ul>
+<h4>TEG Interpretation</h4>
+<ul>
+<li><b>R (Reaction time):</b> prolonged = factor deficiency → give FFP.</li>
+<li><b>K / α-angle:</b> abnormal = fibrinogen deficiency/function → give cryoprecipitate.</li>
+<li><b>MA (Max amplitude):</b> low = platelet dysfunction/deficiency → give platelets.</li>
+<li><b>LY30:</b> increased = fibrinolysis → give antifibrinolytic (TXA/Amicar).</li>
+</ul>
+</div></details>
+<details class="ghost"><summary class="cat-header">Ventilator Modes Cheat Sheet</summary><div class="body small">
+<ul>
+<li><b>AC (Assist Control):</b> Full support. Set Vt + rate; all breaths fully supported.</li>
+<li><b>SIMV:</b> Set number of mandatory breaths; spontaneous breaths unassisted unless PS added.</li>
+<li><b>PSV:</b> Pressure augments spontaneous breaths only; no backup rate.</li>
+<li><b>PRVC:</b> Volume-targeted, pressure-limited. Adjusts pressure to reach target Vt.</li>
+<li><b>APRV:</b> Inverse ratio CPAP with intermittent release. Useful in ARDS.</li>
+</ul>
+<p><b>Pearls:</b> Use SIMV+PS or PSV for weaning. AC not ideal for spontaneous weaning (risk of breath-stacking). PRVC/APRV more common in ICU than OR.</p>
+</div></details>
+</section>
+<!-- CALCULATORS -->
+<section class="section" id="tab-calcs">
+<div class="card">
+<h2 class="h2">Patient Inputs</h2>
+<div class="divider"></div>
+<div class="grid g-3">
+<div><label>Height (cm)</label><input class="input" id="hCm" placeholder="e.g., 170" step="0.1" type="number"/></div>
+<div><label>Weight (kg)</label><input class="input" id="wKg" placeholder="e.g., 70" step="0.1" type="number"/></div>
+<div><label>Sex</label><select class="input" id="pSex"><option>Male</option><option>Female</option></select></div>
+</div>
+<div class="grid" style="grid-template-columns:1fr;gap:10px;margin-top:10px">
+<div class="ghost">
+<div class="h2" style="font-size:1.1rem;margin-bottom:6px">At a Glance</div>
+<div class="grid g-3" id="atGlance"></div>
+</div>
+</div>
+<div class="grid" id="surgCalcWrap" style="grid-template-columns:1fr;gap:10px;margin-top:10px">
+<div class="ghost">
+<div class="h2" style="font-size:1.1rem;margin-bottom:6px">Surgical Fluid Replacement</div>
+<div class="grid g-2">
+<label>Case Type
+        <select class="input" id="surgCase">
+<option value="">Select</option>
+<option value="2-4">Minimally invasive (laparoscopic): 2–4 ml/kg/hr</option>
+<option value="4-6">Moderate tissue trauma: 4–6 ml/kg/hr</option>
+<option value="6-8">Major open (e.g., open abdomen): 6–8 ml/kg/hr</option>
+<option value="parkland">Burns (Parkland 4 ml/kg/%TBSA)</option>
+</select>
+</label>
+<label id="burnsBox" style="display:none">Burn Size (%TBSA)
+        <input class="input" id="burnPct" placeholder="e.g., 30" type="number"/>
+</label>
+<div style="grid-column:1/-1">
+        Rule: <span class="badge badge-soft" id="surgRuleOut">—</span>
+</div>
+<div style="grid-column:1/-1">
+        Calculated Replacement: <span class="badge badge-accent" id="surgFluidOut">—</span>
+</div>
+<div class="small" style="grid-column:1/-1;color:var(--muted-2)">
+        Note: These are pragmatic intraoperative replacement targets and should be individualized using hemodynamics, labs, and EBL.
+      </div>
+</div>
+</div>
+</div>
+<div class="grid g-3" style="margin-top:10px">
+<div class="ghost">
+<div class="h2" style="font-size:1.1rem;margin-bottom:6px">Allowable Blood Loss (ABL)</div>
+<div class="grid g-2">
+<label>Starting Hct<input class="input" id="hctStart" placeholder="e.g., 40" step="0.1" type="number"/></label>
+<label>Target Hct<input class="input" id="hctTarget" placeholder="e.g., 25" step="0.1" type="number"/></label>
+<div style="grid-column:1/-1">ABL: <span class="badge badge-accent" id="ablOut">—</span></div>
+</div>
+</div>
+<div class="ghost">
+<div class="h2" style="font-size:1.1rem;margin-bottom:6px">Maintenance Fluids / NPO Deficit</div>
+<div class="grid g-2">
+<label>NPO Hours<input class="input" id="npoH" placeholder="e.g., 8" step="0.1" type="number"/></label>
+<div>Rate (4-2-1): <span class="badge badge-soft" id="mivfOut">—</span></div>
+<div style="grid-column:1/-1">Deficit: <span class="badge badge-soft" id="defOut">—</span></div>
+<div style="grid-column:1/-1;color:var(--muted-2);font-size:.85rem">Plan: 50% 1st hr, 25% 2nd, 25% 3rd (plus mIVF).</div>
+</div>
+</div>
+<div class="ghost">
+<div class="h2" style="font-size:1.1rem;margin-bottom:6px">Local Anesthetic Max</div>
+<div class="grid g-2">
+<label>Anesthetic<select class="input" id="laDrug">
+<option value="">Select</option>
+<option value="lidocaine">Lidocaine</option>
+<option value="bupivacaine">Bupivacaine</option>
+<option value="ropivacaine">Ropivacaine</option>
+<option value="mepivacaine">Mepivacaine</option>
+</select></label>
+<label>Concentration<select class="input" id="laConc">
+<option value="">Select</option>
+<option value="0.25">0.25%</option>
+<option value="0.5">0.5%</option>
+<option value="0.75">0.75%</option>
+<option value="1.0">1%</option>
+<option value="1.5">1.5%</option>
+<option value="2.0">2%</option>
+</select></label>
+<label>With Epi?<select class="input" id="laEpi"><option value="no">No</option><option value="yes">Yes</option></select></label>
+<div>Max Dose: <span class="badge badge-accent" id="laMaxDose">—</span></div>
+<div>Max Volume: <span class="badge badge-accent" id="laMaxVol">—</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Drug Info Modal -->
+<div class="mask" id="drugMask"><div class="modal">
+<div class="header"><div class="h2" id="drugTitle" style="font-size:1.2rem">Drug</div><button class="btn-danger" id="drugClose">Close</button></div>
+<div class="body">
+<div class="tabs-mini">
+<button class="btn btn-primary" id="drugTabQuick">Quick Pearls</button>
+<button class="btn" id="drugTabExpanded">Expanded Info</button>
+</div>
+<div class="small" id="drugBody"></div>
+</div>
+</div></div>
+<footer class="wrap" style="justify-content:space-between">
+<div>v36 — Sep 12, 2025</div>
+<div class="small">Local-only • No PHI uploaded • Export CSV supported</div>
+</footer>
+<script>
+/* THEME */
+function setTheme(mode){ document.body.setAttribute('data-theme', mode); localStorage.setItem('srna_theme', mode); }
+document.getElementById('themeToggle').addEventListener('click', ()=>{
+  const cur = document.body.getAttribute('data-theme') || 'dark';
+  setTheme(cur==='dark'?'light':'dark');
+});
+setTheme(localStorage.getItem('srna_theme') || 'dark');
 
-    // Medication data
-    const medications = {
-      Propofol: {
-        short: {
-          use: 'IV sedation/induction. Can be used as a continuous infusion for maintenance.',
-          onset: '30-45 seconds',
-          duration: '3-10 minutes',
-          contraindications: 'Egg or soy allergy (contains lecithin), significant cardiovascular instability, or severe hypovolemia.',
-          pearls: 'Causes significant dose-dependent respiratory depression and hypotension. Patients may experience pain on injection. Can cause Propofol Infusion Syndrome (PRIS) with high-dose, long-term use.'
-        },
-        full: {
-          moa: 'GABA receptor agonist. It enhances the inhibitory effects of GABA, leading to CNS depression and sedation.',
-          class: 'IV Sedative-Hypnotic',
-          use: 'General anesthesia induction, maintenance of anesthesia, sedation for mechanically ventilated patients, sedation for procedures, and antiemetic.',
-          onset: '30-45 seconds',
-          duration: '3-10 minutes',
-          excretion: 'Hepatic metabolism to inactive metabolites, followed by renal excretion.',
-          contraindications: 'Egg or soy allergy (contains lecithin). Caution in patients with hemodynamic instability, severe hypovolemia, or elevated intracranial pressure (ICP).',
-          adverse_effects: 'Significant hypotension (due to vasodilation), respiratory depression (apnea), bradycardia, pain on injection, and hypertriglyceridemia with long-term infusion.',
-          pearls: 'Often used for "smooth" induction. The drug is a lipid emulsion, so it supports bacterial growth; discard opened vials promptly. Can cause Propofol Infusion Syndrome (PRIS) with high-dose, long-term use (>48 hours), characterized by metabolic acidosis, rhabdomyolysis, and cardiac failure.'
-        }
-      },
-      Etomidate: {
-        short: {
-          use: 'IV induction agent, particularly for hemodynamically unstable patients.',
-          onset: '10-20 seconds',
-          duration: '3-5 minutes',
-          contraindications: 'Porphyria. Use with caution in patients with adrenal insufficiency.',
-          pearls: 'Provides excellent hemodynamic stability. Causes adrenal suppression with a single dose. Can cause myoclonus (involuntary muscle movements) on induction.'
-        },
-        full: {
-          moa: 'GABA receptor agonist. It enhances the inhibitory effects of GABA, leading to rapid CNS depression.',
-          class: 'IV Sedative-Hypnotic',
-          use: 'Induction of general anesthesia, particularly in patients with cardiovascular disease or hypovolemia due to minimal hemodynamic effects.',
-          onset: '10-20 seconds',
-          duration: '3-5 minutes',
-          excretion: 'Hepatic hydrolysis to inactive metabolites.',
-          contraindications: 'Acute intermittent porphyria. Caution is advised in patients with septic shock or known adrenal insufficiency due to adrenal suppression.',
-          adverse_effects: 'Adrenocortical suppression (inhibits cortisol and aldosterone synthesis), myoclonus (involuntary muscle movements), pain on injection, nausea, and vomiting.',
-          pearls: 'Known as the "hemodynamically stable" induction agent. A single induction dose can suppress adrenal function for 4-6 hours. Pre-treatment with a small dose of a benzodiazepine can reduce myoclonus.'
-        }
-      },
-      Lidocaine: {
-        short: {
-          use: 'Local anesthetic, antiarrhythmic, and adjunct to induction to blunt sympathetic response.',
-          onset: '45-90 seconds (IV)',
-          duration: '10-20 minutes (IV)',
-          contraindications: 'Hypersensitivity to amide-type local anesthetics, severe heart block, or significant liver disease.',
-          pearls: 'Can be used to "blunt" the hemodynamic response to intubation. Often given before Propofol to decrease injection pain. Monitor for signs of local anesthetic systemic toxicity (LAST).'
-        },
-        full: {
-          moa: 'Blocks voltage-gated sodium channels, preventing the initiation and conduction of nerve impulses.',
-          class: 'Local Anesthetic, Class IB Antiarrhythmic',
-          use: 'Local and regional anesthesia, ventricular arrhythmias, and to blunt the sympathetic response to laryngoscopy/intubation.',
-          onset: '45-90 seconds (IV)',
-          duration: '10-20 minutes (IV) or longer for local blocks.',
-          excretion: 'Hepatic metabolism (CYP450) to active and inactive metabolites.',
-          contraindications: 'Hypersensitivity to amide-type local anesthetics, severe sinoatrial or atrioventricular heart block, and significant liver dysfunction.',
-          adverse_effects: 'CNS toxicity (seizures, perioral numbness, tinnitus), cardiovascular depression (bradycardia, hypotension), and allergic reactions.',
-          pearls: 'Maximum dose is 4.5 mg/kg (plain) and 7 mg/kg (with epinephrine). Can be used prophylactically before propofol to reduce injection pain. Be mindful of total dose when multiple routes (e.g., IV and local) are used.'
-        }
-      },
-      Ketamine: {
-        short: {
-          use: 'IV induction agent, analgesic, and procedural sedation. Can be used in IM or intranasal routes.',
-          onset: '30-60 seconds (IV)',
-          duration: '5-10 minutes',
-          contraindications: 'Severe hypertension, significant CAD, or elevated ICP.',
-          pearls: 'Dissociative anesthetic. Maintains airway reflexes and spontaneous respirations. Can cause vivid dreams and hallucinations during emergence. Increases heart rate and blood pressure.'
-        },
-        full: {
-          moa: 'Non-competitive NMDA receptor antagonist. It blocks glutamatergic neurotransmission, producing a "dissociative" anesthetic state.',
-          class: 'Dissociative Anesthetic',
-          use: 'Induction of anesthesia, procedural sedation and analgesia, and management of acute or chronic pain.',
-          onset: '30-60 seconds (IV)',
-          duration: '5-10 minutes (IV)',
-          excretion: 'Hepatic metabolism to norketamine (an active metabolite), followed by renal excretion.',
-          contraindications: 'Severe hypertension, significant coronary artery disease (CAD), congestive heart failure (CHF), or elevated intracranial pressure (ICP).',
-          adverse_effects: 'Emergence delirium (vivid dreams, hallucinations), increased heart rate and blood pressure, increased salivary secretions (requires premedication with an anticholinergic like Glycopyrrolate).',
-          pearls: 'Maintains sympathetic tone, airway reflexes, and spontaneous respirations. Excellent choice for trauma patients or others with hemodynamic instability. Benzodiazepines are often co-administered to reduce emergence delirium.'
-        }
-      },
-      Fentanyl: {
-        short: {
-          use: 'Potent opioid analgesic for pain control and to blunt sympathetic response to intubation.',
-          onset: '1-2 minutes',
-          duration: '30-60 minutes',
-          contraindications: 'Opioid hypersensitivity, severe respiratory depression, or acute bronchial asthma.',
-          pearls: 'Respiratory depressant. Can cause muscle rigidity, especially in the chest wall, if given too quickly (slow push). It can also cause bradycardia.'
-        },
-        full: {
-          moa: 'Synthetic opioid agonist that binds primarily to mu-opioid receptors in the central nervous system, providing analgesia and sedation.',
-          class: 'Synthetic Opioid Analgesic',
-          use: 'Analgesia during surgery, to blunt the sympathetic response to laryngoscopy and surgical stimulation, and for post-operative pain management.',
-          onset: '1-2 minutes (IV)',
-          duration: '30-60 minutes (IV) for a single dose.',
-          excretion: 'Hepatic metabolism (CYP3A4) to inactive metabolites.',
-          contraindications: 'Known hypersensitivity to fentanyl or other opioids, and in patients with severe respiratory depression, acute or severe bronchial asthma, or paralytic ileus.',
-          adverse_effects: 'Respiratory depression, muscle rigidity (especially chest wall), bradycardia, nausea, vomiting, pruritus, and sedation.',
-          pearls: 'Highly potent and lipophilic. Giving it too quickly can lead to chest wall rigidity, making ventilation difficult. A long-acting reversal agent, such as naloxone, may be needed for persistent respiratory depression.'
-        }
-      },
-      Succinylcholine: {
-        short: {
-          use: 'Depolarizing neuromuscular blocking agent for rapid sequence intubation (RSI).',
-          onset: '30-60 seconds',
-          duration: '5-10 minutes',
-          contraindications: 'Malignant hyperthermia susceptibility, hyperkalemia, or severe burns.',
-          pearls: 'Fastest onset NMB agent. Can cause hyperkalemia (increases serum potassium by 0.5 mEq/L). Triggers malignant hyperthermia. Can cause fasciculations (muscle twitching) on administration.'
-        },
-        full: {
-          moa: 'Depolarizing neuromuscular blocking agent. It acts as an acetylcholine (ACh) receptor agonist at the neuromuscular junction, causing sustained depolarization and preventing muscle contraction.',
-          class: 'Neuromuscular Blocking Agent (Depolarizing)',
-          use: 'Rapid Sequence Intubation (RSI) due to its rapid onset and short duration of action.',
-          onset: '30-60 seconds',
-          duration: '5-10 minutes',
-          excretion: 'Hydrolyzed by plasma cholinesterase (pseudocholinesterase) to inactive metabolites.',
-          contraindications: 'Personal or family history of malignant hyperthermia (MH), hyperkalemia, severe burns, crush injuries, or neuromuscular diseases.',
-          adverse_effects: 'Hyperkalemia, malignant hyperthermia, myalgia, fasciculations, and increased intraocular pressure.',
-          pearls: 'The only depolarizing NMB. It is the drug of choice for RSI when MH is not a concern. Watch for signs of hyperkalemia, especially in patients with burns or crush injuries, as it can be life-threatening. Can be pre-treated with a small dose of a non-depolarizing agent to reduce fasciculations and myalgia.'
-        }
-      },
-      Rocuronium: {
-        short: {
-          use: 'Non-depolarizing neuromuscular blocking agent for routine and RSI intubation.',
-          onset: '60-90 seconds',
-          duration: '30-60 minutes',
-          contraindications: 'Hypersensitivity to rocuronium or bromide.',
-          pearls: 'Widely used. Onset can be almost as fast as Succinylcholine at a higher dose (1.2 mg/kg). Reversible with Sugammadex (Bridion), which provides a faster and more reliable reversal than neostigmine.'
-        },
-        full: {
-          moa: 'Non-depolarizing neuromuscular blocking agent. It acts as a competitive antagonist at the nicotinic acetylcholine receptors at the neuromuscular junction, preventing acetylcholine from binding and causing muscle paralysis.',
-          class: 'Neuromuscular Blocking Agent (Non-depolarizing)',
-          use: 'Induction and maintenance of muscle paralysis for intubation and surgery.',
-          onset: '60-90 seconds for a standard dose (0.6 mg/kg); 30-60 seconds for a high dose (1.2 mg/kg).',
-          duration: '30-60 minutes',
-          excretion: 'Primarily hepatobiliary excretion.',
-          contraindications: 'Known hypersensitivity to rocuronium or bromide.',
-          adverse_effects: 'Bradycardia, hypotension (less than other non-depolarizing agents), and residual muscle paralysis.',
-          pearls: 'Reversible with Sugammadex, which can rapidly reverse paralysis, making it a good choice for situations where a "can\'t intubate, can\'t ventilate" scenario is a concern. The high dose (1.2 mg/kg) is often used for RSI.'
-        }
-      },
-      Midazolam: {
-        short: {
-          use: 'Short-acting benzodiazepine for sedation, anxiolysis, and amnesia.',
-          onset: '1-3 minutes',
-          duration: '15-30 minutes',
-          contraindications: 'Acute narrow-angle glaucoma, severe hypotension, or hypersensitivity.',
-          pearls: 'Often used for pre-operative anxiolysis. Can cause significant respiratory depression, especially in combination with opioids. Synergistic with opioids and other sedatives.'
-        },
-        full: {
-          moa: 'Benzodiazepine. It enhances the effect of GABA at the GABA-A receptor, leading to sedation, anxiolysis, and anterograde amnesia.',
-          class: 'Benzodiazepine',
-          use: 'Pre-operative sedation, anxiolysis, and as an adjunct to general anesthesia. Also used for procedural sedation.',
-          onset: '1-3 minutes (IV)',
-          duration: '15-30 minutes',
-          excretion: 'Extensive hepatic metabolism (CYP3A4).',
-          contraindications: 'Acute narrow-angle glaucoma, hypersensitivity to benzodiazepines. Use with extreme caution in patients with severe respiratory depression, hypotension, or alcohol intoxication.',
-          adverse_effects: 'Respiratory depression, hypotension, paradoxical reactions (agitation, aggression), and anterograde amnesia.',
-          pearls: 'Most common benzodiazepine in anesthesia due to its rapid onset and short duration. Its effects are synergistic with opioids and other CNS depressants. Can be reversed with Flumazenil.'
-        }
-      },
-      Precedex: {
-        short: {
-          use: 'IV sedative and analgesic, particularly for awake fiberoptic intubation and ICU sedation.',
-          onset: '10-20 minutes',
-          duration: '1-4 hours (after discontinuation)',
-          contraindications: 'Severe bradycardia or heart block without a pacemaker.',
-          pearls: 'Patient remains arousable and cooperative ("awake sedation"). Provides analgesia without respiratory depression. Can cause significant hypotension and bradycardia, especially with the loading dose.'
-        },
-        full: {
-          moa: 'Alpha-2 adrenergic receptor agonist. It works by inhibiting the release of norepinephrine, leading to sedation and analgesia.',
-          class: 'Alpha-2 Agonist',
-          use: 'Procedural sedation, sedation of intubated and mechanically ventilated patients in the ICU, and as an adjunct to general anesthesia. Excellent for "awake" sedation due to lack of respiratory depression.',
-          onset: '10-20 minutes after infusion begins',
-          duration: '1-4 hours after discontinuation',
-          excretion: 'Hepatic metabolism.',
-          contraindications: 'Hypersensitivity. Use with caution in patients with pre-existing heart block, severe bradycardia, or hypotension.',
-          adverse_effects: 'Bradycardia, hypotension, and transient hypertension during loading dose.',
-          pearls: 'The patient is arousable and cooperative, making it an ideal choice for awake fiberoptic intubation. It provides sedation and analgesia without causing significant respiratory depression. A loading dose should be infused slowly to avoid acute hypotension or bradycardia.'
-        }
-      },
-      Naloxone: {
-        short: {
-          use: 'Opioid antagonist used to reverse the effects of opioid overdose or respiratory depression.',
-          onset: '1-2 minutes (IV)',
-          duration: '30-60 minutes',
-          contraindications: 'Hypersensitivity to naloxone.',
-          pearls: 'Has a shorter half-life than most opioids. The patient may re-narcotize. Administer in small, titrated doses to reverse respiratory depression without causing severe pain or withdrawal.'
-        },
-        full: {
-          moa: 'Competitive opioid receptor antagonist. It has a high affinity for mu-opioid receptors, effectively blocking the binding of opioids and reversing their effects.',
-          class: 'Opioid Antagonist',
-          use: 'Reversal of opioid-induced respiratory depression, CNS depression, and analgesia.',
-          onset: '1-2 minutes (IV)',
-          duration: '30-60 minutes',
-          excretion: 'Rapid hepatic metabolism.',
-          contraindications: 'Hypersensitivity to naloxone.',
-          adverse_effects: 'Rapid reversal can cause acute withdrawal symptoms, hypertension, tachycardia, pulmonary edema, and ventricular fibrillation.',
-          pearls: 'Has a shorter duration of action than many opioids. Patients may require repeat doses or a continuous infusion to prevent re-narcotization. Titrate carefully to reverse respiratory depression without reversing all analgesia and causing pain.'
-        }
-      },
-      Neostigmine: {
-        short: {
-          use: 'Reversal agent for non-depolarizing neuromuscular blocking agents.',
-          onset: '5-10 minutes',
-          duration: '30-60 minutes',
-          contraindications: 'Bowel or bladder obstruction, or peritonitis.',
-          pearls: 'Must be co-administered with an anticholinergic (Glycopyrrolate or Atropine) to prevent severe bradycardia and increased secretions. Max dose is 5 mg for an adult.'
-        },
-        full: {
-          moa: 'Acetylcholinesterase inhibitor. It increases the concentration of acetylcholine at the neuromuscular junction, allowing it to compete with the non-depolarizing neuromuscular blocking agent.',
-          class: 'Acetylcholinesterase Inhibitor',
-          use: 'Reversal of residual non-depolarizing neuromuscular blockade.',
-          onset: '5-10 minutes',
-          duration: '30-60 minutes',
-          excretion: 'Metabolism by plasma esterases and renal excretion.',
-          contraindications: 'Bowel or urinary obstruction, peritonitis, or known hypersensitivity.',
-          adverse_effects: 'Muscarinic side effects (bradycardia, salivation, increased secretions, bronchospasm, nausea, vomiting) if not co-administered with an anticholinergic.',
-          pearls: 'Always administered with an anticholinergic (typically Glycopyrrolate) to counteract muscarinic side effects. The max dose is 5 mg to avoid a "cholinergic crisis." It should only be given after some spontaneous recovery of neuromuscular function has occurred.'
-        }
-      },
-      Sugammadex: {
-        short: {
-          use: 'Reversal agent for rocuronium and vecuronium.',
-          onset: '1-3 minutes',
-          duration: 'Complete reversal of blockade within minutes.',
-          contraindications: 'Hypersensitivity to sugammadex.',
-          pearls: 'The "game-changer" for NMB reversal. Provides a rapid and reliable reversal. It does not have anticholinergic side effects and does not require co-administration of another drug. It can reverse deep blockade.'
-        },
-        full: {
-          moa: 'A modified gamma-cyclodextrin. It encapsulates rocuronium and vecuronium molecules in the plasma, reducing the concentration of the muscle relaxant at the neuromuscular junction.',
-          class: 'Selective Relaxant Binding Agent',
-          use: 'Reversal of neuromuscular blockade induced by rocuronium or vecuronium.',
-          onset: '1-3 minutes',
-          duration: 'Complete reversal of blockade within minutes.',
-          excretion: 'Primarily renal excretion.',
-          contraindications: 'Known hypersensitivity to sugammadex.',
-          adverse_effects: 'Anaphylaxis (rare), taste perversion, nausea, and vomiting.',
-          pearls: 'Provides a rapid and reliable reversal of rocuronium and vecuronium, even from a deep blockade. It does not have muscarinic side effects, so no anticholinergic is needed. It may interfere with oral contraceptive effectiveness; advise patients to use a non-hormonal method for 7 days.'
-        }
-      },
-      Glycopyrrolate: {
-        short: {
-          use: 'Anticholinergic used to prevent bradycardia and reduce secretions.',
-          onset: '2-3 minutes (IV)',
-          duration: '2-4 hours',
-          contraindications: 'Glaucoma, myasthenia gravis, or urinary retention.',
-          pearls: 'Paired with neostigmine to prevent bradycardia. Less likely to cross the blood-brain barrier than atropine, so it has fewer CNS side effects. Reduces salivary and respiratory secretions.'
-        },
-        full: {
-          moa: 'Muscarinic anticholinergic. It antagonizes muscarinic acetylcholine receptors, which blocks parasympathetic effects such as salivation and bradycardia.',
-          class: 'Anticholinergic',
-          use: 'Prevention of bradycardia during neostigmine reversal, to reduce salivary and respiratory secretions, and as a vagolytic.',
-          onset: '2-3 minutes (IV)',
-          duration: '2-4 hours',
-          excretion: 'Primarily renal excretion.',
-          contraindications: 'Glaucoma (may increase intraocular pressure), myasthenia gravis, urinary retention, and gastrointestinal obstruction.',
-          adverse_effects: 'Tachycardia, dry mouth, blurred vision, and urinary retention.',
-          pearls: 'The drug of choice to pair with neostigmine due to its similar onset and duration. It does not cross the blood-brain barrier as readily as atropine, resulting in fewer CNS side effects like sedation or delirium.'
-        }
-      },
-      Atropine: {
-        short: {
-          use: 'Anticholinergic for treatment of bradycardia and to reduce secretions.',
-          onset: '1 minute (IV)',
-          duration: '15-30 minutes',
-          contraindications: 'Glaucoma, myasthenia gravis, or urinary retention.',
-          pearls: 'Faster onset than Glycopyrrolate. Can be used to treat acute bradycardia. Can cause a paradoxical decrease in heart rate at very low doses.'
-        },
-        full: {
-          moa: 'Muscarinic anticholinergic. It antagonizes muscarinic acetylcholine receptors, blocking the vagal nerve effects on the heart, increasing heart rate.',
-          class: 'Anticholinergic',
-          use: 'Treatment of symptomatic bradycardia, and to decrease salivary secretions.',
-          onset: '1 minute (IV)',
-          duration: '15-30 minutes',
-          excretion: 'Primarily renal excretion.',
-          contraindications: 'Glaucoma (may increase intraocular pressure), myasthenia gravis, urinary retention, and gastrointestinal obstruction.',
-          adverse_effects: 'Tachycardia, dry mouth, blurred vision, and urinary retention. Can cause CNS side effects (agitation, delirium) as it crosses the blood-brain barrier.',
-          pearls: 'A faster-acting anticholinergic than Glycopyrrolate. The initial dose for bradycardia is typically 0.5 mg. Very low doses (<0.5 mg) can cause a paradoxical bradycardia. It crosses the blood-brain barrier and can cause central anticholinergic syndrome.'
-        }
-      },
-      Phenylephrine: {
-        short: {
-          use: 'Vasopressor to increase blood pressure, often used for hypotension from vasodilation.',
-          onset: '1 minute (IV)',
-          duration: '5-10 minutes',
-          contraindications: 'Severe hypertension, pheochromocytoma, or severe peripheral vascular disease.',
-          pearls: 'A pure alpha-1 agonist. Increases blood pressure by vasoconstriction. Can cause reflex bradycardia. Often the first-line choice for hypotension secondary to spinal anesthesia.'
-        },
-        full: {
-          moa: 'Pure alpha-1 adrenergic receptor agonist. It stimulates alpha-1 receptors, causing peripheral vasoconstriction and an increase in systemic vascular resistance (SVR), leading to increased blood pressure.',
-          class: 'Vasopressor',
-          use: 'Treatment of hypotension, especially that caused by vasodilation from anesthesia (e.g., spinal, volatile agents).',
-          onset: '1 minute (IV)',
-          duration: '5-10 minutes',
-          excretion: 'Metabolized by monoamine oxidase (MAO) and catechol-O-methyltransferase (COMT).',
-          contraindications: 'Severe hypertension, ventricular tachycardia, pheochromocytoma, or narrow-angle glaucoma.',
-          adverse_effects: 'Reflex bradycardia, hypertension, and headache. May decrease cardiac output due to increased afterload.',
-          pearls: 'Also known as "neo." It is a good first-line choice for hypotension in the operating room. Since it does not increase heart rate, it is useful in tachycardic patients. It can be given as a bolus or a continuous infusion.'
-        }
-      },
-      Ephedrine: {
-        short: {
-          use: 'Vasopressor to increase blood pressure and heart rate.',
-          onset: '1-2 minutes (IV)',
-          duration: '10-20 minutes',
-          contraindications: 'Severe hypertension, pheochromocytoma, or taking MAO inhibitors.',
-          pearls: 'Mixed alpha and beta agonist. Increases both blood pressure and heart rate. Tachyphylaxis (diminished effect with repeated doses) can occur. Good for hypotension with bradycardia.'
-        },
-        full: {
-          moa: 'Mixed-acting sympathomimetic. It directly stimulates alpha and beta receptors and indirectly causes the release of norepinephrine from nerve terminals.',
-          class: 'Vasopressor, Sympathomimetic',
-          use: 'Treatment of hypotension, particularly in the presence of bradycardia or when both blood pressure and heart rate need to be increased.',
-          onset: '1-2 minutes (IV)',
-          duration: '10-20 minutes',
-          excretion: 'Renal excretion.',
-          contraindications: 'Severe hypertension, ventricular fibrillation, pheochromocytoma, or concurrent use with MAO inhibitors.',
-          adverse_effects: 'Tachycardia, hypertension, palpitations, and anxiety.',
-          pearls: 'Less potent than epinephrine or norepinephrine. Tachyphylaxis is common, meaning repeated doses may become less effective as norepinephrine stores are depleted. The standard dose is 5-10 mg IV.'
-        }
-      },
-      Norepinephrine: {
-        short: {
-          use: 'Potent vasopressor for septic shock and severe hypotension.',
-          onset: '1-2 minutes',
-          duration: '1-2 minutes (after discontinuation)',
-          contraindications: 'Hypovolemic hypotension.',
-          pearls: 'Primarily an alpha-1 agonist. First-line pressor for septic shock. Requires central line administration if possible due to risk of extravasation and necrosis.'
-        },
-        full: {
-          moa: 'Potent alpha-1 and beta-1 adrenergic receptor agonist. It causes intense peripheral vasoconstriction (alpha-1) and increases heart rate and contractility (beta-1).',
-          class: 'Vasopressor',
-          use: 'First-line agent for the treatment of septic shock and other forms of severe hypotension unresponsive to fluid resuscitation.',
-          onset: '1-2 minutes',
-          duration: '1-2 minutes (after discontinuation)',
-          excretion: 'Metabolized by MAO and COMT.',
-          contraindications: 'Hypovolemic hypotension (unless given with appropriate fluid resuscitation).',
-          adverse_effects: 'Severe hypertension, reflex bradycardia, limb ischemia, and tissue necrosis if extravasation occurs.',
-          pearls: 'Also known as "Levophed." It is the first-line choice for septic shock. Due to the risk of tissue necrosis with extravasation, it should be administered via a central venous catheter whenever possible. A peripheral IV site should be monitored closely.'
-        }
-      },
-      Esmolol: {
-        short: {
-          use: 'Ultra-short acting beta-blocker for intraoperative tachycardia and hypertension.',
-          onset: '1-2 minutes',
-          duration: '10-20 minutes',
-          contraindications: 'Decompensated heart failure, cardiogenic shock, or severe bradycardia.',
-          pearls: 'Beta-1 selective. Excellent for acutely controlling heart rate and blood pressure. Can be used to blunt the sympathetic response to intubation. Its short duration makes it easy to titrate.'
-        },
-        full: {
-          moa: 'Beta-1 selective adrenergic receptor antagonist. It blocks beta-1 receptors in the heart, decreasing heart rate, contractility, and blood pressure.',
-          class: 'Beta-Blocker',
-          use: 'Intraoperative tachycardia and hypertension, especially for short-term control. Can be used to blunt the sympathetic response to intubation or surgical stimulation.',
-          onset: '1-2 minutes (IV)',
-          duration: '10-20 minutes',
-          excretion: 'Rapid metabolism by plasma esterases.',
-          contraindications: 'Decompensated heart failure, cardiogenic shock, severe bradycardia, or second- or third-degree heart block.',
-          adverse_effects: 'Hypotension, bradycardia, and heart failure.',
-          pearls: 'An ultra-short acting beta-blocker, making it a good choice for acute intraoperative issues. Its short half-life allows for quick titration of effect. Often used in cardiac cases or to control heart rate in pheochromocytoma patients.'
-        }
-      },
-      Metoprolol: {
-        short: {
-          use: 'Beta-blocker for hypertension and tachycardia. Can be used as a pre-medication for cardiac patients.',
-          onset: '5-10 minutes (IV)',
-          duration: '3-6 hours',
-          contraindications: 'Decompensated heart failure, cardiogenic shock, or severe bradycardia.',
-          pearls: 'A longer-acting beta-blocker. Good for long-term control of blood pressure and heart rate. Can cause bradycardia and hypotension.'
-        },
-        full: {
-          moa: 'Beta-1 selective adrenergic receptor antagonist. It blocks beta-1 receptors in the heart, decreasing heart rate, contractility, and blood pressure.',
-          class: 'Beta-Blocker',
-          use: 'Management of hypertension, tachycardia, and to reduce myocardial oxygen demand in patients with coronary artery disease.',
-          onset: '5-10 minutes (IV)',
-          duration: '3-6 hours',
-          excretion: 'Hepatic metabolism (CYP2D6) and renal excretion.',
-          contraindications: 'Decompensated heart failure, cardiogenic shock, severe bradycardia, or second- or third-degree heart block.',
-          adverse_effects: 'Hypotension, bradycardia, fatigue, and dizziness.',
-          pearls: 'More commonly used for routine management of hypertension and heart rate than for acute crisis. Unlike Esmolol, its longer duration means a more sustained effect. Good for patients on chronic beta-blocker therapy to prevent withdrawal.'
-        }
-      },
-      Hydralazine: {
-        short: {
-          use: 'Vasodilator for acute hypertension.',
-          onset: '10-20 minutes (IV)',
-          duration: '2-4 hours',
-          contraindications: 'Coronary artery disease (may cause reflex tachycardia and myocardial ischemia).',
-          pearls: 'Arterial vasodilator. It has a slow onset, so it is not for an immediate hypertensive crisis. Can cause reflex tachycardia and is therefore not the best choice for patients with CAD.'
-        },
-        full: {
-          moa: 'Direct-acting vasodilator that acts primarily on arterial smooth muscle, reducing systemic vascular resistance and blood pressure.',
-          class: 'Vasodilator',
-          use: 'Management of moderate to severe hypertension, particularly in pre-eclampsia or post-operative hypertension.',
-          onset: '10-20 minutes (IV)',
-          duration: '2-4 hours',
-          excretion: 'Hepatic metabolism.',
-          contraindications: 'Coronary artery disease, mitral valvular rheumatic heart disease, and hypersensitivity.',
-          adverse_effects: 'Reflex tachycardia, palpitations, headache, and flushing. Can increase myocardial oxygen demand and cause ischemia in CAD patients.',
-          pearls: 'Has a relatively slow onset of action compared to other agents like labetalol or nitroglycerin. It is a good choice for a slow-developing hypertensive issue but is not a good choice for acute hypertensive emergencies due to the delayed onset and risk of reflex tachycardia.'
-        }
-      },
-      Nitroglycerin: {
-        short: {
-          use: 'Vasodilator for hypertension and myocardial ischemia.',
-          onset: '1-3 minutes (IV)',
-          duration: '3-5 minutes',
-          contraindications: 'Hypotension, phosphodiesterase inhibitors (e.g., Viagra), or severe anemia.',
-          pearls: 'Venous vasodilator at low doses, arterial vasodilator at high doses. Used to treat hypertension and chest pain. Can cause a severe drop in blood pressure and a headache.'
-        },
-        full: {
-          moa: 'Nitric oxide donor. It causes vasodilation primarily in veins at low doses and in arteries at high doses, leading to reduced preload and afterload.',
-          class: 'Nitrate Vasodilator',
-          use: 'Treatment of hypertension, myocardial ischemia, and congestive heart failure.',
-          onset: '1-3 minutes (IV)',
-          duration: '3-5 minutes (IV infusion is continuous)',
-          excretion: 'Extensive hepatic metabolism.',
-          contraindications: 'Hypotension, severe anemia, increased intracranial pressure, and use with phosphodiesterase-5 inhibitors (e.g., sildenafil) within 24 hours.',
-          adverse_effects: 'Headache (most common), flushing, hypotension, and reflex tachycardia.',
-          pearls: 'Used to treat hypertension and to manage chest pain. It works primarily on veins, which reduces preload and is beneficial for pulmonary edema. A continuous infusion is required for sustained effect. Can cause a severe drop in blood pressure when combined with other vasodilators or in hypovolemic patients.'
-        }
-      },
-      Dexamethasone: {
-        short: {
-          use: 'Corticosteroid for antiemetic effects, cerebral edema, and inflammation.',
-          onset: 'Hours to days for full anti-inflammatory effect; 1-2 hours for antiemetic effect.',
-          duration: '2-3 days',
-          contraindications: 'Systemic fungal infections, or hypersensitivity to glucocorticoids.',
-          pearls: 'Commonly used as a prophylactic antiemetic, often given at the beginning of the case. Can cause an increase in blood glucose.'
-        },
-        full: {
-          moa: 'Corticosteroid. It has anti-inflammatory, immunosuppressive, and metabolic effects. The antiemetic effect is thought to be related to its ability to inhibit prostaglandin synthesis and reduce inflammation in the chemoreceptor trigger zone.',
-          class: 'Glucocorticoid',
-          use: 'Prophylaxis and treatment of post-operative nausea and vomiting (PONV), cerebral edema, and to reduce inflammation.',
-          onset: '1-2 hours for antiemetic effect',
-          duration: '2-3 days',
-          excretion: 'Primarily hepatic metabolism.',
-          contraindications: 'Systemic fungal infections, hypersensitivity to glucocorticoids. Use with caution in patients with diabetes mellitus, hypertension, or peptic ulcer disease.',
-          adverse_effects: 'Hyperglycemia, fluid retention, hypertension, and mood changes.',
-          pearls: 'One of the most effective antiemetics and is often given at the start of the case with induction. A common dose is 4-8 mg IV. Monitor blood glucose, especially in diabetic patients, as it can cause significant hyperglycemia.'
-        }
-      },
-      Ondansetron: {
-        short: {
-          use: 'Antiemetic for nausea and vomiting.',
-          onset: '5 minutes',
-          duration: '4-8 hours',
-          contraindications: 'Congenital long QT syndrome, or hypersensitivity to ondansetron.',
-          pearls: '5-HT3 antagonist. Effective for PONV. Can prolong the QT interval, so use with caution in patients with heart rhythm issues.'
-        },
-        full: {
-          moa: 'Selective 5-HT3 receptor antagonist. It blocks serotonin receptors in the chemoreceptor trigger zone and on vagal nerve terminals, preventing nausea and vomiting.',
-          class: 'Antiemetic (5-HT3 Antagonist)',
-          use: 'Prophylaxis and treatment of post-operative nausea and vomiting (PONV).',
-          onset: '5 minutes (IV)',
-          duration: '4-8 hours',
-          excretion: 'Hepatic metabolism (CYP450).',
-          contraindications: 'Congenital long QT syndrome, or concomitant use with apomorphine.',
-          adverse_effects: 'QT prolongation, headache, constipation, and dizziness.',
-          pearls: 'One of the most commonly used antiemetics. It is generally well-tolerated. The main side effect to watch for is QT prolongation, which can lead to arrhythmias like Torsades de Pointes, especially in patients with pre-existing cardiac conditions or those on other QT-prolonging medications.'
-        }
-      },
-      Haloperidol: {
-        short: {
-          use: 'Antiemetic and antipsychotic.',
-          onset: '20-30 minutes',
-          duration: '12-24 hours',
-          contraindications: 'Parkinson\'s disease, CNS depression, or long QT syndrome.',
-          pearls: 'Dopamine antagonist. Very effective antiemetic, especially for refractory nausea. Can cause sedation and extrapyramidal side effects.'
-        },
-        full: {
-          moa: 'Butyrophenone antipsychotic that acts as a potent dopamine (D2) receptor antagonist.',
-          class: 'Antiemetic, Antipsychotic',
-          use: 'Treatment of post-operative nausea and vomiting (PONV), particularly for refractory cases. Also used for acute agitation.',
-          onset: '20-30 minutes (IV)',
-          duration: '12-24 hours',
-          excretion: 'Hepatic metabolism.',
-          contraindications: 'Parkinson\'s disease, severe CNS depression, or prolonged QT interval.',
-          adverse_effects: 'QT prolongation, sedation, extrapyramidal symptoms (dystonia, tardive dyskinesia), and neuroleptic malignant syndrome (rare).',
-          pearls: 'Very effective, but carries a risk of QT prolongation and extrapyramidal side effects. It is often used as a "rescue" antiemetic for patients with severe or refractory PONV.'
-        }
+/* TABS */
+const tabs = document.querySelectorAll('.tab');
+const sections = {'tab-case':document.getElementById('tab-case'),'tab-meds':document.getElementById('tab-meds'),'tab-pearls':document.getElementById('tab-pearls'),'tab-calcs':document.getElementById('tab-calcs')};
+function activateTab(id){ tabs.forEach(t=>t.classList.remove('active')); const activeTab=document.querySelector('.tab[data-target="'+id+'"]'); if(activeTab){activeTab.classList.add('active');} Object.values(sections).forEach(s=>s.classList.remove('active')); if(sections[id]) sections[id].classList.add('active'); localStorage.setItem('srna_last_tab', id); }
+tabs.forEach(t=>t.addEventListener('click', ()=>activateTab(t.dataset.target)));
+activateTab(localStorage.getItem('srna_last_tab') || 'tab-case');
+
+/* CASE TRACKER */
+const KEY='srna_cases_v36';
+const $=id=>document.getElementById(id);
+const getCases=()=>{ try{return JSON.parse(localStorage.getItem(KEY)||'[]');}catch(e){return [];} };
+const saveCases=arr=>localStorage.setItem(KEY, JSON.stringify(arr));
+const uid=()=>Math.random().toString(36).slice(2,9);
+function durationStr(start,end){ if(!start||!end) return ""; const [sh,sm]=start.split(':').map(Number), [eh,em]=end.split(':').map(Number); let a=sh*60+sm, b=eh*60+em; if(b<a) b+=1440; const d=b-a; return Math.floor(d/60)+'h '+(d%60)+'m'; }
+function renderSummary(arr){ const total=arr.length; let mins=0; const asa={}; arr.forEach(c=>{ if(c.start&&c.end){ let [sh,sm]=c.start.split(':').map(Number), [eh,em]=c.end.split(':').map(Number); let a=sh*60+sm, b=eh*60+em; if(b<a) b+=1440; mins+=b-a; } if(c.asa){ asa[c.asa]=(asa[c.asa]||0)+1; } }); const h=Math.floor(mins/60), m=mins%60; const parts=['<span class="badge badge-soft">Cases: '+total+'</span>','<span class="badge badge-soft">Hours: '+h+'h '+m+'m</span>'].concat(Object.entries(asa).map(([k,v])=>'<span class="badge badge-soft">ASA '+k+': '+v+'</span>')); $('sumBar').innerHTML=parts.join(' '); }
+function renderCases(){ const arr=getCases(), list=$('caseList'); if(!arr.length){ list.innerHTML='<div class="muted">No cases yet</div>'; renderSummary(arr); return; } list.innerHTML = arr.map(c=>`<div class="case-card" data-id="${c.id}"><div style="font-weight:800">${c.date||''} — ${c.proc||''}</div><div class="muted">${c.anes||''} • ASA ${c.asa||''} • ${c.caseType||''}</div><div class="muted">Duration: ${durationStr(c.start,c.end)}</div></div>`).join(''); renderSummary(arr); }
+function clearForm(){ ['cDate','cStart','cEnd','cAge','cSex','cASA','cProc','cAnes','cAirway','cType','cNotes'].forEach(id=>$(id).value=''); }
+$('saveCase').addEventListener('click', ()=>{ const c={ id:uid(), date:$('cDate').value, start:$('cStart').value, end:$('cEnd').value, age:$('cAge').value, sex:$('cSex').value, asa:$('cASA').value, proc:$('cProc').value, anes:$('cAnes').value, airway:$('cAirway').value, caseType:$('cType').value, notes:$('cNotes').value }; const arr=getCases(); arr.push(c); saveCases(arr); renderCases(); clearForm(); });
+$('clearFields').addEventListener('click', clearForm);
+$('clearAll').addEventListener('click', ()=>{ if(confirm('Delete all saved cases?')){ saveCases([]); renderCases(); }});
+$('exportAll').addEventListener('click', ()=>{ const arr=getCases(); const header=["Date","Start","End","Age","Sex","ASA","Procedure","Anesthetic","Airway","Case Type","Notes"]; const rows=arr.map(c=>[c.date,c.start,c.end,c.age,c.sex,c.asa,c.proc,c.anes,c.airway,c.caseType,c.notes]); const csv=[header].concat(rows).map(r=>r.map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(",")).join("\n"); const blob=new Blob([csv],{type:"text/csv"}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='cases.csv'; a.click(); URL.revokeObjectURL(url); });
+const caseMask=$('caseMask'), caseBody=$('caseBody'); let currentId=null;
+function viewHTML(c){ return `<div class="grid g-2"><div><b>Date:</b> ${c.date||''}</div><div><b>Time:</b> ${c.start||''}–${c.end||''} (${durationStr(c.start,c.end)})</div><div style="grid-column:1/-1"><b>Procedure:</b> ${c.proc||''}</div><div><b>Anesthetic:</b> ${c.anes||''}</div><div><b>ASA:</b> ${c.asa||''}</div><div><b>Case Type:</b> ${c.caseType||''}</div><div><b>Airway:</b> ${c.airway||''}</div><div style="grid-column:1/-1"><b>Notes:</b><br>${(c.notes||'').replace(/\n/g,'<br>')}</div></div>`; }
+function editHTML(c){ return `<div class="grid g-2"><label>Date<input id="eDate" type="date" class="input" value="${c.date||''}"></label><label>Start<input id="eStart" type="time" class="input" value="${c.start||''}"></label><label>End<input id="eEnd" type="time" class="input" value="${c.end||''}"></label><label>Procedure<input id="eProc" class="input" value="${c.proc||''}"></label><label>Anesthetic<input id="eAnes" class="input" value="${c.anes||''}"></label><label>ASA<select id="eASA" class="input"><option></option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option><option>I-E</option><option>II-E</option><option>III-E</option><option>IV-E</option><option>V-E</option></select></label><label>Case Type<input id="eType" class="input" value="${c.caseType||''}"></label><label>Airway<input id="eAirway" class="input" value="${c.airway||''}"></label><label style="grid-column:1/-1">Notes<textarea id="eNotes" class="input" rows="3">${c.notes||''}</textarea></label></div>`; }
+document.getElementById('caseList').addEventListener('click', (e)=>{ const card=e.target.closest('.case-card'); if(!card) return; currentId=card.dataset.id; const c=getCases().find(x=>x.id===currentId); if(!c) return; caseBody.innerHTML=viewHTML(c); document.getElementById('caseEdit').style.display='inline-block'; document.getElementById('caseSave').style.display='none'; caseMask.classList.add('active'); });
+document.getElementById('caseClose').addEventListener('click', ()=> caseMask.classList.remove('active'));
+document.getElementById('caseDelete').addEventListener('click', ()=>{ if(!currentId) return; saveCases(getCases().filter(x=>x.id!==currentId)); renderCases(); caseMask.classList.remove('active'); });
+document.getElementById('caseExport').addEventListener('click', ()=>{ if(!currentId) return; const c=getCases().find(x=>x.id===currentId); if(!c) return; const header=["Date","Start","End","Age","Sex","ASA","Procedure","Anesthetic","Airway","Case Type","Notes"]; const row=[c.date,c.start,c.end,c.age,c.sex,c.asa,c.proc,c.anes,c.airway,c.caseType,c.notes]; const csv=header.join(",")+"\n"+row.map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(","); const blob=new Blob([csv],{type:"text/csv"}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='case-'+(c.date||'entry')+'.csv'; a.click(); URL.revokeObjectURL(url); });
+document.getElementById('caseEdit').addEventListener('click', ()=>{ const c=getCases().find(x=>x.id===currentId); if(!c) return; caseBody.innerHTML=editHTML(c); document.getElementById('eASA').value=c.asa||''; document.getElementById('caseEdit').style.display='none'; document.getElementById('caseSave').style.display='inline-block'; });
+document.getElementById('caseSave').addEventListener('click', ()=>{ const arr=getCases(); const i=arr.findIndex(x=>x.id===currentId); if(i<0) return; const c=arr[i]; arr[i]={...c, date:document.getElementById('eDate').value, start:document.getElementById('eStart').value, end:document.getElementById('eEnd').value, proc:document.getElementById('eProc').value, anes:document.getElementById('eAnes').value, asa:document.getElementById('eASA').value, caseType:document.getElementById('eType').value, airway:document.getElementById('eAirway').value, notes:document.getElementById('eNotes').value}; saveCases(arr); renderCases(); caseMask.classList.remove('active'); });
+renderCases();
+
+/* MEDICATIONS */
+const DRUGS=[
+  // Induction
+  {cat:'Induction', name:'Propofol', brand:'Diprivan', unit:'mg/kg', range:[1,2.5],
+   quick:{use:'IV induction and maintenance of anesthesia; also used for sedation and antiemesis in small doses.',
+          onset:'30–45 sec', duration:'5–10 min (bolus)',
+          ci:'Unstable hemodynamics without support; allergy to components.',
+          ae:'Hypotension, respiratory depression, pain on injection; PRIS with prolonged high-dose infusions.',
+          pearls:'Consider lidocaine 20–40 mg IV to reduce injection pain; reduce dose in elderly/hypovolemia.'},
+   expanded:{cls:'Sedative-hypnotic', moa:'Potentiates GABA-A receptor activity.',
+             pk:'Rapid onset from high lipid solubility; large Vd; hepatic + extrahepatic clearance.',
+             excr:'Renal (metabolites).',
+             tips:'Induction 1–2.5 mg/kg; maintenance 50–150 mcg/kg/min; monitor hemodynamics.'}},
+  {cat:'Induction', name:'Etomidate', brand:'Amidate', unit:'mg/kg', range:[0.2,0.4],
+   quick:{use:'Hemodynamically stable IV induction in fragile patients.', onset:'30–60 sec', duration:'3–10 min',
+          ci:'Porphyria (relative).', ae:'Myoclonus, PONV, adrenal suppression with infusions.',
+          pearls:'Consider opioid/benzodiazepine to blunt myoclonus.'},
+   expanded:{cls:'Imidazole hypnotic', moa:'GABA-A modulation.',
+             pk:'Rapid onset/short duration; minimal CV depression.', excr:'Hepatic/ester hydrolysis; renal excretion.',
+             tips:'Induction 0.2–0.4 mg/kg; avoid prolonged infusions.'}},
+  {cat:'Induction', name:'Lidocaine (IV)', brand:'Xylocaine', unit:'mg/kg', range:[1,1],
+   quick:{use:'Blunts airway reflexes; adjunct analgesia; reduces propofol injection pain.',
+          onset:'1–2 min', duration:'10–20 min', ci:'Severe heart block without pacer; allergy.',
+          ae:'CNS toxicity at high levels; hypotension.', pearls:'Count toward total local-anesthetic load.'},
+   expanded:{cls:'Amide local anesthetic', moa:'Na⁺ channel blockade.',
+             pk:'Rapid onset IV.', excr:'Hepatic (CYP); renal metabolites.', tips:'1 mg/kg IV for airway blunting.'}},
+  {cat:'Induction', name:'Ketamine', brand:'Ketalar', unit:'mg/kg', range:[1,2],
+   quick:{use:'IV induction; analgesia at 0.2–0.5 mg/kg.', onset:'30–60 sec', duration:'5–15 min',
+          ci:'Uncontrolled HTN/ischemia (relative).', ae:'Emergence delirium, sialorrhea, ↑HR/↑BP.',
+          pearls:'Bronchodilator—useful in reactive airways.'},
+   expanded:{cls:'PCP derivative', moa:'NMDA antagonism (dissociative).',
+             pk:'High lipid solubility; hepatic to norketamine.', tips:'Consider glycopyrrolate for secretions.'}},
+
+  // NMBD
+  {cat:'NMBD', name:'Succinylcholine', brand:'Anectine', unit:'mg/kg', range:[1,1.5],
+   quick:{use:'RSI paralysis (rapid onset/offset).', onset:'30–60 sec', duration:'5–10 min',
+          ci:'Burns >24–48h, neuromuscular disease, hyperkalemia risk, MH.', ae:'Bradycardia (repeat), hyperkalemia, fasciculations.',
+          pearls:'Avoid in denervation/chronic paralysis.'},
+   expanded:{cls:'Depolarizing NMBD', moa:'Nicotinic agonist causing depolarization.', tips:'Consider atropine in peds.'}},
+  {cat:'NMBD', name:'Rocuronium', brand:'Zemuron', unit:'mg/kg', range:[0.6,1.2],
+   quick:{use:'Intubation paralysis; RSI at 1.2 mg/kg.', onset:'60–90 sec (1.2 mg/kg)', duration:'30–60 min',
+          ci:'Hypersensitivity', ae:'Rare anaphylaxis', pearls:'Sugammadex reversal 2–16 mg/kg.'},
+   expanded:{cls:'NDMB (aminosteroid)', moa:'Competitive nicotinic antagonist.', tips:'Volatiles potentiate block.'}},
+
+  // Opioids
+  {cat:'Opioid', name:'Fentanyl', brand:'Sublimaze', unit:'mcg/kg', range:[1,2],
+   quick:{use:'Analgesia, blunts sympathetic response.', onset:'2–3 min', duration:'30–60 min',
+          ci:'Hypersensitivity', ae:'Resp depression, chest wall rigidity (rapid/high doses).',
+          pearls:'25–50 mcg aliquots.'},
+   expanded:{cls:'Phenylpiperidine', moa:'μ-agonist.', tips:'Beware serotonergic interactions/MAOIs.'}},
+  {cat:'Opioid', name:'Remifentanil', brand:'Ultiva', unit:'mcg/kg/min', range:[0.05,2],
+   quick:{use:'Short-acting analgesia/suppression.', onset:'1–2 min', duration:'3–5 min (context-insensitive)',
+          ci:'Hypersensitivity', ae:'Bradycardia, hypotension, apnea.', pearls:'Bridge with longer-acting opioid before stop.'},
+   expanded:{cls:'Ester opioid', moa:'μ-agonist', tips:'Organ-independent clearance (esterases).'}},
+  {cat:'Opioid', name:'Hydromorphone', brand:'Dilaudid', unit:'mcg/kg', range:[15,15],
+   quick:{use:'Longer-acting analgesia.', onset:'5–10 min', duration:'3–5 h',
+          ci:'Hypersensitivity', ae:'Resp depression, pruritus, nausea.', pearls:'Typical 0.2–0.6 mg IV titration.'},
+   expanded:{cls:'Semi-synthetic opioid', moa:'μ-agonist', tips:'Renal caution (H3G metabolite).'}},
+
+  // Reversal
+  {cat:'Reversal', name:'Naloxone', brand:'Narcan', unit:'mcg/kg', range:[1,10],
+   quick:{use:'Opioid reversal.', onset:'1–2 min', duration:'30–60 min',
+          ci:'Opioid dependence (withdrawal).', ae:'Pain, hypertension, pulmonary edema (rare).',
+          pearls:'Titrate 20–40 mcg aliquots; consider infusion.'},
+   expanded:{cls:'Opioid antagonist', moa:'Competitive μ blockade.', tips:'Watch for renarcotization.'}},
+  {cat:'Reversal', name:'Neostigmine', brand:'Bloxiverz', unit:'mcg/kg', range:[25,75],
+   quick:{use:'NDMB reversal (with antimuscarinic).', onset:'7–11 min', duration:'45–60 min',
+          ci:'GI/GU obstruction.', ae:'Bradycardia, bronchospasm, secretions.', pearls:'Pair glycopyrrolate 10–20 mcg/kg.'},
+   expanded:{cls:'AChE inhibitor', moa:'↑ACh at NMJ.', tips:'Requires adequate TOF.'}},
+  {cat:'Reversal', name:'Sugammadex', brand:'Bridion', unit:'mg/kg', range:[2,16],
+   quick:{use:'Roc/Vec reversal.', onset:'2–3 min (2–4 mg/kg); immediate at 16 mg/kg',
+          ci:'Severe renal impairment (relative).', ae:'Bradycardia, anaphylaxis (rare).',
+          pearls:'2 mg/kg (TOF 2+), 4 mg/kg (deep), 16 mg/kg for RSI dose.'},
+   expanded:{cls:'Cyclodextrin chelator', moa:'Encapsulates roc/vec.', tips:'Warn about hormonal contraceptive interaction (backup 7 days).'}},
+  {cat:'Reversal', name:'Glycopyrrolate', brand:'Robinul', unit:'mcg/kg', range:[10,20],
+   quick:{use:'Counter muscarinic effects; antisialagogue.', onset:'1–2 min', duration:'2–4 h',
+          ci:'Glaucoma caution, GI obstruction.', ae:'Tachycardia, dry mouth, urinary retention.', pearls:'Does not cross BBB.'},
+   expanded:{cls:'Antimuscarinic (quaternary)', moa:'M3 antagonism.', tips:'0.2 mg per 1 mg neostigmine (approx).'}},
+  {cat:'Reversal', name:'Atropine', brand:'Atropen', unit:'mcg/kg', range:[10,20],
+   quick:{use:'Bradycardia (adult); antimuscarinic adjunct (peds).', onset:'1–2 min', duration:'1–2 h',
+          ci:'Glaucoma, tachyarrhythmias.', ae:'Tachycardia, CNS effects.', pearls:'Crosses BBB.'},
+   expanded:{cls:'Antimuscarinic (tertiary)', moa:'Muscarinic antagonism.', tips:'Consider glyco in adults with neostigmine.'}},
+
+  // Rescue
+  {cat:'Rescue', name:'Phenylephrine', brand:'Neo-Synephrine', unit:'mcg/kg', range:[1,2], fixed:'50–100 mcg IV',
+   quick:{use:'Vasoplegia/post-induction hypotension.', onset:'<1 min', duration:'5–10 min',
+          ci:'Severe bradyarrhythmias.', ae:'Reflex bradycardia, ↓CO.', pearls:'Pure α1; consider ephedrine if bradycardic.'},
+   expanded:{cls:'α1-agonist', moa:'Peripheral vasoconstriction.', tips:'Infusion 0.1–1 mcg/kg/min.'}},
+  {cat:'Rescue', name:'Ephedrine', brand:'—', unit:'mg', range:[5,10],
+   quick:{use:'Hypotension with low HR.', onset:'<1 min', duration:'10–15 min',
+          ci:'Tachyarrhythmias.', ae:'Tachycardia, hypertension.', pearls:'Tachyphylaxis with repeated doses.'},
+   expanded:{cls:'Indirect sympathomimetic', moa:'NE release; α/β agonism.', tips:'Use direct agent if catecholamine depleted.'}},
+  {cat:'Rescue', name:'Norepinephrine', brand:'Levophed', unit:'mcg/min', range:[2,20],
+   quick:{use:'Vasoplegic shock.', onset:'<1 min', duration:'1–2 min (infusion)',
+          ci:'Ischemia risk; extravasation.', ae:'Arrhythmias, ischemia.', pearls:'α1>β1—↑SVR with modest inotropy.'},
+   expanded:{cls:'Catecholamine', moa:'α1/β1 agonism.', tips:'Prefer central line for higher doses.'}},
+  {cat:'Rescue', name:'Vasopressin', brand:'Vasostrict', unit:'units/min', range:[0.01,0.04],
+   quick:{use:'Refractory vasoplegia (esp. ACE-I).', onset:'5–15 min', duration:'10–20 min',
+          ci:'Ischemic risk at high doses.', ae:'Hyponatremia, ischemia.', pearls:'No effect on HR/CO (pure V1).'},
+   expanded:{cls:'Peptide analog', moa:'V1 receptor agonist.', tips:'Adjunct to NE.'}},
+  {cat:'Rescue', name:'Esmolol', brand:'Brevibloc', unit:'mg', range:[10,30],
+   quick:{use:'Blunt tachycardia/HTN.', onset:'1–2 min', duration:'10–20 min',
+          ci:'Severe bradycardia, heart block.', ae:'Hypotension, bradycardia.', pearls:'Ultra–short acting β1 selective.'},
+   expanded:{cls:'β1-blocker', moa:'β1 antagonism.', tips:'RBC esterase metabolism.'}},
+  {cat:'Rescue', name:'Hydralazine', brand:'Apresoline', unit:'mg', range:[2.5,20],
+   quick:{use:'Afterload reduction/HTN.', onset:'10–20 min', duration:'3–8 h',
+          ci:'Tachycardia/angina.', ae:'Reflex tachycardia, headache.', pearls:'Slow onset—use when time allows.'},
+   expanded:{cls:'Direct arterial vasodilator', moa:'Smooth muscle relaxation.', tips:'Start 2.5–5 mg.'}},
+
+  // Adjuncts
+  {cat:'Adjunct', name:'Midazolam', brand:'Versed', unit:'mg', range:[1,2],
+   quick:{use:'Anxiolysis/amnesia.', onset:'2–3 min', duration:'30–60 min',
+          ci:'Severe respiratory depression risk.', ae:'Respiratory depression (with opioids).', pearls:'Small doses 1–2 mg; caution elderly/OSA.'},
+   expanded:{cls:'Benzodiazepine', moa:'GABA-A modulation.', tips:'CYP3A4 metabolism.'}},
+  {cat:'Adjunct', name:'Dexmedetomidine', brand:'Precedex', unit:'mcg/kg', range:[0.2,1],
+   quick:{use:'Sedation with minimal respiratory depression.', onset:'10–15 min', duration:'Dose-dependent',
+          ci:'Bradycardia/hypotension.', ae:'Bradycardia, hypotension.', pearls:'Avoid bolus in fragile patients.'},
+   expanded:{cls:'α2-agonist', moa:'Locus coeruleus α2 stimulation.', tips:'Infusion 0.2–0.7 mcg/kg/hr typical.'}},
+  {cat:'Adjunct', name:'Dexamethasone', brand:'Decadron', unit:'mg', range:[4,10],
+   quick:{use:'PONV prophylaxis; anti-inflammatory.', onset:'1–2 h', duration:'24–72 h',
+          ci:'Uncontrolled diabetes (glucose rise).', ae:'Hyperglycemia, mood changes.', pearls:'Give after induction.'},
+   expanded:{cls:'Glucocorticoid', moa:'Genomic anti-inflammatory.', tips:'4–8 mg common.'}},
+  {cat:'Adjunct', name:'Ondansetron', brand:'Zofran', unit:'mg', range:[4,8],
+   quick:{use:'Antiemetic.', onset:'10–30 min', duration:'4–8 h',
+          ci:'QT prolongation risk.', ae:'Headache, constipation, QT prolongation.', pearls:'4 mg IV near end of case.'},
+   expanded:{cls:'5-HT3 antagonist', moa:'Blocks 5-HT3 in CTZ/vagal afferents.', tips:'Adjust if severe hepatic impairment.'}},
+  {cat:'Adjunct', name:'Haloperidol', brand:'Haldol', unit:'mg', range:[1,2],
+   quick:{use:'Antiemetic/delirium adjunct.', onset:'10–20 min', duration:'4–6 h',
+          ci:'Parkinson’s disease, QT prolongation.', ae:'QT prolongation, EPS (rare single low dose).', pearls:'0.5–1 mg IV useful.'},
+   expanded:{cls:'Butyrophenone', moa:'D2 antagonism.', tips:'Monitor QT in high-risk.'}},
+  {cat:'Adjunct', name:'Ketorolac', brand:'Toradol', unit:'mg', range:[15,30],
+   quick:{use:'NSAID analgesia.', onset:'10–15 min', duration:'4–6 h',
+          ci:'Renal failure, GI bleed risk, pregnancy near term.', ae:'Bleeding, renal injury.', pearls:'Reduce dose in elderly/renal impairment.'},
+   expanded:{cls:'NSAID', moa:'COX inhibition.', tips:'Consider platelet effects for neuraxial timing.'}}
+];
+
+/* DRUGS ENRICHMENT */
+try {
+  const EXCR_MAP = {"Propofol": "Hepatic conjugation + extrahepatic clearance; inactive metabolites renally excreted.", "Etomidate": "Ester hydrolysis by hepatic/plasma esterases; renal excretion of metabolites.", "Lidocaine (IV)": "Hepatic CYP1A2/3A4 to active and inactive metabolites; renal excretion.", "Ketamine": "Hepatic CYP3A4/2B6/2C9 to norketamine; renal excretion.", "Succinylcholine": "Rapid hydrolysis by plasma pseudocholinesterase (butyrylcholinesterase); minimal renal excretion.", "Rocuronium": "Hepatic uptake/biliary excretion (primary) with ~10–20% renal excretion.", "Fentanyl": "Hepatic CYP3A4 metabolism; inactive metabolites renally excreted.", "Remifentanil": "Rapid hydrolysis by non-specific blood/tissue esterases; organ-independent; renal excretion of metabolites.", "Hydromorphone": "Hepatic glucuronidation to H3G; renal excretion (accumulates in renal impairment).", "Naloxone": "Hepatic glucuronidation; renal excretion; short half-life.", "Neostigmine": "Hepatic metabolism; predominant renal excretion (dose-reduce in renal impairment).", "Sugammadex": "Renally excreted unchanged; avoid in severe renal impairment.", "Glycopyrrolate": "Renal excretion (major) with some hepatic metabolism; quaternary—does not cross BBB.", "Atropine": "Hepatic metabolism; renal excretion; tertiary amine—crosses BBB.", "Phenylephrine": "Metabolized by MAO; renal excretion of metabolites.", "Ephedrine": "Partial hepatic metabolism; largely renally excreted unchanged; urinary pH–dependent.", "Norepinephrine": "Uptake/metabolism by MAO and COMT; metabolites renally excreted.", "Vasopressin": "Hepatic and renal metabolism; V1 receptor-mediated clearance.", "Esmolol": "Rapid hydrolysis by RBC esterases; renal excretion of metabolites.", "Hydralazine": "Hepatic acetylation; renal excretion of metabolites.", "Midazolam": "Hepatic CYP3A4 to 1‑OH‑midazolam; renal excretion (active metabolite).", "Dexmedetomidine": "Hepatic glucuronidation and CYP2A6; renal excretion of metabolites.", "Dexamethasone": "Hepatic metabolism; renal excretion.", "Ondansetron": "Hepatic CYP3A4/2D6/1A2; renal excretion; prolongs QT at high doses.", "Haloperidol": "Hepatic metabolism (CYP3A4/2D6); renal/biliary excretion.", "Ketorolac": "Hepatic metabolism; predominantly renal excretion (dose-reduce renally)."};
+  DRUGS.forEach(d => {
+    d.expanded = d.expanded || {};
+    const q = d.quick || {};
+    // Onset/Duration (fallbacks from quick)
+    if (!d.expanded.onset && q.onset) d.expanded.onset = q.onset;
+    if (!d.expanded.duration && q.duration) d.expanded.duration = q.duration;
+    // Uses (fallback from quick.use)
+    if (!d.expanded.uses && q.use) d.expanded.uses = q.use;
+    // Contraindications/Adverse effects (fallbacks)
+    if (!d.expanded.ci && q.ci) d.expanded.ci = q.ci;
+    if (!d.expanded.ae && q.ae) d.expanded.ae = q.ae;
+    // Dose string from range/unit/fixed
+    if (!d.expanded.dose) {
+      const r = d.range || [];
+      const lo = r[0], hi = r[1];
+      const unit = (d.unit || '');
+      let doseStr = '';
+      if (typeof lo === 'number' && typeof hi === 'number') {
+        if (lo === hi) doseStr = `${lo} ${unit}`;
+        else doseStr = `${lo}–${hi} ${unit}`;
       }
-    };
+      if (d.fixed) doseStr += (doseStr ? ' • ' : '') + `Fixed: ${d.fixed}`;
+      d.expanded.dose = doseStr;
+    }
+    // Excretion/Metabolism mapping
+    if (!d.expanded.excr && EXCR_MAP[d.name]) d.expanded.excr = EXCR_MAP[d.name];
+  });
+} catch(e) { console.error(e); }
 
+const ORDER=['Induction','NMBD','Opioid','Reversal','Rescue','Adjunct'];
+const medList = document.getElementById('medList');
+function doseBadge(w, d){ if(!w || !d.range) return ''; const [lo,hi]=d.range; const unit=d.unit||''; const labelUnit=unit.replace('/kg','').replace('/kg/min','/min'); let txt=''; if(lo===hi){ txt=(lo*w).toFixed(1)+' '+labelUnit; } else { txt=(lo*w).toFixed(1)+'–'+(hi*w).toFixed(1)+' '+labelUnit; } if(d.fixed) txt+=' (or '+d.fixed+')'; return '<span class="badge badge-accent" style="margin-left:6px">'+txt+'</span>'; }
+function renderMeds(){ const w = parseFloat(document.getElementById('ptWt').value||'0'); const search = (document.getElementById('searchDrug').value||'').toLowerCase(); medList.innerHTML=''; ORDER.forEach(cat=>{ const items = DRUGS.filter(d=>d.cat===cat && (d.name.toLowerCase().includes(search) || d.brand.toLowerCase().includes(search))); if(!items.length) return; const block=document.createElement('div'); block.className='ghost'; const head=document.createElement('div'); head.className='cat-header'; head.innerHTML = `<div>${cat}</div><div class="small">${items.length} drugs</div>`; block.appendChild(head); items.forEach(d=>{ const row=document.createElement('div'); row.className='drug-row'; const left=document.createElement('div'); left.innerHTML = `<div style="font-weight:800">${d.name} <span class="small">(${d.brand})</span></div><div class="dose-base">${d.unit} ${d.range[0]}–${d.range[1]}${d.fixed? ' • Fixed: '+d.fixed:''}</div>`; const right=document.createElement('div'); right.innerHTML = `<span class="small">Dose for ${w>0?w+' kg':'—'}</span>${doseBadge(w,d)} <button class="btn" data-info="${d.name}">Info</button>`; row.appendChild(left); row.appendChild(right); block.appendChild(row); }); medList.appendChild(block); }); }
+document.getElementById('ptWt').addEventListener('input', renderMeds);
+document.getElementById('searchDrug').addEventListener('input', renderMeds);
+renderMeds();
+/* Drug Modal */
+const drugMask=document.getElementById('drugMask'); const drugTitle=document.getElementById('drugTitle'); const drugBody=document.getElementById('drugBody'); let drugTab='quick';
+function quickHTML(d){ const q=d.quick||{}; return `<div><p><b>Use:</b> ${q.use||''}</p><p><b>Onset:</b> ${q.onset||''} &nbsp;&nbsp; <b>Duration:</b> ${q.duration||''}</p><p><b>Contraindications:</b> ${q.ci||''}</p><p><b>Adverse Effects:</b> ${q.ae||''}</p><p><b>Clinical Pearls:</b> ${q.pearls||''}</p></div>`; }
 
-    // Check storage usage
-    function checkStorage() {
-      const storageSize = JSON.stringify(localStorage).length;
-      const maxSize = 5 * 1024 * 1024; // 5MB
-      if (storageSize > maxSize * 0.9) {
-        storageWarning.classList.remove('hidden');
-      } else {
-        storageWarning.classList.add('hidden');
+function expandedHTML(d){
+  const e = d.expanded || {};
+  return `
+    <div class="small">
+      <p><b>Class:</b> ${e.cls||''}</p>
+      <p><b>MOA:</b> ${e.moa||''}</p>
+      <p><b>Onset:</b> ${e.onset||''}</p>
+      <p><b>Duration:</b> ${e.duration||''}</p>
+      <p><b>Common Dosages:</b> ${e.dose||''}</p>
+      <p><b>Uses:</b> ${e.uses||''}</p>
+      <p><b>Adverse Effects:</b> ${e.ae||''}</p>
+      <p><b>Excretion/Metabolism:</b> ${e.excr||''}</p>
+      <p><b>Contraindications:</b> ${e.ci||''}</p>
+      <p><b>Clinical Pearls:</b> ${e.tips||''}</p>
+    </div>`;
+}
+function renderDrug(name){ const d = DRUGS.find(x=>x.name===name); if(!d){ drugBody.innerHTML='<div class="small">Info coming soon.</div>'; return; } drugBody.innerHTML = (drugTab==='quick') ? quickHTML(d) : expandedHTML(d); }
+document.getElementById('medList').addEventListener('click', (e)=>{ const btn = e.target.closest('button[data-info]'); if(!btn) return; const name = btn.getAttribute('data-info'); drugTitle.textContent=name; drugTab='quick'; renderDrug(name); drugMask.classList.add('active'); document.getElementById('drugTabQuick').onclick=()=>{ drugTab='quick'; renderDrug(name); }; document.getElementById('drugTabExpanded').onclick=()=>{ drugTab='expanded'; renderDrug(name); }; });
+document.getElementById('drugClose').addEventListener('click', ()=>drugMask.classList.remove('active'));
+/* CALCULATORS */
+function calcAll(){ const h = parseFloat(($('hCm').value)||'0'); const w = parseFloat(($('wKg').value)||'0'); const sex=$('pSex').value||'Male'; const ibw = sex==='Male' ? (50 + 0.9*(h-152)) : (45.5 + 0.9*(h-152)); const bmi = h>0 ? (w / ((h/100)**2)) : 0; const ebv = (sex==='Male'?75:65) * (w>0?w:0); const tv = 7 * (w>0?w:0); const ett = sex==='Male' ? '7.5–8.0' : '7.0–7.5'; const lma = w<50?'#3':(w<70?'#4':'#5'); const glance=[['IBW (kg)', ibw>0?ibw.toFixed(1):'—'],['BMI', bmi>0?bmi.toFixed(1):'—'],['EBV (mL)', ebv>0?Math.round(ebv):'—'],['Tidal Volume (mL)', tv>0?Math.round(tv):'—'],['ETT Size', ett],['LMA Size', lma]]; const at=$('atGlance'); at.innerHTML=''; glance.forEach(([k,v])=>{ const div=document.createElement('div'); div.innerHTML = `<b>${k}:</b> <span class="hl">${v}</span>`; at.appendChild(div); }); const hs=parseFloat(($('hctStart').value)||'0'); const ht=parseFloat(($('hctTarget').value)||'0'); if(w>0 && hs>0 && ht>0){ const ebvCalc=(sex==='Male'?75:65)*w; const abl = ebvCalc * (hs - ht) / hs; $('ablOut').textContent = isFinite(abl)? Math.round(abl) + ' mL' : '—'; } else $('ablOut').textContent='—'; const npo=parseFloat(($('npoH').value)||'0'); if(w>0){ let rate=0; if (w <= 10) rate = w*4; else if (w <= 20) rate = 40 + (w-10)*2; else rate = 60 + (w-20)*1; $('mivfOut').textContent = Math.round(rate) + ' mL/hr'; $('defOut').textContent = Math.round(rate*(npo>0?npo:0)) + ' mL'; } else { $('mivfOut').textContent='—'; $('defOut').textContent='—'; } const d=$('laDrug').value, conc=parseFloat(($('laConc').value)||'0'), epi=$('laEpi').value; if(w>0 && d && conc>0){ const caps={ lidocaine:{plain:4.5, epi:7}, bupivacaine:{plain:2.5, epi:3}, ropivacaine:{plain:3, epi:3}, mepivacaine:{plain:5, epi:7} }; const mgkg = (epi==='yes'? caps[d].epi : caps[d].plain); const maxDose = mgkg * w; const mgPerMl = conc*10; const maxVol = maxDose / mgPerMl; $('laMaxDose').textContent = maxDose.toFixed(1)+' mg ('+mgkg+' mg/kg)'; $('laMaxVol').textContent = maxVol.toFixed(1)+' mL @ '+conc+'%'; } else { $('laMaxDose').textContent='—'; $('laMaxVol').textContent='—'; } 
+// BEGIN SURGICAL FLUIDS
+if ($('surgCase')) {
+  const sel = $('surgCase').value;
+  const weight = w; // from earlier
+  const ruleEl = $('surgRuleOut');
+  const outEl = $('surgFluidOut');
+  const burnsBox = $('burnsBox');
+  const burnPct = $('burnPct') ? parseFloat(($('burnPct').value)||'0') : 0;
+
+  let ruleTxt = '—', calcTxt = '—';
+
+  if (sel === 'parkland') {
+    burnsBox.style.display = 'block';
+    ruleTxt = 'Parkland: 4 ml/kg/%TBSA (24h, 1/2 in first 8h)';
+    if (weight > 0 && burnPct > 0) {
+      const vol = 4 * weight * burnPct;
+      calcTxt = `${Math.round(vol)} mL (first 24h)`;
+    }
+  } else {
+    burnsBox.style.display = 'none';
+    if (sel && weight > 0) {
+      const parts = sel.split('-');
+      if (parts.length === 2) {
+        const lo = parseFloat(parts[0]), hi = parseFloat(parts[1]);
+        const loRate = lo * weight;
+        const hiRate = hi * weight;
+        // Map back to label for visibility
+        let label = '';
+        if (sel === '2-4') label = 'Minimally invasive (laparoscopic): 2–4 ml/kg/hr';
+        else if (sel === '4-6') label = 'Moderate tissue trauma: 4–6 ml/kg/hr';
+        else if (sel === '6-8') label = 'Major open (e.g., open abdomen): 6–8 ml/kg/hr';
+        ruleTxt = label;
+        calcTxt = `${Math.round(loRate)}–${Math.round(hiRate)} mL/hr (for ${weight.toFixed(1)} kg)`;
       }
     }
+  }
+  if (ruleEl) ruleEl.textContent = ruleTxt;
+  if (outEl) outEl.textContent = calcTxt;
+} else {
+  // Elements not present on this tab
+}
+// END SURGICAL FLUIDS
+}
+['hCm','wKg','pSex','hctStart','hctTarget','npoH','laDrug','laConc','laEpi'].forEach(id=>$(id).addEventListener('input', calcAll));
+calcAll();
+if ($('surgCase')) $('surgCase').addEventListener('change', calcAll);
+if ($('burnPct')) $('burnPct').addEventListener('input', calcAll);
 
-    // Show main app if username is set
-    if (username) {
-      usernamePage.classList.add('hidden');
-      mainApp.classList.remove('hidden');
-      loadCases();
-    } else {
-      usernamePage.classList.remove('hidden');
-      mainApp.classList.add('hidden');
-    }
 
-    // Handle username submission
-    document.getElementById('setUsername').addEventListener('click', () => {
-      username = document.getElementById('username').value.trim();
-      if (username) {
-        localStorage.setItem('srnaUsername', username);
-        usernamePage.classList.add('hidden');
-        mainApp.classList.remove('hidden');
-        loadCases();
-      } else {
-        alert('Please enter a username.');
-      }
-    });
-
-    // Tab navigation
-    const tabs = document.querySelectorAll('.tab');
-    const tabContents = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
-        // If the clicked tab is Medication Pearls, render the content
-        if (tab.dataset.tab === 'medicationPearls') {
-          renderMedicationPearls();
-        }
-      });
-    });
-
-    // Load cases for the current user
-    function loadCases() {
-      cases = JSON.parse(localStorage.getItem(`srnaCases_${username}`)) || [];
-      displayCases();
-      checkStorage();
-    }
-
-    // Handle form submission
-    document.getElementById('caseForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const caseData = {
-        caseName: document.getElementById('caseName').value,
-        date: document.getElementById('date').value || '',
-        startTime: document.getElementById('startTime').value || '',
-        stopTime: document.getElementById('stopTime').value || '',
-        age: document.getElementById('age').value || '',
-        asaStatus: document.getElementById('asaStatus').value || '',
-        caseType: document.getElementById('caseType').value || '',
-        notes: document.getElementById('notes').value || '',
-        id: Date.now(),
-        username: username
-      };
-      if (!caseData.date && !caseData.startTime && !caseData.stopTime && !caseData.age && !caseData.asaStatus && !caseData.caseType && !caseData.notes) {
-        alert('Please enter at least one additional field besides Case Name.');
-        return;
-      }
-      cases.push(caseData);
-      localStorage.setItem(`srnaCases_${username}`, JSON.stringify(cases));
-      displayCases();
-      document.getElementById('caseForm').reset();
-      checkStorage();
-    });
-
-    // Display saved cases
-    function displayCases() {
-      const caseList = document.getElementById('cases');
-      caseList.innerHTML = '';
-      cases.forEach((c, index) => {
-        if (c.username === username) {
-          const li = document.createElement('li');
-          li.className = 'p-3 case-item border border-teal-200 rounded-md cursor-pointer';
-          li.innerHTML = `
-            <strong>Case:</strong> ${c.caseName}<br>
-            <strong>Date:</strong> ${c.date || 'Not Provided'}<br>
-            <strong>Start/Stop:</strong> ${c.startTime || 'Not Provided'} - ${c.stopTime || 'Not Provided'}<br>
-            <strong>Age:</strong> ${c.age || 'Not Provided'}<br>
-            <strong>ASA:</strong> ${c.asaStatus || 'Not Provided'}<br>
-            <strong>Case Type:</strong> ${c.caseType || 'Not Provided'}<br>
-            <strong>Notes:</strong> ${c.notes || 'None'}
-          `;
-          li.addEventListener('click', () => showModal(c));
-          caseList.appendChild(li);
-        }
-      });
-    }
-
-    // Show modal with case details
-    function showModal(caseData) {
-      selectedCaseId = caseData.id;
-      modalCaseName.textContent = caseData.caseName;
-      modalContent.innerHTML = `
-        <p><strong>Date:</strong> ${caseData.date || 'Not Provided'}</p>
-        <p><strong>Start/Stop:</strong> ${caseData.startTime || 'Not Provided'} - ${caseData.stopTime || 'Not Provided'}</p>
-        <p><strong>Age:</strong> ${caseData.age || 'Not Provided'}</p>
-        <p><strong>ASA Status:</strong> ${caseData.asaStatus || 'Not Provided'}</p>
-        <p><strong>Case Type:</strong> ${caseData.caseType || 'Not Provided'}</p>
-        <p class="notes"><strong>Notes:</strong> ${caseData.notes || 'None'}</p>
-      `;
-      modalContent.style.display = 'block';
-      editForm.classList.add('hidden');
-      modalButtons.style.display = 'flex';
-      modal.style.display = 'flex';
-    }
-
-    // Show edit form
-    document.getElementById('editCase').addEventListener('click', () => {
-      const caseData = cases.find(c => c.id === selectedCaseId);
-      if (caseData) {
-        document.getElementById('editCaseName').value = caseData.caseName;
-        document.getElementById('editDate').value = caseData.date || '';
-        document.getElementById('editStartTime').value = caseData.startTime || '';
-        document.getElementById('editStopTime').value = caseData.stopTime || '';
-        document.getElementById('editAge').value = caseData.age || '';
-        document.getElementById('editAsaStatus').value = caseData.asaStatus || '';
-        document.getElementById('editCaseType').value = caseData.caseType || '';
-        document.getElementById('editNotes').value = caseData.notes || '';
-        modalContent.style.display = 'none';
-        modalButtons.style.display = 'none';
-        editForm.classList.remove('hidden');
-      }
-    });
-
-    // Save edited case
-    document.getElementById('saveEdit').addEventListener('click', (e) => {
-      e.preventDefault();
-      const updatedCase = {
-        caseName: document.getElementById('editCaseName').value,
-        date: document.getElementById('editDate').value || '',
-        startTime: document.getElementById('editStartTime').value || '',
-        stopTime: document.getElementById('editStopTime').value || '',
-        age: document.getElementById('editAge').value || '',
-        asaStatus: document.getElementById('editAsaStatus').value || '',
-        caseType: document.getElementById('editCaseType').value || '',
-        notes: document.getElementById('editNotes').value || '',
-        id: selectedCaseId,
-        username: username
-      };
-      if (!updatedCase.date && !updatedCase.startTime && !updatedCase.stopTime && !updatedCase.age && !updatedCase.asaStatus && !updatedCase.caseType && !updatedCase.notes) {
-        alert('Please enter at least one additional field besides Case Name.');
-        return;
-      }
-      cases = cases.map(c => c.id === selectedCaseId ? updatedCase : c);
-      localStorage.setItem(`srnaCases_${username}`, JSON.stringify(cases));
-      displayCases();
-      modal.style.display = 'none';
-      selectedCaseId = null;
-      checkStorage();
-    });
-
-    // Cancel edit
-    document.getElementById('cancelEdit').addEventListener('click', () => {
-      const caseData = cases.find(c => c.id === selectedCaseId);
-      if (caseData) {
-        showModal(caseData);
-      }
-    });
-
-    // Close modal
-    document.getElementById('closeModal').addEventListener('click', () => {
-      modal.style.display = 'none';
-      selectedCaseId = null;
-    });
-
-    // Export case as CSV
-    document.getElementById('exportCase').addEventListener('click', () => {
-      const caseData = cases.find(c => c.id === selectedCaseId);
-      if (caseData) {
-        const csv = `Case Name,Date,Start Time,Stop Time,Age,ASA Status,Case Type,Notes\n"${caseData.caseName}",${caseData.date || ''},${caseData.startTime || ''},${caseData.stopTime || ''},${caseData.age || ''},${caseData.asaStatus || ''},${caseData.caseType || ''},"${caseData.notes || ''}"`;
-        const blob = new Blob([csv], { type: 'text/csv' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `case_${caseData.id}.csv`;
-        a.click();
-        URL.revokeObjectURL(url);
-      }
-      modal.style.display = 'none';
-      selectedCaseId = null;
-    });
-
-    // Delete case
-    document.getElementById('deleteCase').addEventListener('click', () => {
-      if (confirm('Are you sure you want to delete this case?')) {
-        cases = cases.filter(c => c.id !== selectedCaseId);
-        localStorage.setItem(`srnaCases_${username}`, JSON.stringify(cases));
-        displayCases();
-        modal.style.display = 'none';
-        selectedCaseId = null;
-        checkStorage();
-      }
-    });
-
-    // Clear all cases
-    document.getElementById('clearCases').addEventListener('click', () => {
-      if (confirm('Are you sure you want to clear all cases? This action cannot be undone.')) {
-        cases = [];
-        localStorage.removeItem(`srnaCases_${username}`);
-        displayCases();
-        checkStorage();
-      }
-    });
-
-    // Drug dosage calculation
-    document.getElementById('ptWeight').addEventListener('input', () => {
-      const weight = parseFloat(document.getElementById('ptWeight').value);
-      if (weight > 0) {
-        document.getElementById('propofolDose').textContent = `(Induction: ${ (weight * 1.5).toFixed(1) }-${ (weight * 2.5).toFixed(1) } mg)`;
-        document.getElementById('etomidateDose').textContent = `(Induction: ${ (weight * 0.2).toFixed(1) }-${ (weight * 0.3).toFixed(1) } mg)`;
-        document.getElementById('lidocaineInductionDose').textContent = `(Adjunct: ${ (weight * 1).toFixed(1) }-${ (weight * 1.5).toFixed(1) } mg)`;
-        document.getElementById('ketamineDose').textContent = `(Induction: ${ (weight * 1).toFixed(1) }-${ (weight * 2).toFixed(1) } mg)`;
-        document.getElementById('fentanylInductionDose').textContent = `(Bolus: ${ (weight * 1).toFixed(1) }-${ (weight * 2).toFixed(1) } mcg)`;
-        document.getElementById('succinylcholineDose').textContent = `(Intubation: ${ (weight * 1).toFixed(1) }-${ (weight * 1.5).toFixed(1) } mg)`;
-        document.getElementById('rocuroniumInductionDose').textContent = `(Intubation: ${ (weight * 0.6).toFixed(1) }-${ (weight * 1.2).toFixed(1) } mg)`;
-        document.getElementById('midazolamDose').textContent = `(Sedation: ${ (weight * 0.02).toFixed(1) }-${ (weight * 0.04).toFixed(1) } mg)`;
-        document.getElementById('precedexDose').textContent = `(Loading: ${ (weight * 0.5).toFixed(1) }-${ (weight * 1).toFixed(1) } mcg; Maintenance: ${ (weight * 0.2).toFixed(1) }-${ (weight * 0.7).toFixed(1) } mcg/hr)`;
-        document.getElementById('neostigmineDose').textContent = `(0.04-0.07 mg/kg: ${ (weight * 0.04).toFixed(1) }-${ (weight * 0.07).toFixed(1) } mg)`;
-        document.getElementById('sugammadexDose').textContent = `(Routine: ${ (weight * 2).toFixed(1) }-${ (weight * 4).toFixed(1) } mg)`;
-        document.getElementById('atropineDose').textContent = `(Bradycardia: ${ (weight * 0.01).toFixed(1) }-${ (weight * 0.02).toFixed(1) } mg)`;
-        document.getElementById('phenylephrineDose').textContent = `(Bolus: 50-200 mcg; Infusion: ${ (weight * 0.1).toFixed(1) }-${ (weight * 0.5).toFixed(1) } mcg/min)`;
-        document.getElementById('ephedrineDose').textContent = `(Bolus: 5-10 mg)`;
-        document.getElementById('norepinephrineDose').textContent = `(Infusion: ${ (weight * 0.01).toFixed(1) }-${ (weight * 0.1).toFixed(1) } mcg/min)`;
-        document.getElementById('esmololDose').textContent = `(Bolus: ${ (weight * 0.5).toFixed(1) } mg; Infusion: ${ (weight * 50).toFixed(1) }-${ (weight * 200).toFixed(1) } mcg/min)`;
-        document.getElementById('metoprololDose').textContent = `(1-5 mg)`;
-        document.getElementById('hydralazineDose').textContent = `(5-20 mg)`;
-        document.getElementById('nitroglycerinDose').textContent = `(Infusion: 5-20 mcg/min)`;
-        document.getElementById('naloxoneDose').textContent = `(0.04-0.4 mg)`;
-        document.getElementById('glycopyrrolateDose').textContent = `(0.2 mg per 1 mg Neostigmine)`;
-        document.getElementById('decadronDose').textContent = `(4-8 mg)`;
-        document.getElementById('zofranDose').textContent = `(4-8 mg)`;
-        document.getElementById('haldolDose').textContent = `(0.5-2 mg)`;
-      } else {
-        document.querySelectorAll('[id$="Dose"]').forEach(el => el.textContent = '');
-      }
-    });
-
-    // Patient data and calculations
-    function updateCalculations() {
-      const heightInput = document.getElementById('calcHeight');
-      const weightInput = document.getElementById('calcWeight');
-      const height = parseFloat(heightInput.value);
-      const weight = parseFloat(weightInput.value);
-      const gender = document.getElementById('calcGender').value;
-
-      let heightCm, weightKg;
-      
-      if (height > 0) {
-        if (height < 100) { // Assume inches
-          heightCm = height * 2.54;
-          heightInput.placeholder = `${height.toFixed(0)} inches`;
-        } else { // Assume cm
-          heightCm = height;
-          heightInput.placeholder = `${height.toFixed(0)} cm`;
-        }
-      }
-
-      if (weight > 0) {
-        if (weight < 100) { // Assume kg
-          weightKg = weight;
-          weightInput.placeholder = `${weight.toFixed(0)} kg`;
-        } else { // Assume lb
-          weightKg = weight / 2.20462;
-          weightInput.placeholder = `${weight.toFixed(0)} lb`;
-        }
-        document.getElementById('weightLocal').value = weightKg.toFixed(1);
-        document.getElementById('weightFluid').value = weightKg.toFixed(1);
-      } else {
-        document.getElementById('weightLocal').value = '';
-        document.getElementById('weightFluid').value = '';
-      }
-
-      // EBV
-      let ebvResult = '<span class="placeholder">EBV: Enter weight and gender</span>';
-      if (weightKg > 0 && gender) {
-        const ebv = gender === 'male' ? weightKg * 75 : weightKg * 65;
-        ebvResult = `EBV: ${ebv.toFixed(0)} mL`;
-        document.getElementById('ebv').value = ebv.toFixed(0);
-      } else {
-        document.getElementById('ebv').value = '';
-      }
-      document.getElementById('ebvResult').innerHTML = ebvResult;
-
-      // IBW
-      let ibwResult = '<span class="placeholder">IBW: Enter height and gender</span>';
-      if (heightCm > 0 && gender) {
-        const heightInInches = heightCm / 2.54;
-        const ibw = gender === 'male' ? 50 + 2.3 * (heightInInches - 60) : 45.5 + 2.3 * (heightInInches - 60);
-        ibwResult = `IBW: ${ibw.toFixed(1)} kg`;
-      }
-      document.getElementById('ibwResult').innerHTML = ibwResult;
-
-      // Tidal Volume, ETT, LMA
-      let tvRecommendation = '<span class="placeholder">Tidal Volume: Enter weight and height</span>';
-      let ettRecommendation = '<span class="placeholder">ETT Size: Enter weight and gender</span>';
-      let lmaRecommendation = '<span class="placeholder">LMA Size: Enter weight</span>';
-      if (weightKg > 0) {
-        let weightForTv = weightKg;
-        if (heightCm > 0 && gender) {
-          const heightInInches = heightCm / 2.54;
-          weightForTv = gender === 'male' ? 50 + 2.3 * (heightInInches - 60) : 45.5 + 2.3 * (heightInInches - 60);
-        }
-        const tvLow = weightForTv * 6;
-        const tvHigh = weightForTv * 8;
-        tvRecommendation = `Tidal Volume: ${tvLow.toFixed(1)}-${tvHigh.toFixed(1)} mL`;
-        if (weightKg < 5) lmaRecommendation = 'LMA Size: 1 (neonates)';
-        else if (weightKg <= 20) lmaRecommendation = 'LMA Size: 2 (children)';
-        else if (weightKg <= 50) lmaRecommendation = 'LMA Size: 3 (small adults)';
-        else if (weightKg <= 70) lmaRecommendation = 'LMA Size: 4 (adults)';
-        else lmaRecommendation = 'LMA Size: 5 (large adults)';
-        if (weightKg < 20) {
-          ettRecommendation = `ETT Size: ~${((weightKg / 4) + 3.5).toFixed(1)} mm (cuffed)`;
-        } else if (gender) {
-          ettRecommendation = `ETT Size: ${gender === 'male' ? '8.0-9.0 mm' : '7.0-8.0 mm'}`;
-        }
-      }
-      document.getElementById('tvRecommendation').innerHTML = tvRecommendation;
-      document.getElementById('ettRecommendation').innerHTML = ettRecommendation;
-      document.getElementById('lmaRecommendation').innerHTML = lmaRecommendation;
-
-      // Allowable Blood Loss
-      const ebv = parseFloat(document.getElementById('ebv').value);
-      const initialHct = parseFloat(document.getElementById('initialHct').value);
-      const targetHct = parseFloat(document.getElementById('targetHct').value);
-      let ablResult = '<span class="placeholder">ABL: Enter EBV and Hct values</span>';
-      if (ebv > 0 && initialHct > 0 && targetHct > 0 && initialHct > targetHct) {
-        const abl = ebv * (initialHct - targetHct) / initialHct;
-        ablResult = `ABL: ${abl.toFixed(1)} mL`;
-      }
-      document.getElementById('ablResult').innerHTML = ablResult;
-
-      // Maximum Local Anesthetic
-      const weightLocal = parseFloat(document.getElementById('weightLocal').value);
-      const anesthetic = document.getElementById('anesthetic').value;
-      const concentration = parseFloat(document.getElementById('concentration').value) / 100;
-      const epi = document.getElementById('epi').value;
-      let localResult = '<span class="placeholder">Max Volume: Enter all fields</span>';
-      if (weightLocal > 0 && anesthetic && concentration > 0) {
-        const maxDoses = {
-          lidocaine: { plain: 4.5, epi: 7 },
-          bupivacaine: { plain: 2.5, epi: 3 },
-          ropivacaine: { plain: 3, epi: 3 },
-          mepivacaine: { plain: 5, epi: 7 }
-        };
-        const maxDose = epi === 'yes' ? maxDoses[anesthetic].epi * weightLocal : maxDoses[anesthetic].plain * weightLocal;
-        const maxVolume = maxDose / (concentration * 10);
-        localResult = `Max Dose: ${maxDose.toFixed(1)} mg, Max Volume: ${maxVolume.toFixed(1)} mL`;
-      }
-      document.getElementById('localResult').innerHTML = localResult;
-
-      // Fluid and NPO Deficit
-      const weightFluid = parseFloat(document.getElementById('weightFluid').value);
-      const npoHours = parseFloat(document.getElementById('npoHours').value);
-      let fluidNpoResult = '<span class="placeholder">Fluid: Enter weight and NPO hours</span>';
-      if (weightFluid > 0 && npoHours >= 0) {
-        let maintenance = 0;
-        if (weightFluid <= 10) {
-          maintenance = weightFluid * 4;
-        } else if (weightFluid <= 20) {
-          maintenance = 10 * 4 + (weightFluid - 10) * 2;
-        } else {
-          maintenance = 10 * 4 + 10 * 2 + (weightFluid - 20) * 1;
-        }
-        const deficit = maintenance * npoHours;
-        fluidNpoResult = `Maintenance: ${maintenance.toFixed(1)} mL/hr, Deficit: ${deficit.toFixed(1)} mL`;
-      }
-      document.getElementById('fluidNpoResult').innerHTML = fluidNpoResult;
-    }
-
-    // Event listeners for calculations
-    document.getElementById('calcHeight').addEventListener('input', updateCalculations);
-    document.getElementById('calcWeight').addEventListener('input', updateCalculations);
-    document.getElementById('calcGender').addEventListener('change', updateCalculations);
-    document.getElementById('ebv').addEventListener('input', updateCalculations);
-    document.getElementById('initialHct').addEventListener('input', updateCalculations);
-    document.getElementById('targetHct').addEventListener('input', updateCalculations);
-    document.getElementById('weightLocal').addEventListener('input', updateCalculations);
-    document.getElementById('anesthetic').addEventListener('change', updateCalculations);
-    document.getElementById('concentration').addEventListener('change', updateCalculations);
-    document.getElementById('epi').addEventListener('change', updateCalculations);
-    document.getElementById('weightFluid').addEventListener('input', updateCalculations);
-    document.getElementById('npoHours').addEventListener('input', updateCalculations);
-
-    // Collapsible sections for Clinical Pearls
-    document.querySelectorAll('.collapsible-header').forEach(header => {
-      header.addEventListener('click', () => {
-        const content = header.nextElementSibling;
-        content.classList.toggle('active');
-      });
-    });
-
-    // Drug info modal functionality
-    document.querySelectorAll('.info-btn').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        const drugName = e.target.dataset.drug;
-        const drug = medications[drugName].short;
-        document.getElementById('drugInfoTitle').textContent = drugName;
-        document.getElementById('drugInfoContent').innerHTML = `
-          <ul class="list-disc ml-4 space-y-2 text-gray-700">
-            <li><strong>Use:</strong> ${drug.use}</li>
-            <li><strong>Onset:</strong> ${drug.onset}</li>
-            <li><strong>Duration:</strong> ${drug.duration}</li>
-            <li><strong>Contraindications:</strong> ${drug.contraindications}</li>
-            <li><strong>Clinical Pearls:</strong> ${drug.pearls}</li>
-          </ul>
-          <div class="mt-4 text-center">
-            <a href="#" id="viewFullDetails" class="text-blue-600 hover:text-blue-800 font-medium">View full details in Medication Pearls</a>
-          </div>
-        `;
-        drugInfoModal.style.display = 'flex';
-        document.getElementById('viewFullDetails').addEventListener('click', (e) => {
-          e.preventDefault();
-          drugInfoModal.style.display = 'none';
-          const tab = document.querySelector('.tab[data-tab="medicationPearls"]');
-          tab.click();
-          const drugHeader = document.querySelector(`.collapsible-header[data-drug-full="${drugName}"]`);
-          if (drugHeader) {
-            drugHeader.scrollIntoView({ behavior: 'smooth' });
-            if (!drugHeader.nextElementSibling.classList.contains('active')) {
-              drugHeader.click();
-            }
-          }
-        });
-      });
-    });
-
-    document.getElementById('closeDrugInfoModal').addEventListener('click', () => {
-      drugInfoModal.style.display = 'none';
-    });
-    
-    // Medication Pearls rendering and search
-    function renderMedicationPearls(query = '') {
-      const listContainer = document.getElementById('medicationList');
-      listContainer.innerHTML = '';
-      const filteredDrugs = Object.keys(medications).filter(drugName => 
-        drugName.toLowerCase().includes(query.toLowerCase()) || 
-        JSON.stringify(medications[drugName].full).toLowerCase().includes(query.toLowerCase())
-      );
-      filteredDrugs.forEach(drugName => {
-        const drug = medications[drugName].full;
-        const div = document.createElement('div');
-        div.className = 'collapsible-container';
-        div.innerHTML = `
-          <div class="collapsible-header" data-drug-full="${drugName}">
-            ${drugName}
-          </div>
-          <div class="collapsible-content">
-            <ul class="space-y-2 text-gray-700">
-              <li><strong>Class:</strong> ${drug.class}</li>
-              <li><strong>MOA:</strong> ${drug.moa}</li>
-              <li><strong>Use:</strong> ${drug.use}</li>
-              <li><strong>Onset:</strong> ${drug.onset}</li>
-              <li><strong>Duration:</strong> ${drug.duration}</li>
-              <li><strong>Excretion:</strong> ${drug.excretion}</li>
-              <li><strong>Contraindications:</strong> ${drug.contraindications}</li>
-              <li><strong>Adverse Effects:</strong> ${drug.adverse_effects}</li>
-              <li><strong>Clinical Pearls:</strong> ${drug.pearls}</li>
-            </ul>
-          </div>
-        `;
-        listContainer.appendChild(div);
-      });
-      document.querySelectorAll('.collapsible-header').forEach(header => {
-        header.addEventListener('click', () => {
-          const content = header.nextElementSibling;
-          content.classList.toggle('active');
-        });
-      });
-    }
-
-    document.getElementById('medicationSearch').addEventListener('input', (e) => {
-      renderMedicationPearls(e.target.value);
-    });
-
-    // Load cases on page load
-    if (username) {
-      loadCases();
-      renderMedicationPearls();
-    }
-
-    // Initialize concentration dropdown
-    const concentrationOptions = {
-      lidocaine: ['0.5', '1', '2'],
-      bupivacaine: ['0.125', '0.25', '0.5'],
-      ropivacaine: ['0.2', '0.5', '1'],
-      mepivacaine: ['1', '1.5', '2']
-    };
-    document.getElementById('anesthetic').addEventListener('change', () => {
-      const anesthetic = document.getElementById('anesthetic').value;
-      const concentrationSelect = document.getElementById('concentration');
-      concentrationSelect.innerHTML = '<option value="" disabled selected>Select Concentration</option>';
-      if (anesthetic && concentrationOptions[anesthetic]) {
-        concentrationOptions[anesthetic].forEach(conc => {
-          const option = document.createElement('option');
-          option.value = conc;
-          option.textContent = `${conc}%`;
-          concentrationSelect.appendChild(option);
-        });
-      }
-      updateCalculations();
-    });
-    document.getElementById('anesthetic').dispatchEvent(new Event('change'));
-  </script>
+/* PEARLS EXPAND/COLLAPSE */
+$('btnExpandPearls').addEventListener('click', ()=>{ document.querySelectorAll('#tab-pearls details').forEach(d=>d.open=true); });
+$('btnCollapsePearls').addEventListener('click', ()=>{ document.querySelectorAll('#tab-pearls details').forEach(d=>d.open=false); });
+</script>
 </body>
 </html>
