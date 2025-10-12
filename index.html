@@ -75,6 +75,27 @@
   body[data-theme="dark"] input[type="time"]::-webkit-calendar-picker-indicator{ filter: invert(1) brightness(1.4); }
   footer{max-width:1200px;margin:12px auto 20px;color:var(--muted-2);font-size:.85rem}
   .hl{background:var(--highlight);padding:0 .25rem;border-radius:8px;color:#000}
+
+.la-table th, .la-table td{ padding:12px; font-size:15px; }
+.la-table tbody tr:nth-child(odd){ background: var(--surface-ghost); }
+@media (min-width: 768px){
+  .la-table th, .la-table td{ padding:14px; font-size:16px; }
+}
+</style>
+<style>
+/* === LA bar styles (updated) === */
+.la-slider-wrap{display:flex;align-items:center;gap:8px}
+.la-slider{width:180px; appearance:none; height:8px; border-radius:6px; outline:none; background:#ddd}
+.la-slider::-webkit-slider-thumb{appearance:none; width:16px; height:16px; border-radius:50%; background:#111; border:2px solid #fff; box-shadow:0 0 0 1px rgba(0,0,0,0.2)}
+.la-slider::-moz-range-thumb{width:16px; height:16px; border-radius:50%; background:#111; border:2px solid #fff}
+</style>
+<style>
+/* === LA bar styles (updated) === */
+.la-bar-wrap{display:flex;align-items:center;gap:8px;display:flex;align-items:center;gap:8px}
+.la-bar{width:220px;height:10px;border-radius:6px;background:#e0e0e0;position:relative;overflow:hidden}
+.la-fill{height:100%;width:0%;border-radius:6px;background:#4caf50}
+
+#laOverallPct{color:#4caf50;font-weight:600}
 </style>
 </head>
 <body data-theme="dark">
@@ -109,8 +130,18 @@
 </div>
 <div><label>ASA (with E)</label>
 <select class="input" id="cASA">
-<option></option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option>
-<option>I-E</option><option>II-E</option><option>III-E</option><option>IV-E</option><option>V-E</option>
+<option value=""></option>
+<option value="I">ASA 1 — non-smoker / minimal alcohol use</option>
+<option value="II">ASA 2 — smoker / pregnant / controlled HTN or DM</option>
+<option value="III">ASA 3 — poorly controlled DM or HTN, BMI ≥ 40, > 3 mo MI/CVA</option>
+<option value="IV">ASA 4 — < 3 mo MI/CVA, severe systemic disease</option>
+<option value="V">ASA 5 — not expected to survive</option>
+<option value="VI">ASA 6 — organ donor</option>
+<option value="I-E">ASA 1-E — Emergency</option>
+<option value="II-E">ASA 2-E — Emergency</option>
+<option value="III-E">ASA 3-E — Emergency</option>
+<option value="IV-E">ASA 4-E — Emergency</option>
+<option value="V-E">ASA 5-E — Emergency</option>
 </select>
 </div>
 <div style="grid-column: span 2 / span 2"><label>Procedure</label><input class="input" id="cProc" placeholder="e.g., Lap chole"/></div>
@@ -203,13 +234,12 @@
 <li>Deepen: propofol 0.5–1 mg/kg IV.</li>
 <li>Refractory: succinylcholine 0.5–1 mg/kg IV (2 mg/kg IM).</li>
 </ul>
-<div class="divider"></div><div class="h2" style="font-size:1rem">Extubation Criteria</div><ul style="margin-left:18px"><li><b>Respiratory:</b> TV &gt; 5 mL/kg, VC &gt; 10–15 mL/kg, RR &lt; 30/min, SpO₂ &gt; 90% on FiO₂ ≤ 40%</li><li><b>Protective Reflexes:</b> intact gag/cough, able to follow commands</li><li><b>Neuromuscular Reversal:</b> TOF ≥ 0.9, sustained head lift/hand grip</li><li><b>Hemodynamics:</b> stable BP/HR, normothermia</li></ul></div>
-
+<div class="divider"></div><div class="h2" style="font-size:1rem">Extubation Criteria</div><ul style="margin-left:18px"><li><b>Respiratory:</b> TV &gt; 5 mL/kg, VC &gt; 10–15 mL/kg, RR &lt; 30/min, SpO₂ &gt; 90% on FiO₂ ≤ 40%</li><li><b>Protective Reflexes:</b> intact gag/cough, able to follow commands</li><li><b>Neuromuscular Reversal:</b> TOF ≥ 0.9, sustained head lift/hand grip</li><li><b>Hemodynamics:</b> stable BP/HR, normothermia</li></ul>
+</div>
 </details>
 <details class="ghost">
-<summary class="cat-header">Airway Sizes (Adult)</summary>
-<div class="body small">
-<table style="width:100%;border-collapse:collapse">
+<summary class="cat-header">Airway &amp; Blade Sizes (Adult)</summary>
+<div class="body small"><table style="width:100%;border-collapse:collapse">
 <thead>
 <tr style="background:var(--surface-ghost)">
 <th class="badge-soft" style="text-align:left;border:1px solid var(--border);padding:6px">Device</th>
@@ -235,6 +265,31 @@
 </tr>
 </tbody>
 </table>
+<hr/>
+<div class="h2" style="font-size:1rem;margin:.5rem 0">Laryngoscope Blade Sizes</div>
+<table style="width:100%;border-collapse:collapse">
+<thead>
+<tr style="background:var(--surface-ghost)">
+<th class="badge-soft" style="text-align:left;border:1px solid var(--border);padding:6px">Blade</th>
+<th class="badge-soft" style="text-align:left;border:1px solid var(--border);padding:6px">Typical Adult Sizes</th>
+<th class="badge-soft" style="text-align:left;border:1px solid var(--border);padding:6px">Rule of Thumb</th>
+</tr>
+</thead>
+<tbody>
+<tr><td style="border:1px solid var(--border);padding:6px">Macintosh (curved)</td>
+<td style="border:1px solid var(--border);padding:6px">Size 3 (most females), Size 4 (most males/tall/large)</td>
+<td style="border:1px solid var(--border);padding:6px">If height ≥ 180 cm or large habitus → Mac 4; otherwise Mac 3</td></tr>
+<tr><td style="border:1px solid var(--border);padding:6px">Miller (straight)</td>
+<td style="border:1px solid var(--border);padding:6px">Size 2–3 adults (3 common), Size 4 tall/large</td>
+<td style="border:1px solid var(--border);padding:6px">Prefer when anterior airway/limited mouth opening; pick 3, go up if exposure poor</td></tr>
+<tr><td style="border:1px solid var(--border);padding:6px">Video (Mac or Hyperangulated)</td>
+<td style="border:1px solid var(--border);padding:6px">Use Mac 3/4 equivalents; hyperangulated 3 common</td>
+<td style="border:1px solid var(--border);padding:6px">Match to Mac size; consider hyperangulated if anticipated difficult airway</td></tr>
+</tbody>
+</table>
+<div class="small" style="margin-top:.5rem">
+<b>Selection tips:</b> Check dentition, mouth opening, thyromental distance. Have one size up/down ready. Combine with the ETT/OPA/NPA “rule of thumb” above.
+</div>
 </div>
 </details>
 <details class="ghost">
@@ -305,7 +360,7 @@
 <h2 class="h2">Patient Inputs</h2>
 <div class="divider"></div>
 <div class="grid g-3">
-<div><label>Height (cm)</label><input class="input" id="hCm" placeholder="e.g., 170" step="0.1" type="number"/></div>
+<div><label>Height <span class="small" style="margin-left:6px"><select class="input" id="hUnit" style="width:auto;display:inline-block;padding:2px 6px"><option selected="" value="cm">cm</option><option value="in">in</option></select></span></label><input class="input" id="hCm" placeholder="e.g., 170" step="0.1" type="number"/></div>
 <div><label>Weight (kg)</label><input class="input" id="wKg" placeholder="e.g., 70" step="0.1" type="number"/></div>
 <div><label>Sex</label><select class="input" id="pSex"><option>Male</option><option>Female</option></select></div>
 </div>
@@ -316,6 +371,18 @@
 </div>
 </div>
 <div class="grid" id="surgCalcWrap" style="grid-template-columns:1fr;gap:10px;margin-top:10px">
+<div class="card" id="card-periop-fluids">
+<div class="h2">Perioperative Fluids</div>
+<div class="small">Maintenance/NPO planning side-by-side with surgical replacement targets. Use case details + NPO hours to see both plans together.</div>
+<div class="grid g-2" style="margin-top:8px">
+<div class="ghost">
+<div class="h2" style="font-size:1.1rem;margin-bottom:6px">Maintenance Fluids / NPO Deficit</div>
+<div class="grid g-2">
+<label>NPO Hours<input class="input" id="npoH" placeholder="e.g., 8" step="0.1" type="number"/></label>
+<div>Rate (4-2-1): <span class="badge badge-soft" id="mivfOut">—</span></div>
+<div style="grid-column:1/-1">Deficit: <span class="badge badge-soft" id="defOut">—</span></div>
+<div style="grid-column:1/-1;color:var(--muted-2);font-size:.85rem">Plan: 50% 1st hr, 25% 2nd, 25% 3rd (plus mIVF).</div>
+</div></div>
 <div class="ghost">
 <div class="h2" style="font-size:1.1rem;margin-bottom:6px">Surgical Fluid Replacement</div>
 <div class="grid g-2">
@@ -340,28 +407,19 @@
 <div class="small" style="grid-column:1/-1;color:var(--muted-2)">
         Note: These are pragmatic intraoperative replacement targets and should be individualized using hemodynamics, labs, and EBL.
       </div>
+</div></div>
 </div>
 </div>
-</div>
-<div class="grid g-3" style="margin-top:10px">
-<div class="ghost">
+<div class="grid g-2" id="row-abl">
+<div class="ghost" style="grid-column:1/-1"><div class="ghost">
 <div class="h2" style="font-size:1.1rem;margin-bottom:6px">Allowable Blood Loss (ABL)</div>
 <div class="grid g-2">
 <label>Starting Hct<input class="input" id="hctStart" placeholder="e.g., 40" step="0.1" type="number"/></label>
 <label>Target Hct<input class="input" id="hctTarget" placeholder="e.g., 25" step="0.1" type="number"/></label>
 <div style="grid-column:1/-1">ABL: <span class="badge badge-accent" id="ablOut">—</span></div>
+</div></div>
 </div>
-</div>
-<div class="ghost">
-<div class="h2" style="font-size:1.1rem;margin-bottom:6px">Maintenance Fluids / NPO Deficit</div>
-<div class="grid g-2">
-<label>NPO Hours<input class="input" id="npoH" placeholder="e.g., 8" step="0.1" type="number"/></label>
-<div>Rate (4-2-1): <span class="badge badge-soft" id="mivfOut">—</span></div>
-<div style="grid-column:1/-1">Deficit: <span class="badge badge-soft" id="defOut">—</span></div>
-<div style="grid-column:1/-1;color:var(--muted-2);font-size:.85rem">Plan: 50% 1st hr, 25% 2nd, 25% 3rd (plus mIVF).</div>
-</div>
-</div>
-<div class="ghost">
+<div class="ghost" style="grid-column:1/-1;">
 <div class="h2" style="font-size:1.1rem;margin-bottom:6px">Local Anesthetic Max</div>
 <div class="grid g-2">
 <label>Anesthetic<select class="input" id="laDrug">
@@ -381,12 +439,171 @@
 <option value="2.0">2%</option>
 </select></label>
 <label>With Epi?<select class="input" id="laEpi"><option value="no">No</option><option value="yes">Yes</option></select></label>
+<label>LA Weight (kg)<input class="input" id="laWeight" placeholder="e.g., 70" step="0.1" type="number"/></label>
 <div>Max Dose: <span class="badge badge-accent" id="laMaxDose">—</span></div>
 <div>Max Volume: <span class="badge badge-accent" id="laMaxVol">—</span></div>
+<div class="row" id="laInlineRow" style="display:flex;gap:10px;flex-wrap:wrap;align-items:end;margin-top:6px">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:14px">Unit
+    <select class="input" id="laDoseUnit" style="width:auto;min-width:90px"><option selected="" value="mL">mL</option><option value="mg">mg</option></select>
+</label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:14px">Dose Given/Planned
+    <input class="input" id="laVolGiven" placeholder="e.g., 20" step="0.1" style="min-width:140px" type="number"/>
+</label>
+<div style="display:flex;flex-direction:column;gap:6px">
+<div class="small">Remaining allowable (this agent)</div>
+<div id="laPlanSliderWrap" style="display:flex;flex-direction:column;gap:6px;margin-top:8px">
+  <div class="small" style="font-weight:600">Planned vs Max (this agent)</div>
+  <div class="la-bar-wrap">
+    <div class="la-bar" id="laPlanBar"><div class="la-fill" id="laPlanFill" style="width:0%"></div></div>
+    <span class="small" id="laPlanPct">0%</span>
+  </div>
+  <div class="small" id="laPlanHelper" style="color:var(--muted-2)">Enter drug, concentration, epi, LA weight, and a planned dose.</div>
+</div>
+  <div class=" -wrap">
+    <!-- removed range input -->
+    <span class="small" id="laPlanPct">0%</span>
+  </div>
+  <div class="small" id="laPlanHelper" style="color:var(--muted-2)">Enter drug, concentration, epi, LA weight, and a planned dose.</div>
+</div>
+<div class="row" style="display:flex;gap:8px;align-items:center">
+<span class="badge badge-soft" id="laRemainMg">— mg</span>
+<span class="badge badge-soft" id="laRemainMl">— mL</span>
+<button class="btn" id="laAutoFill" title="Auto-fill with max safe amount for this agent">Auto‑fill</button>
+<button class="btn btn-primary" id="laAdd">Add Agent</button>
+<button class="btn" id="laClear">Clear All</button>
+</div>
+</div>
+</div>
+<div class="divider" style="height:1px;background:var(--border);margin:8px 0"></div>
+<div class="h2" style="font-size:1rem;margin-bottom:6px">Running Total</div>
+<div class="grid" id="laTotalsRow" style="display:grid; grid-template-columns: 1fr; gap: 12px; margin-top:6px"></div>
+
+<div style="grid-column:1/span 1" id="laTotalsLeft">
+  <div id="laOverallSliderWrap" style="display:flex;flex-direction:column;gap:6px;margin:6px 0">
+  <div class="small" style="font-weight:600">Overall LA Total</div>
+  <div class="la-bar-wrap">
+    <div class="la-bar" id="laOverallBar"><div class="la-fill" id="laOverallFill" style="width:0%"></div> <span class="small" id="laOverallPct" style="margin-left:8px">0%</span>
+  </div>
+</div>
+<div class="ghost" id="lastCalcBox" style="padding:8px;border:1px solid var(--border);border-radius:10px;margin-top:6px">
+  <div class="h2" style="font-size:1rem;margin-bottom:6px">LAST Lipid Infusion Protocol (20% Emulsion)</div>
+  <div class="small" style="margin-bottom:6px;color:var(--muted-2)">Uses LA Weight (kg)</div>
+  <div class="grid g-2">
+    <div style="grid-column:1/-1">
+      <div class="small"><b>Initial Bolus:</b> <span id="lastBolusMl">—</span> mL (1 min)</div>
+    </div>
+    <div><div class="small"><b>Infusion (0.25 mL/kg/min):</b></div>
+      <div class="small">Rate: <span id="lastInfuse025MlMin">—</span> mL/min</div>
+      <div class="small">Rate: <span id="lastInfuse025MlHr">—</span> mL/hr</div>
+    </div>
+    <div><div class="small"><b>Infusion (0.5 mL/kg/min):</b></div>
+      <div class="small">Rate: <span id="lastInfuse05MlMin">—</span> mL/min</div>
+      <div class="small">Rate: <span id="lastInfuse05MlHr">—</span> mL/hr</div>
+    </div>
+    <div style="grid-column:1/-1">
+      <div class="small"><b>Max total (first 30 min):</b> <span id="lastMax30Ml">—</span> mL (≈ 10 mL/kg)</div>
+    </div>
+    <div class="small" style="grid-column:1/-1;color:var(--muted-2)">
+      Consider repeat bolus (up to 2) for persistent instability and increase infusion to 0.5 mL/kg/min if needed. Continue infusion ≥10 min after stability.
+    </div>
+  </div>
+</div>
+
+  <div class=" -wrap">
+    <!-- removed range input -->
+    <span class="small" id="laOverallPct">0%</span>
+  </div>
+</div>
+<div class="small">LA Weight (kg) above is used for each agent’s max (mg/kg).</div>
+<div class="small" id="laTotals" style="margin:8px 0"></div>
+<div>
+<table class="la-table" id="laTable" style="width:100%;border-collapse:collapse">
+<thead>
+<tr style="background:var(--surface-ghost)">
+<th style="text-align:left;border:1px solid var(--border);padding:6px">Agent</th>
+<th style="text-align:left;border:1px solid var(--border);padding:6px">Conc</th>
+<th style="text-align:left;border:1px solid var(--border);padding:6px">Epi</th>
+<th style="text-align:left;border:1px solid var(--border);padding:6px">Vol (mL)</th>
+<th style="text-align:left;border:1px solid var(--border);padding:6px">Given (mg)</th>
+<th style="text-align:left;border:1px solid var(--border);padding:6px">Agent Max (mg)</th>
+<th style="text-align:left;border:1px solid var(--border);padding:6px">% of Agent Max</th>
+<th style="text-align:left;border:1px solid var(--border);padding:6px"></th>
+</tr>
+</thead>
+<tbody id="laTbody">
+<tr><td class="small" colspan="8" style="border:1px solid var(--border);padding:8px;color:var(--muted-2)">No agents added yet.</td></tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="card" id="card-reconstitution">
+  <h2 class="h2">Reconstitution / Dilution</h2>
+  <div class="small">Calculate how much stock medication and diluent to combine to reach a target concentration and final volume.</div>
+  <div class="divider"></div>
+
+  <div class="grid g-3">
+    <label>Stock concentration
+      <div class="grid g-2">
+        <input class="input" id="rc_stock_val" type="number" inputmode="decimal" step="0.01" placeholder="e.g., 50">
+        <select class="input" id="rc_stock_unit">
+          <option value="mcg_per_ml">mcg/mL</option>
+          <option value="mg_per_ml">mg/mL</option>
+        </select>
+      </div>
+      <div class="small muted">Example: fentanyl 50 mcg/mL</div>
+    </label>
+
+    <label>Desired concentration
+      <div class="grid g-2">
+        <input class="input" id="rc_goal_val" type="number" inputmode="decimal" step="0.01" placeholder="e.g., 10">
+        <select class="input" id="rc_goal_unit">
+          <option value="mcg_per_ml">mcg/mL</option>
+          <option value="mg_per_ml">mg/mL</option>
+        </select>
+      </div>
+      <div class="small muted">What you want in the syringe/bag</div>
+    </label>
+
+    <label>Final volume (mL)
+      <input class="input" id="rc_final_vol" type="number" inputmode="decimal" step="0.01" placeholder="e.g., 10">
+      <div class="small muted">Total volume after dilution</div>
+    </label>
+  </div>
+
+  <div class="ghost">
+    <div class="grid g-3">
+      <div><span class="badge badge-accent">Drug (stock): <span id="rc_out_drug">—</span> mL</span></div>
+      <div><span class="badge badge-soft">Diluent: <span id="rc_out_dil">—</span> mL</span></div>
+      <div><span class="badge badge-soft">Check: <span id="rc_out_check">—</span></span></div>
+    </div>
+    <div class="small" id="rc_warn" aria-live="polite" style="color:var(--warn)"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="grid g-2">
+    <label>Quick preset
+      <select class="input" id="rc_preset">
+        <option value="">— Select —</option>
+        <option value="fentanyl_50_to_10_in_10">Fentanyl 50 mcg/mL → 10 mcg/mL in 10 mL</option>
+        <option value="hydromorphone_1_to_0_2_in_10">Hydromorphone 1 mg/mL → 0.2 mg/mL in 10 mL</option>
+        <option value="epi_1_to_0_01_in_100">Epinephrine 1 mg/mL → 0.01 mg/mL in 100 mL (1:100,000)</option>
+        <option value="ketamine_100_to_10_in_50">Ketamine 100 mg/mL → 10 mg/mL in 50 mL</option>
+        <option value="propofol_10_to_1_in_20">Propofol 10 mg/mL → 1 mg/mL in 20 mL</option>
+        <option value="phenylephrine_10_to_0_1_in_100">Phenylephrine 10 mg/mL → 0.1 mg/mL in 100 mL</option>
+        <option value="norepi_1_to_0_004_in_250">Norepinephrine 1 mg/mL → 0.004 mg/mL in 250 mL</option>
+        <option value="vasopressin_20u_per_ml_to_0_4u_per_ml_in_50">Vasopressin 20 U/mL → 0.4 U/mL in 50 mL</option>
+        <option value="lidocaine_2_to_1_in_20">Lidocaine 2% (20 mg/mL) → 10 mg/mL in 20 mL</option>
+</select>
+    </label>
+    <div class="small muted">Auto-converts mg↔mcg. Rounds to syringe-friendly values.</div>
+  </div>
+</div>
+
 </section>
 </main>
 <!-- Drug Info Modal -->
@@ -435,14 +652,28 @@ $('clearFields').addEventListener('click', clearForm);
 $('clearAll').addEventListener('click', ()=>{ if(confirm('Delete all saved cases?')){ saveCases([]); renderCases(); }});
 $('exportAll').addEventListener('click', ()=>{ const arr=getCases(); const header=["Date","Start","End","Age","Sex","ASA","Procedure","Anesthetic","Airway","Case Type","Notes"]; const rows=arr.map(c=>[c.date,c.start,c.end,c.age,c.sex,c.asa,c.proc,c.anes,c.airway,c.caseType,c.notes]); const csv=[header].concat(rows).map(r=>r.map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(",")).join("\n"); const blob=new Blob([csv],{type:"text/csv"}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='cases.csv'; a.click(); URL.revokeObjectURL(url); });
 const caseMask=$('caseMask'), caseBody=$('caseBody'); let currentId=null;
-function viewHTML(c){ return `<div class="grid g-2"><div><b>Date:</b> ${c.date||''}</div><div><b>Time:</b> ${c.start||''}–${c.end||''} (${durationStr(c.start,c.end)})</div><div style="grid-column:1/-1"><b>Procedure:</b> ${c.proc||''}</div><div><b>Anesthetic:</b> ${c.anes||''}</div><div><b>ASA:</b> ${c.asa||''}</div><div><b>Case Type:</b> ${c.caseType||''}</div><div><b>Airway:</b> ${c.airway||''}</div><div style="grid-column:1/-1"><b>Notes:</b><br>${(c.notes||'').replace(/\n/g,'<br>')}</div></div>`; }
-function editHTML(c){ return `<div class="grid g-2"><label>Date<input id="eDate" type="date" class="input" value="${c.date||''}"></label><label>Start<input id="eStart" type="time" class="input" value="${c.start||''}"></label><label>End<input id="eEnd" type="time" class="input" value="${c.end||''}"></label><label>Procedure<input id="eProc" class="input" value="${c.proc||''}"></label><label>Anesthetic<input id="eAnes" class="input" value="${c.anes||''}"></label><label>ASA<select id="eASA" class="input"><option></option><option>I</option><option>II</option><option>III</option><option>IV</option><option>V</option><option>I-E</option><option>II-E</option><option>III-E</option><option>IV-E</option><option>V-E</option></select></label><label>Case Type<input id="eType" class="input" value="${c.caseType||''}"></label><label>Airway<input id="eAirway" class="input" value="${c.airway||''}"></label><label style="grid-column:1/-1">Notes<textarea id="eNotes" class="input" rows="3">${c.notes||''}</textarea></label></div>`; }
+function viewHTML(c){ return `<div class="grid g-2"><div><b>Date:</b> ${c.date||''}</div><div><b>Time:</b> ${c.start||''}–${c.end||''} (${durationStr(c.start,c.end)})</div><div style="grid-column:1/-1"><b>Procedure:</b> ${c.proc||''}</div><div><b>Anesthetic:</b> ${c.anes||''}</div><div><b>ASA:</b> ${c.asa||''}</div><div><b>Age:</b> ${c.age||''}</div><div><b>Sex:</b> ${c.sex||''}</div><div><b>Case Type:</b> ${c.caseType||''}</div><div><b>Airway:</b> ${c.airway||''}</div><div style="grid-column:1/-1"><b>Notes:</b><br>${(c.notes||'').replace(/\n/g,'<br>')}</div></div>`; }
+function editHTML(c){ return `<div class="grid g-2"><label>Date<input id="eDate" type="date" class="input" value="${c.date||''}"></label><label>Start<input id="eStart" type="time" class="input" value="${c.start||''}"></label><label>End<input id="eEnd" type="time" class="input" value="${c.end||''}"></label><label>Age<input id="eAge" type="number" class="input" value="${c.age||''}"></label><label>Sex<select id="eSex" class="input"><option></option><option>Male</option><option>Female</option><option>Other</option></select></label><label>Procedure<input id="eProc" class="input" value="${c.proc||''}"></label><label>Anesthetic<input id="eAnes" class="input" value="${c.anes||''}"></label><label>ASA<select id="eASA" class="input">
+<option value=""></option>
+<option value="I">ASA 1 — non-smoker / minimal alcohol use</option>
+<option value="II">ASA 2 — smoker / pregnant / controlled HTN or DM</option>
+<option value="III">ASA 3 — poorly controlled DM or HTN, BMI ≥ 40, > 3 mo MI/CVA</option>
+<option value="IV">ASA 4 — < 3 mo MI/CVA, severe systemic disease</option>
+<option value="V">ASA 5 — not expected to survive</option>
+<option value="VI">ASA 6 — organ donor</option>
+<option value="I-E">ASA 1-E — Emergency</option>
+<option value="II-E">ASA 2-E — Emergency</option>
+<option value="III-E">ASA 3-E — Emergency</option>
+<option value="IV-E">ASA 4-E — Emergency</option>
+<option value="V-E">ASA 5-E — Emergency</option>
+</select></label><label>Case Type<input id="eType" class="input" value="${c.caseType||''}"></label><label>Airway<input id="eAirway" class="input" value="${c.airway||''}"></label><label style="grid-column:1/-1">Notes<textarea id="eNotes" class="input" rows="3">${c.notes||''}</textarea></label></div>`; }
 document.getElementById('caseList').addEventListener('click', (e)=>{ const card=e.target.closest('.case-card'); if(!card) return; currentId=card.dataset.id; const c=getCases().find(x=>x.id===currentId); if(!c) return; caseBody.innerHTML=viewHTML(c); document.getElementById('caseEdit').style.display='inline-block'; document.getElementById('caseSave').style.display='none'; caseMask.classList.add('active'); });
 document.getElementById('caseClose').addEventListener('click', ()=> caseMask.classList.remove('active'));
 document.getElementById('caseDelete').addEventListener('click', ()=>{ if(!currentId) return; saveCases(getCases().filter(x=>x.id!==currentId)); renderCases(); caseMask.classList.remove('active'); });
 document.getElementById('caseExport').addEventListener('click', ()=>{ if(!currentId) return; const c=getCases().find(x=>x.id===currentId); if(!c) return; const header=["Date","Start","End","Age","Sex","ASA","Procedure","Anesthetic","Airway","Case Type","Notes"]; const row=[c.date,c.start,c.end,c.age,c.sex,c.asa,c.proc,c.anes,c.airway,c.caseType,c.notes]; const csv=header.join(",")+"\n"+row.map(v=>'"'+String(v||'').replace(/"/g,'""')+'"').join(","); const blob=new Blob([csv],{type:"text/csv"}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='case-'+(c.date||'entry')+'.csv'; a.click(); URL.revokeObjectURL(url); });
-document.getElementById('caseEdit').addEventListener('click', ()=>{ const c=getCases().find(x=>x.id===currentId); if(!c) return; caseBody.innerHTML=editHTML(c); document.getElementById('eASA').value=c.asa||''; document.getElementById('caseEdit').style.display='none'; document.getElementById('caseSave').style.display='inline-block'; });
-document.getElementById('caseSave').addEventListener('click', ()=>{ const arr=getCases(); const i=arr.findIndex(x=>x.id===currentId); if(i<0) return; const c=arr[i]; arr[i]={...c, date:document.getElementById('eDate').value, start:document.getElementById('eStart').value, end:document.getElementById('eEnd').value, proc:document.getElementById('eProc').value, anes:document.getElementById('eAnes').value, asa:document.getElementById('eASA').value, caseType:document.getElementById('eType').value, airway:document.getElementById('eAirway').value, notes:document.getElementById('eNotes').value}; saveCases(arr); renderCases(); caseMask.classList.remove('active'); });
+document.getElementById('caseEdit').addEventListener('click', ()=>{ const c=getCases().find(x=>x.id===currentId); if(!c) return; caseBody.innerHTML=editHTML(c); document.getElementById('eASA').value=c.asa||'';
+ document.getElementById('eSex').value=c.sex||''; document.getElementById('caseEdit').style.display='none'; document.getElementById('caseSave').style.display='inline-block'; });
+document.getElementById('caseSave').addEventListener('click', ()=>{ const arr=getCases(); const i=arr.findIndex(x=>x.id===currentId); if(i<0) return; const c=arr[i]; arr[i]={...c, date:document.getElementById('eDate').value, start:document.getElementById('eStart').value, end:document.getElementById('eEnd').value, age:document.getElementById('eAge').value, sex:document.getElementById('eSex').value, proc:document.getElementById('eProc').value, anes:document.getElementById('eAnes').value, asa:document.getElementById('eASA').value, caseType:document.getElementById('eType').value, airway:document.getElementById('eAirway').value, notes:document.getElementById('eNotes').value}; saveCases(arr); renderCases(); caseMask.classList.remove('active'); });
 renderCases();
 
 /* MEDICATIONS */
@@ -697,6 +928,933 @@ if ($('burnPct')) $('burnPct').addEventListener('input', calcAll);
 /* PEARLS EXPAND/COLLAPSE */
 $('btnExpandPearls').addEventListener('click', ()=>{ document.querySelectorAll('#tab-pearls details').forEach(d=>d.open=true); });
 $('btnCollapsePearls').addEventListener('click', ()=>{ document.querySelectorAll('#tab-pearls details').forEach(d=>d.open=false); });
+
+/* ==== LOCAL ANESTHETIC RUNNING TOTALS (Add Agent feature, enhanced) ==== */
+const LA_KEY='srna_la_log_v3';
+const getLA=()=>{ try{return JSON.parse(localStorage.getItem(LA_KEY)||'[]');}catch(e){return [];} };
+const saveLA=arr=>localStorage.setItem(LA_KEY, JSON.stringify(arr));
+const LA_CAPS = { lidocaine:{plain:4.5, epi:7}, bupivacaine:{plain:2.5, epi:3}, ropivacaine:{plain:3, epi:3}, mepivacaine:{plain:5, epi:7} };
+function mgPerMlFromConc(conc){ return conc*10; } // 1% = 10 mg/mL
+
+function totalsByAgent(){
+  const t = {lidocaine:0, bupivacaine:0, ropivacaine:0, mepivacaine:0};
+  getLA().forEach(a => { if (t.hasOwnProperty(a.drug)) t[a.drug] += a.mg; });
+  return t;
+}
+function compositeFraction(){
+  const w=parseFloat((document.getElementById('wKg')?.value)||'0');
+  if(!(w>0)) return 0;
+  let sum=0;
+  getLA().forEach(a => {
+    const perKg=(a.epi==='yes'?LA_CAPS[a.drug].epi:LA_CAPS[a.drug].plain);
+    const max = perKg * w;
+    if(max>0) sum += a.mg / max;
+  });
+  return sum;
+}
+function remainingForSelected(){
+  const drug = document.getElementById('laDrug')?.value;
+  const conc = parseFloat((document.getElementById('laConc')?.value)||'0');
+  const epi  = document.getElementById('laEpi')?.value || 'no';
+  const w    = parseFloat((document.getElementById('wKg')?.value)||'0');
+  if(!drug || !(w>0) || !(conc>0)) return {mg:0, ml:0, maxMg:0, givenMg:0};
+  const perKg=(epi==='yes'?LA_CAPS[drug].epi:LA_CAPS[drug].plain);
+  const agentMax = perKg * w;
+  const byAgent = totalsByAgent();
+  const given = byAgent[drug] || 0;
+  const compFrac = compositeFraction();
+  const compRemaining = Math.max(0, (1 - compFrac) * agentMax);
+  const agentRemaining = Math.max(0, agentMax - given);
+  const mgAllowed = Math.min(compRemaining, agentRemaining);
+  const mlAllowed = mgPerMlFromConc(conc)>0 ? (mgAllowed / mgPerMlFromConc(conc)) : 0;
+  return {mg:mgAllowed, ml:mlAllowed, maxMg:agentMax, givenMg:given};
+}
+function updateRemainingBadges(){
+  const rem = remainingForSelected();
+  const rMg = document.getElementById('laRemainMg');
+  const rMl = document.getElementById('laRemainMl');
+  if(rMg) rMg.textContent = (rem.mg>0 ? rem.mg.toFixed(1) : '0.0') + ' mg';
+  if(rMl) rMl.textContent = (rem.ml>0 ? rem.ml.toFixed(1) : '0.0') + ' mL';
+}
+function renderLARows(){
+  const tbody=document.getElementById('laTbody');
+  const totalsEl=document.getElementById('laTotals');
+  if(!tbody||!totalsEl) return;
+  const w=parseFloat((document.getElementById('wKg')?.value)||'0');
+  const list=getLA();
+  if(!list.length){
+    tbody.innerHTML='<tr><td colspan="8" class="small" style="border:1px solid var(--border);padding:8px;color:var(--muted-2)">No agents added yet.</td></tr>';
+    
+totalsEl.innerHTML = 'Total Given: '
+  + '<span class="badge '+(dangerAll?'':'badge-soft')+'"'
+  + ' style="'+(dangerAll?'background:var(--danger);color:#fff':'')+'">'
+  + sumMg.toFixed(1) + ' mg</span>'
+  + ' <span class="small muted">('
+  + '<span id="laTotalGivenPct" class="badge '+(dangerAll?'':'badge-soft')+'"'
+  + ' style="'+(dangerAll?'background:var(--danger);color:#fff':'background:#4caf50;color:#fff;border-color:#4caf50')+'">'
+  + overallPct + '%</span>)</span>'
+  + ' &nbsp; • &nbsp; Composite use: '
+  + '<span class="badge '+(dangerAll?'':'badge-soft')+'" style="'+(dangerAll?'background:var(--danger);color:#fff':'')+'">'
+  + overallPct + '%</span>';
+
+    updateRemainingBadges();
+    return;
+  }
+  let rows=''; let sumMg=0; let sumFraction=0;
+  list.forEach((a,i)=>{
+    const perKg=(a.epi==='yes'?LA_CAPS[a.drug].epi:LA_CAPS[a.drug].plain);
+    const agentMaxMg=(w>0?perKg*w:0);
+    const frac=agentMaxMg>0?(a.mg/agentMaxMg):0;
+    sumMg+=a.mg; sumFraction+=frac;
+    const pctTxt=agentMaxMg>0? (100*frac).toFixed(0)+'%':'—';
+    const danger = frac>1;
+    rows += '<tr>'
+      + '<td style="border:1px solid var(--border);padding:6px">'+a.drug+'</td>'
+      + '<td style="border:1px solid var(--border);padding:6px">'+a.conc+'%</td>'
+      + '<td style="border:1px solid var(--border);padding:6px">'+(a.epi==='yes'?'Yes':'No')+'</td>'
+      + '<td style="border:1px solid var(--border);padding:6px">'+(a.vol>0?a.vol.toFixed(1):'—')+'</td>'
+      + '<td style="border:1px solid var(--border);padding:6px">'+a.mg.toFixed(1)+'</td>'
+      + '<td style="border:1px solid var(--border);padding:6px">'+(agentMaxMg>0?agentMaxMg.toFixed(1):'—')+'</td>'
+      + '<td style="border:1px solid var(--border);padding:6px;'+(danger?'color:var(--danger);font-weight:800':'')+'">'+pctTxt+'</td>'
+      + '<td style="border:1px solid var(--border);padding:6px"><button class="btn btn-danger" data-del="'+i+'">Delete</button></td>'
+      + '</tr>';
+  });
+  tbody.innerHTML=rows;
+  const overallPct=(100*sumFraction).toFixed(0);
+  const dangerAll=sumFraction>1;
+  totalsEl.innerHTML = 'Total given: <span class="badge '+(dangerAll?'':'badge-soft')+'" style="'+(dangerAll?'background:var(--danger);color:#fff':'')+'">'+sumMg.toFixed(1)+' mg</span>'
+    + ' &nbsp; • &nbsp; Composite use: '
+    + '<span class="badge '+(dangerAll?'':'badge-soft')+'" style="'+(dangerAll?'background:var(--danger);color:#fff':'')+'">'+overallPct+'%</span>';
+  if(dangerAll){
+    totalsEl.insertAdjacentHTML('beforeend',' <span class="badge" style="background:var(--warn);color:#000;margin-left:8px">Over safe amount!</span>');
+  }
+  updateRemainingBadges();
+}
+function addLAFromUI(e){
+  if (e) e.preventDefault();
+  const drug=document.getElementById('laDrug')?.value;
+  const conc=parseFloat((document.getElementById('laConc')?.value)||'0');
+  const epi=document.getElementById('laEpi')?.value||'no';
+  const unit=document.getElementById('laDoseUnit')?.value||'mL';
+  const valEl=document.getElementById('laVolGiven');
+  const doseVal=parseFloat((valEl?.value)||'0');
+  const w=parseFloat((document.getElementById('wKg')?.value)||'0');
+  if(!drug || !(conc>0) || !(doseVal>0) || !(w>0)) return;
+  const rem = remainingForSelected();
+  const mgMl=mgPerMlFromConc(conc);
+  let addMg = unit==='mL' ? (mgMl * doseVal) : doseVal;
+  if(addMg > rem.mg + 1e-6){ addMg = rem.mg; }
+  const vol = mgMl>0 ? (addMg / mgMl) : 0;
+  const list=getLA(); list.push({drug,conc,epi,vol,mg:addMg}); saveLA(list);
+  if(valEl) valEl.value='';
+  renderLARows();
+}
+document.addEventListener('click', (e)=>{
+  const btn=e.target.closest('button[data-del]'); if(!btn) return;
+  const idx=parseInt(btn.getAttribute('data-del'),10);
+  const list=getLA(); if(idx>=0 && idx<list.length){ list.splice(idx,1); saveLA(list); renderLARows(); }
+});
+(function wireLA(){
+  const add=document.getElementById('laAdd'); if(add) add.addEventListener('click', addLAFromUI);
+  const addEnter = document.getElementById('laVolGiven');
+  if(addEnter){
+    addEnter.addEventListener('keydown', (ev)=>{
+      if(ev.key==='Enter'){ ev.preventDefault(); addLAFromUI(ev); }
+    });
+  }
+  const clr=document.getElementById('laClear'); if(clr) clr.addEventListener('click', ()=>{ saveLA([]); renderLARows(); });
+  const unit=document.getElementById('laDoseUnit');
+  if(unit){
+    unit.addEventListener('change', ()=>{
+      const input=document.getElementById('laVolGiven');
+      if(input) input.placeholder = unit.value==='mL' ? 'e.g., 20' : 'e.g., 100 (mg)';
+      const lbl = input ? input.closest('label') : null;
+      if(lbl && lbl.firstChild && lbl.firstChild.nodeType===3){
+        lbl.firstChild.textContent = unit.value==='mL' ? 'Dose Given/Planned (mL)' : 'Dose Given/Planned (mg)';
+      }
+      updateRemainingBadges();
+    });
+  }
+  ['wKg','laDrug','laConc','laEpi'].forEach(id=>{ const el=document.getElementById(id); if(el) el.addEventListener('input', ()=>{ renderLARows(); updateRemainingBadges(); }); });
+  const autoBtn = document.getElementById('laAutoFill');
+  if(autoBtn){
+    autoBtn.addEventListener('click', ()=>{
+      const unitSel=document.getElementById('laDoseUnit');
+      const input=document.getElementById('laVolGiven');
+      const rem = remainingForSelected();
+      if(!unitSel || !input) return;
+      if(unitSel.value==='mL'){ input.value = rem.ml>0? rem.ml.toFixed(1) : 0; }
+      else { input.value = rem.mg>0? rem.mg.toFixed(1) : 0; }
+    });
+  }
+  renderLARows();
+  updateRemainingBadges();
+})();
+/* ==== END LA RUNNING TOTALS ==== */
+
+/* ==== Color coding helpers for running totals ==== */
+function statusColor(pct){ // pct is 0-100
+  if (!(pct>=0)) return {bg:'', fg:''};
+  if (pct < 70) return {bg:'var(--success)', fg:'#fff'};        // green
+  if (pct < 90) return {bg:'var(--warn)', fg:'#000'};           // yellow
+  return {bg:'var(--danger)', fg:'#fff'};                       // red
+}
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const hInput = document.getElementById('hCm');
+  const uSel = document.getElementById('hUnit');
+  const toIn = cm => cm/2.54;
+  const toCm = inch => inch*2.54;
+  function updatePlaceholder(){
+    if(!hInput||!uSel) return;
+    hInput.placeholder = uSel.value==='cm' ? 'e.g., 170' : 'e.g., 67';
+  }
+  function convertValue(oldUnit,newUnit){
+    if(!hInput) return;
+    const v = parseFloat(hInput.value);
+    if(!(v>=0)) return;
+    if(oldUnit==='cm'&&newUnit==='in'){ hInput.value = (toIn(v)).toFixed(1); }
+    if(oldUnit==='in'&&newUnit==='cm'){ hInput.value = (toCm(v)).toFixed(1); }
+  }
+  if(hInput && uSel){
+    updatePlaceholder();
+    uSel.addEventListener('change', (e)=>{
+      convertValue(e.target._prev || 'cm', e.target.value);
+      e.target._prev = e.target.value;
+      updatePlaceholder();
+      if (typeof window.recalcCalcs==='function') try{ window.recalcCalcs(); }catch(_){}
+    });
+    uSel._prev = uSel.value;
+  }
+  window.getHeightCm = function(){
+    if(!hInput||!uSel) return null;
+    const raw = parseFloat(hInput.value);
+    if(!(raw>=0)) return null;
+    return uSel.value==='cm' ? raw : (raw*2.54);
+  };
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  function mark(el, hasVal){
+    if(!el) return;
+    el.classList.remove('badge-soft');
+    if(hasVal){ el.style.background='var(--accent)'; el.style.color='#fff'; }
+    else { el.style.background=''; el.style.color=''; el.classList.add('badge-soft'); }
+  }
+  const rate = document.getElementById('mivfOut');
+  const def = document.getElementById('defOut');
+  function refresh(){
+    if(rate) mark(rate, /\d/.test(rate.textContent));
+    if(def) mark(def, /\d/.test(def.textContent));
+  }
+  refresh();
+  ['recalcCalcs','updateMIVF','updateNPO'].forEach(fn=>{
+    if(typeof window[fn]==='function'){
+      const orig = window[fn];
+      window[fn]=function(){ const r = orig.apply(this, arguments); try{refresh();}catch(_){ } return r; };
+    }
+  });
+  const moTgt = document.getElementById('surgCalcWrap') || document.getElementById('tab-calcs');
+  if(moTgt && 'MutationObserver' in window){
+    const mo = new MutationObserver(refresh);
+    mo.observe(moTgt, {subtree:true, childList:true, characterData:true});
+  }
+});
+</script>
+
+
+
+
+
+
+
+
+<script>
+// === LA Two-Bar Visualization + Hardened Add Agent ===
+document.addEventListener('DOMContentLoaded', function(){
+  function num(v){ const x=parseFloat(v); return (x>=0||x<0)?x:NaN; }
+  function clamp(x,min,max){ return Math.max(min, Math.min(max,x)); }
+  function barColor(p){ if(p<75) return '#4caf50'; if(p<100) return '#ffeb3b'; return '#f44336'; }
+
+  const LA_CAPS = (window.LA_CAPS || { lidocaine:{plain:4.5, epi:7}, bupivacaine:{plain:2.5, epi:3}, ropivacaine:{plain:3, epi:3}, mepivacaine:{plain:5, epi:7} });
+  const mgPerMlFromConc = (window.mgPerMlFromConc || function(c){ return c*10; });
+
+  function getLaWeight(){
+    const el=document.getElementById('laWeight'); const v=num(el&&el.value); return (v>0)?v:NaN;
+  }
+
+  function computeAgentMaxMg(){
+    const drug=(document.getElementById('laDrug')||{}).value;
+    const conc=num((document.getElementById('laConc')||{}).value);
+    const epi=(document.getElementById('laEpi')||{}).value;
+    const lw=getLaWeight();
+    if(!(drug && (lw>0) && (conc>0))) return {ok:false};
+    const perKg = (epi==='yes'? LA_CAPS[drug].epi : LA_CAPS[drug].plain);
+    const agentMax = perKg * lw;
+    return {ok:true, agentMaxMg:agentMax, perKg, conc};
+  }
+
+  function computePlannedMg(){
+    const unit=(document.getElementById('laDoseUnit')||{}).value;
+    const valEl=document.getElementById('laVolGiven');
+    const v=num(valEl && valEl.value);
+    const conc=num((document.getElementById('laConc')||{}).value);
+    if(!(v>=0) || !(conc>0)) return {ok:false};
+    if(unit==='mg') return {ok:true, mg:v};
+    return {ok:true, mg: v * mgPerMlFromConc(conc)};
+  }
+
+  function paintBar(fillEl, pct){
+    if(!fillEl) return;
+    const p=clamp(Math.round(pct),0,150);
+    fillEl.style.width = Math.min(p,100) + '%';
+    fillEl.style.background = barColor(p);
+    fillEl.parentElement.style.outline = (p>=100)? '2px solid #f44336' : '';
+  }
+
+  function updateAgentPlanBar(){
+    const planFill=document.getElementById('laPlanFill');
+    const pctLbl=document.getElementById('laPlanPct');
+    const helper=document.getElementById('laPlanHelper');
+    const maxInfo = computeAgentMaxMg();
+    const planned = computePlannedMg();
+    if(maxInfo.ok && planned.ok){
+      const pct = 100*planned.mg / (maxInfo.agentMaxMg||1);
+      paintBar(planFill, pct);
+      if(pctLbl) pctLbl.textContent = Math.round(clamp(pct,0,150)) + '%';
+      if(helper){
+        const remaining = Math.max(0, maxInfo.agentMaxMg - planned.mg);
+        helper.textContent = `Planned: ${planned.mg.toFixed(1)} mg | Max: ${Math.round(maxInfo.agentMaxMg)} mg | Remaining: ${remaining.toFixed(1)} mg`;
+        helper.style.color = '';
+      }
+    } else {
+      paintBar(planFill, 0);
+      if(pctLbl) pctLbl.textContent = '0%';
+      if(helper){ helper.textContent = 'Enter drug, concentration, epi, LA weight, and a planned dose.'; helper.style.color='var(--muted-2)'; }
+    }
+  }
+
+  function updateOverallBar(){
+    const fill=document.getElementById('laOverallFill');
+    const pctLbl=document.getElementById('laOverallPct');
+    const wEl=document.getElementById('wKg');
+    const prev=wEl? wEl.value : null;
+    const lw=getLaWeight();
+    if(wEl) wEl.value = (lw>0)? String(lw) : '';
+    let pct=0;
+    try{
+      if(typeof window.compositeFraction==='function'){ pct = Math.round(100*window.compositeFraction()); }
+      else {
+        const t=document.getElementById('laTotals');
+        const m=t && (t.textContent||'').match(/(\d+)\s*%/);
+        pct = m? parseInt(m[1],10) : 0;
+      }
+    }catch(_){ pct=0; } finally { if(wEl && prev!==null) wEl.value = prev; }
+    paintBar(fill, pct);
+    if(pctLbl) pctLbl.textContent = clamp(pct, 0, 150) + '%';
+  }
+
+  function recalcLAStandalone(){
+    // Keep Max Dose/Vol in sync using LA weight
+    const outDose=document.getElementById('laMaxDose');
+    const outVol=document.getElementById('laMaxVol');
+    const info=computeAgentMaxMg();
+    if(outDose && outVol){
+      if(info.ok){
+        const maxVol = info.agentMaxMg / mgPerMlFromConc(info.conc);
+        outDose.textContent = Math.round(info.agentMaxMg) + ' mg ('+info.perKg+' mg/kg)';
+        outVol.textContent = maxVol.toFixed(1) + ' mL @ '+info.conc+'%';
+      } else { outDose.textContent='—'; outVol.textContent='—'; }
+    }
+    updateAgentPlanBar();
+    updateOverallBar();
+  }
+
+  // Harden addLAFromUI to ensure pushing to log and re-rendering even if original was truncated
+  window.addLAFromUI = function(e){
+    if(e) e.preventDefault();
+    const drug=(document.getElementById('laDrug')||{}).value;
+    const conc=num((document.getElementById('laConc')||{}).value);
+    const epi=(document.getElementById('laEpi')||{}).value || 'no';
+    const unit=(document.getElementById('laDoseUnit')||{}).value || 'mL';
+    const input=document.getElementById('laVolGiven');
+    const v=num(input && input.value);
+    const lw=getLaWeight();
+    if(!(drug && (conc>0) && (v>0) && (lw>0))) return;
+
+    const mg = unit==='mg' ? v : (v * mgPerMlFromConc(conc));
+
+    // Calculate remaining allowed mg based on current selections
+    let allow = mg;
+    try{
+      if(typeof window.remainingForSelected==='function'){
+        const rem = window.remainingForSelected();
+        if(rem && rem.mg>=0) allow = Math.min(mg, rem.mg);
+      }
+    }catch(_){}
+
+    // Read, append, save
+    try{
+      const LA_KEY='srna_la_log_v3';
+      const getLA=()=>{ try{return JSON.parse(localStorage.getItem(LA_KEY)||'[]');}catch(e){return [];} };
+      const saveLA=arr=>localStorage.setItem(LA_KEY, JSON.stringify(arr));
+      const list=getLA();
+      list.push({drug:drug, conc:conc, epi:epi, mg: allow});
+      saveLA(list);
+      if(input) input.value='';
+      if(typeof window.renderLARows==='function') window.renderLARows();
+      updateOverallBar();
+    }catch(err){
+      console.error('LA add failed:', err);
+    }
+  };
+
+  // Wire events
+  ['laWeight','laDrug','laConc','laEpi','laDoseUnit','laVolGiven'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ el.addEventListener('input', recalcLAStandalone); el.addEventListener('change', recalcLAStandalone); }
+  });
+
+  // Ensure "Add Agent" click uses our hardened function
+  const addBtn=document.getElementById('laAdd');
+  if(addBtn){ addBtn.addEventListener('click', window.addLAFromUI); }
+  // Also handle Enter key in planned dose
+  const addEnter=document.getElementById('laVolGiven');
+  if(addEnter){ addEnter.addEventListener('keydown', (ev)=>{ if(ev.key==='Enter'){ ev.preventDefault(); window.addLAFromUI(ev); } }); }
+
+  // Recalculate when rows are re-rendered
+  if(typeof window.renderLARows==='function'){
+    const __orig = window.renderLARows;
+    window.renderLARows = function(){ const r=__orig.apply(this, arguments); try{ updateOverallBar(); }catch(_){ } return r; };
+  }
+
+  // Initial
+  recalcLAStandalone();
+});
+</script>
+
+
+<script>
+// === Override LA calculations to use laWeight exclusively (no patient wKg usage) ===
+document.addEventListener('DOMContentLoaded', function(){
+  // helpers
+  function num(v){ const x=parseFloat(v); return (x>=0||x<0)?x:NaN; }
+  function getLaWeight(){
+    const el = document.getElementById('laWeight');
+    const v = num(el && el.value);
+    return (v>0)? v : NaN;
+  }
+  // Access app constants
+  const LA_CAPS = (window.LA_CAPS || { lidocaine:{plain:4.5, epi:7}, bupivacaine:{plain:2.5, epi:3}, ropivacaine:{plain:3, epi:3}, mepivacaine:{plain:5, epi:7} });
+  const mgPerMlFromConc = (window.mgPerMlFromConc || function(c){ return c*10; });
+  const LA_KEY='srna_la_log_v3';
+  const getLA=()=>{ try{return JSON.parse(localStorage.getItem(LA_KEY)||'[]');}catch(e){return [];} };
+  const saveLA=arr=>localStorage.setItem(LA_KEY, JSON.stringify(arr));
+
+  // Fresh implementations that use laWeight
+  function computeCompositeFractionWith(lw){
+    if(!(lw>0)) return 0;
+    let sum = 0;
+    getLA().forEach(a => {
+      const perKg=(a.epi==='yes'?LA_CAPS[a.drug].epi:LA_CAPS[a.drug].plain);
+      const agentMax = perKg * lw;
+      if(agentMax>0) sum += a.mg / agentMax;
+    });
+    return sum;
+  }
+  function totalsByAgent(){
+    const t = {lidocaine:0, bupivacaine:0, ropivacaine:0, mepivacaine:0};
+    getLA().forEach(a => { if (t.hasOwnProperty(a.drug)) t[a.drug] += a.mg; });
+    return t;
+  }
+  window.remainingForSelected = function(){
+    const drug = document.getElementById('laDrug')?.value;
+    const conc = parseFloat((document.getElementById('laConc')?.value)||'0');
+    const epi  = document.getElementById('laEpi')?.value || 'no';
+    const lw    = getLaWeight();
+    if(!drug || !(lw>0) || !(conc>0)) return {mg:0, ml:0, maxMg:0, givenMg:0};
+    const perKg=(epi==='yes'?LA_CAPS[drug].epi:LA_CAPS[drug].plain);
+    const agentMax = perKg * lw;
+    const byAgent = totalsByAgent();
+    const given = byAgent[drug] || 0;
+    const compFrac = computeCompositeFractionWith(lw);
+    const compRemaining = Math.max(0, (1 - compFrac) * agentMax);
+    const agentRemaining = Math.max(0, agentMax - given);
+    const mgAllowed = Math.min(compRemaining, agentRemaining);
+    const mlAllowed = mgAllowed / mgPerMlFromConc(conc);
+    return { mg: mgAllowed, ml: mlAllowed, maxMg: agentMax, givenMg: given };
+  };
+
+  // Override renderLARows to use laWeight for % calculations and maxes
+  if (typeof window.renderLARows === 'function'){
+    const _origDelHandlerInstalled = true; // original uses event delegation for delete
+    window.renderLARows = function(){
+      const tbody=document.getElementById('laTbody');
+      const totalsEl=document.getElementById('laTotals');
+      if(!tbody||!totalsEl) return;
+      const lw = getLaWeight();
+      const list = getLA();
+      if(!list.length || !(lw>0)){
+        tbody.innerHTML='<tr><td colspan="8" class="small" style="border:1px solid var(--border);padding:8px;color:var(--muted-2)">No agents added yet.</td></tr>';
+        totalsEl.innerHTML='';
+        if(typeof window.updateRemainingBadges==='function') window.updateRemainingBadges();
+        // Also reset overall bar if present
+        try{
+          const fill = document.getElementById('laOverallFill');
+          const lbl = document.getElementById('laOverallPct');
+          if(fill){ fill.style.width='0%'; fill.style.background='#4caf50'; }
+          if(lbl){ lbl.textContent='0%'; }
+        }catch(_){}
+        return;
+      }
+      let rows=''; let sumMg=0; let sumFraction=0;
+      list.forEach((a,i)=>{
+        const perKg=(a.epi==='yes'?LA_CAPS[a.drug].epi:LA_CAPS[a.drug].plain);
+        const agentMaxMg=(lw>0?perKg*lw:0);
+        const pct = agentMaxMg>0 ? (100*a.mg/agentMaxMg) : 0;
+        sumMg += a.mg;
+        sumFraction += (agentMaxMg>0 ? a.mg/agentMaxMg : 0);
+        const mgPerMl = mgPerMlFromConc(a.conc);
+        rows += ''
+          + '<tr>'
+          + `<td style="border:1px solid var(--border);padding:6px">${a.drug}</td>`
+          + `<td style="border:1px solid var(--border);padding:6px">${a.conc}%</td>`
+          + `<td style="border:1px solid var(--border);padding:6px">${a.epi==='yes'?'Yes':'No'}</td>`
+          + `<td style="border:1px solid var(--border);padding:6px">${a.mg.toFixed(1)} mg</td>`
+          + `<td style="border:1px solid var(--border);padding:6px">${mgPerMl.toFixed(1)} mg/mL</td>`
+          + `<td style="border:1px solid var(--border);padding:6px">${agentMaxMg>0? Math.round(agentMaxMg)+' mg':'—'}</td>`
+          + `<td style="border:1px solid var(--border);padding:6px">${Math.round(pct)}%</td>`
+          + `<td style="border:1px solid var(--border);padding:6px"><button class="btn btn-danger" data-del="${i}">Delete</button></td>`
+          + '</tr>';
+      });
+      tbody.innerHTML = rows;
+      const overallPct = Math.round(100*sumFraction);
+      const dangerAll = sumFraction>1;
+      totalsEl.innerHTML = 'Total given: <span class="badge '+(dangerAll?'':'badge-soft')+'" style="'+(dangerAll?'background:var(--danger);color:#fff':'' )+'">'+Math.round(sumMg)+' mg ('+overallPct+'%)</span>';
+      if(typeof window.updateRemainingBadges==='function') window.updateRemainingBadges();
+
+      // Update overall bar (if present) without using patient wKg
+      try{
+        const fill=document.getElementById('laOverallFill');
+        const lbl=document.getElementById('laOverallPct');
+        if(fill){
+          const pct = Math.max(0, Math.min(150, overallPct));
+          fill.style.width = Math.min(pct, 100)+'%';
+          fill.style.background = pct<75 ? '#4caf50' : (pct<100 ? '#ffeb3b' : '#f44336');
+        }
+        if(lbl){ lbl.textContent = (overallPct<0?0:overallPct>150?150:overallPct) + '%'; }
+      }catch(_){}
+    };
+  }
+
+  // Also override compositeFraction to our laWeight-based version for any code paths that still call it
+  window.compositeFraction = function(){
+    const lw = getLaWeight();
+    return computeCompositeFractionWith(lw);
+  };
+
+  // Make sure "Add Agent" still works with our overrides
+  const addBtn = document.getElementById('laAdd');
+  if(addBtn && typeof window.addLAFromUI === 'function'){
+    addBtn.removeEventListener && addBtn.removeEventListener('click', window.addLAFromUI);
+    addBtn.addEventListener('click', window.addLAFromUI);
+  }
+
+  // Recalc when LA weight or fields change
+  function recalcBarsAndTable(){
+    try{
+      if(typeof window.renderLARows==='function') window.renderLARows();
+      // Update the agent planned bar (if our two-bar script exists)
+      const planFill=document.getElementById('laPlanFill');
+      if(planFill && typeof window.remainingForSelected==='function'){
+        const drug=(document.getElementById('laDrug')||{}).value;
+        const conc=num((document.getElementById('laConc')||{}).value);
+        const epi=(document.getElementById('laEpi')||{}).value;
+        const unit=(document.getElementById('laDoseUnit')||{}).value;
+        const valEl=document.getElementById('laVolGiven');
+        const v=num(valEl && valEl.value);
+        let plannedMg = (unit==='mg')? v : (v * (conc>0? mgPerMlFromConc(conc):0));
+        plannedMg = (plannedMg>=0? plannedMg: 0);
+        const rem = window.remainingForSelected();
+        const maxMg = rem.maxMg || 0;
+        const pct = maxMg>0 ? Math.round(100*plannedMg/maxMg) : 0;
+        planFill.style.width = Math.min(Math.max(pct,0),100)+'%';
+        const lbl = document.getElementById('laPlanPct'); if(lbl) lbl.textContent = (pct<0?0:pct>150?150:pct)+'%';
+      }
+    }catch(_){}
+  }
+  ['laWeight','laDrug','laConc','laEpi','laDoseUnit','laVolGiven'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ el.addEventListener('input', recalcBarsAndTable); el.addEventListener('change', recalcBarsAndTable); }
+  });
+  // Initial render
+  recalcBarsAndTable();
+});
+</script>
+
+
+<script>
+/* Ensure "Clear All" clears LA list and refreshes UI */
+document.addEventListener('DOMContentLoaded', function(){
+  const LA_KEY='srna_la_log_v3';
+  function getLA(){ try{return JSON.parse(localStorage.getItem(LA_KEY)||'[]');}catch(e){return [];} }
+  function saveLA(arr){ localStorage.setItem(LA_KEY, JSON.stringify(arr)); }
+  function doClearAll(){
+    try{
+      saveLA([]);
+      if (typeof window.renderLARows==='function') window.renderLARows();
+      // Reset bars
+      const planFill=document.getElementById('laPlanFill');
+      const planLbl=document.getElementById('laPlanPct');
+      if(planFill) planFill.style.width='0%';
+      if(planLbl) planLbl.textContent='0%';
+      const overFill=document.getElementById('laOverallFill');
+      const overLbl=document.getElementById('laOverallPct');
+      if(overFill) overFill.style.width='0%';
+      if(overLbl) overLbl.textContent='0%';
+    }catch(e){ console.error(e); }
+  }
+  const btn = document.getElementById('laClear');
+  if(btn){
+    btn.addEventListener('click', function(e){ e.preventDefault(); doClearAll(); });
+  }
+});
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  function num(v){ const x=parseFloat(v); return (x>=0||x<0)?x:NaN; }
+  function getLaWeight(){
+    const el=document.getElementById('laWeight');
+    const v=num(el && el.value);
+    return (v>0)? v : NaN;
+  }
+  function setText(id, val){ const el=document.getElementById(id); if(el) el.textContent = (val!=null && !isNaN(val)) ? String(val) : '—'; }
+
+  function recomputeLAST(){
+    const w = getLaWeight();
+    if(!(w>0)){
+      ['lastBolusMl','lastInfuse025MlMin','lastInfuse025MlHr','lastInfuse05MlMin','lastInfuse05MlHr','lastMax30Ml'].forEach(id=>setText(id,'—'));
+      return;
+    }
+    const bolus = 1.5 * w;              // mL (1.5 mL/kg of 20%)
+    const inf025_min = 0.25 * w;        // mL/min
+    const inf025_hr = inf025_min * 60;  // mL/hr
+    const inf05_min = 0.5 * w;          // mL/min
+    const inf05_hr = inf05_min * 60;    // mL/hr
+    const max30 = 10 * w;               // mL over first 30 min
+
+    setText('lastBolusMl', Math.round(bolus));
+    setText('lastInfuse025MlMin', +(inf025_min.toFixed(1)));
+    setText('lastInfuse025MlHr', Math.round(inf025_hr));
+    setText('lastInfuse05MlMin', +(inf05_min.toFixed(1)));
+    setText('lastInfuse05MlHr', Math.round(inf05_hr));
+    setText('lastMax30Ml', Math.round(max30));
+  }
+
+  ['laWeight'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el){ el.addEventListener('input', recomputeLAST); el.addEventListener('change', recomputeLAST); }
+  });
+  recomputeLAST();
+});
+</script>
+
+
+<script>
+/* --- Height Unit Handling & At-a-Glance Refresh (enhanced) --- */
+document.addEventListener('DOMContentLoaded', function(){
+  const hInput = document.getElementById('hCm');
+  const uSel = document.getElementById('hUnit');
+
+  // Helpers
+  const toIn = cm => cm/2.54;
+  const toCm = inch => inch*2.54;
+
+  function getHeightCm(){
+    if(!hInput||!uSel) return null;
+    const raw = parseFloat(hInput.value);
+    if(!(raw>=0)) return null;
+    return uSel.value==='cm' ? raw : (raw*2.54);
+  }
+  window.getHeightCm = getHeightCm; // expose
+
+  function updatePlaceholders(){
+    if(!hInput||!uSel) return;
+    hInput.placeholder = uSel.value==='cm' ? 'e.g., 170' : 'e.g., 67';
+  }
+  function convertOnUnitChange(oldUnit,newUnit){
+    if(!hInput) return;
+    const v = parseFloat(hInput.value);
+    if(!(v>=0)) return;
+    if(oldUnit==='cm' && newUnit==='in'){ hInput.value = (toIn(v)).toFixed(1); }
+    if(oldUnit==='in' && newUnit==='cm'){ hInput.value = (toCm(v)).toFixed(0); }
+  }
+
+  function recomputeAtAGlance(){
+    // Try to call the app's overall calculation if present
+    if (typeof window.recalcCalcs === 'function') {
+      try { window.recalcCalcs(); return; } catch(_){}
+    }
+    // Fallback: directly recompute BMI (kg/m^2), IBW (Devine), BSA (Mosteller) if elements exist
+    const wEl = document.getElementById('wKg');
+    const w = parseFloat(wEl && wEl.value) || NaN;
+    const hcm = getHeightCm() || NaN;
+    const h_m = hcm/100;
+    const bmiEl = document.getElementById('bmiOut');
+    const bsaEl = document.getElementById('bsaOut');
+    const ibwEl = document.getElementById('ibwOut');
+    const sexEl = document.getElementById('pSex');
+
+    if(bmiEl && w>0 && h_m>0){ bmiEl.textContent = (w/(h_m*h_m)).toFixed(1); }
+    if(bsaEl && w>0 && hcm>0){ bsaEl.textContent = (Math.sqrt((hcm*w)/3600)).toFixed(2)+' m²'; }
+    if(ibwEl && hcm>0 && sexEl){
+      const ht_in = hcm/2.54;
+      const over5 = Math.max(0, ht_in - 60);
+      const base = (sexEl.value==='F' ? 45.5 : 50);
+      const ibw = base + 2.3*over5;
+      ibwEl.textContent = ibw.toFixed(1)+' kg';
+    }
+  }
+
+  // Wire up listeners
+  if (hInput && uSel){
+    updatePlaceholders();
+    // Remember previous unit on focus
+    uSel._prev = uSel.value;
+    uSel.addEventListener('change', (e)=>{
+      convertOnUnitChange(e.target._prev || 'cm', e.target.value);
+      e.target._prev = e.target.value;
+      updatePlaceholders();
+      recomputeAtAGlance();
+    });
+    hInput.addEventListener('input', recomputeAtAGlance);
+    // Also recompute when sex or weight changes (affects IBW/BMI)
+    const wEl = document.getElementById('wKg');
+    const sEl = document.getElementById('pSex');
+    if(wEl) wEl.addEventListener('input', recomputeAtAGlance);
+    if(sEl) sEl.addEventListener('change', recomputeAtAGlance);
+  }
+
+  // Initial recompute
+  recomputeAtAGlance();
+});
+</script>
+
+
+<script>
+/* --- Height/At‑a‑Glance: robust recompute when DOM updates --- */
+document.addEventListener('DOMContentLoaded', function(){
+  function num(v){ const x=parseFloat(v); return (x>=0||x<0)?x:NaN; }
+  const hInput = document.getElementById('hCm');
+  const uSel = document.getElementById('hUnit');
+  const wEl = document.getElementById('wKg');
+  const sEl = document.getElementById('pSex');
+
+  // canonical height in cm
+  function getHeightCm(){
+    if(!hInput||!uSel) return NaN;
+    const raw = num(hInput.value);
+    if(!(raw>0)) return NaN;
+    return uSel.value==='cm' ? raw : (raw*2.54);
+  }
+  window.getHeightCm = getHeightCm; // expose for any other code paths
+
+  function recomputeAtAGlance(){
+    const hcm = getHeightCm();
+    const w = num(wEl && wEl.value);
+    const sex = (sEl && sEl.value) || ''; // '' -> assume Devine male baseline (50)
+    const h_m = hcm/100;
+
+    const bmiEl = document.getElementById('bmiOut');
+    const bsaEl = document.getElementById('bsaOut');
+    const ibwEl = document.getElementById('ibwOut');
+
+    if(bmiEl) bmiEl.textContent = (w>0 && h_m>0) ? (w/(h_m*h_m)).toFixed(1) : '—';
+    if(bsaEl) bsaEl.textContent = (w>0 && hcm>0) ? (Math.sqrt((hcm*w)/3600)).toFixed(2)+' m²' : '—';
+    if(ibwEl){
+      if(hcm>0){
+        const ht_in = hcm/2.54;
+        const over5 = Math.max(0, ht_in - 60);
+        const base = (sex==='F' ? 45.5 : 50);
+        const ibw = base + 2.3*over5;
+        ibwEl.textContent = ibw.toFixed(1) + ' kg';
+      } else {
+        ibwEl.textContent = '—';
+      }
+    }
+  }
+
+  // Recompute on relevant inputs
+  ;[hInput, uSel, wEl, sEl].forEach(el=>{
+    if(el){ el.addEventListener('input', recomputeAtAGlance); el.addEventListener('change', recomputeAtAGlance); }
+  });
+
+  // Also recompute when At‑a‑Glance DOM gets (re)built by app code
+  const ag = document.getElementById('atGlance');
+  if(ag && 'MutationObserver' in window){
+    const mo = new MutationObserver(()=>{ try{ recomputeAtAGlance(); }catch(_){} });
+    mo.observe(ag, {childList:true, subtree:true});
+  }
+
+  // Initial
+  recomputeAtAGlance();
+});
+</script>
+
+
+<script>
+/* === Reconstitution / Dilution Calculator === */
+(function(){
+  const $ = (id)=>document.getElementById(id);
+  const stockVal = $('rc_stock_val');
+  const stockUnit = $('rc_stock_unit');
+  const goalVal  = $('rc_goal_val');
+  const goalUnit = $('rc_goal_unit');
+  const finalVol = $('rc_final_vol');
+  const outDrug  = $('rc_out_drug');
+  const outDil   = $('rc_out_dil');
+  const outCheck = $('rc_out_check');
+  const warn     = $('rc_warn');
+  const preset   = $('rc_preset');
+
+  function to_mcg_per_ml(value, unit){
+    if(!value || value<=0) return null;
+    return (unit==='mg_per_ml') ? value*1000 : value; // mg/mL -> mcg/mL
+  }
+  function roundSyringeML(x){
+    if(x==null || !isFinite(x)) return null;
+    return (Math.abs(x) <= 10) ? Math.round(x*100)/100 : Math.round(x*10)/10;
+  }
+  function roundConc(value){
+    if(value==null || !isFinite(value)) return '—';
+    if(value < 1000){
+      return (Math.round(value*10)/10)+' mcg/mL';
+    } else {
+      return (Math.round((value/1000)*1000)/1000)+' mg/mL';
+    }
+  }
+
+  function calc(){
+    if(!stockVal || !goalVal || !finalVol) return;
+    warn.textContent = '';
+    outDrug.textContent = '—';
+    outDil.textContent = '—';
+    outCheck.textContent = '—';
+
+    const Cs_mcg = to_mcg_per_ml(parseFloat(stockVal.value), stockUnit.value);
+    const Cd_mcg = to_mcg_per_ml(parseFloat(goalVal.value),  goalUnit.value);
+    const Vd     = parseFloat(finalVol.value);
+
+    if(!Cs_mcg || !Cd_mcg || !Vd || Cs_mcg<=0 || Cd_mcg<=0 || Vd<=0) return;
+
+    const drugVol = (Cd_mcg * Vd) / Cs_mcg;
+    if(drugVol > Vd){
+      warn.textContent = 'Warning: Desired concentration is higher than stock—cannot dilute upward.';
+      return;
+    }
+    const dilVol  = Vd - drugVol;
+
+    outDrug.textContent = roundSyringeML(drugVol)?.toString() ?? '—';
+    outDil.textContent  = roundSyringeML(dilVol)?.toString() ?? '—';
+
+    const checkCd_mcg = (Cs_mcg * drugVol) / Vd;
+    outCheck.textContent = roundConc(checkCd_mcg);
+  }
+
+  ['input','change'].forEach(evt=>{
+    if(stockVal){ stockVal.addEventListener(evt, calc); }
+    if(stockUnit){ stockUnit.addEventListener(evt, calc); }
+    if(goalVal){ goalVal.addEventListener(evt, calc); }
+    if(goalUnit){ goalUnit.addEventListener(evt, calc); }
+    if(finalVol){ finalVol.addEventListener(evt, calc); }
+  });
+
+  if(preset){
+    preset.addEventListener('change', ()=>{
+  const v = preset.value;
+  if(v==='fentanyl_50_to_10_in_10'){
+    stockVal.value = 50; stockUnit.value='mcg_per_ml';
+    goalVal.value  = 10; goalUnit.value='mcg_per_ml';
+    finalVol.value = 10;
+  } else if(v==='hydromorphone_1_to_0_2_in_10'){
+    stockVal.value = 1; stockUnit.value='mg_per_ml';
+    goalVal.value  = 0.2; goalUnit.value='mg_per_ml';
+    finalVol.value = 10;
+  } else if(v==='epi_1_to_0_01_in_100'){
+    stockVal.value = 1; stockUnit.value='mg_per_ml';
+    goalVal.value  = 0.01; goalUnit.value='mg_per_ml';
+    finalVol.value = 100;
+  } else if(v==='ketamine_100_to_10_in_50'){
+    stockVal.value = 100; stockUnit.value='mg_per_ml';
+    goalVal.value  = 10;  goalUnit.value='mg_per_ml';
+    finalVol.value = 50;
+  } else if(v==='propofol_10_to_1_in_20'){
+    stockVal.value = 10; stockUnit.value='mg_per_ml';
+    goalVal.value  = 1;  goalUnit.value='mg_per_ml';
+    finalVol.value = 20;
+  } else if(v==='phenylephrine_10_to_0_1_in_100'){
+    stockVal.value = 10; stockUnit.value='mg_per_ml';
+    goalVal.value  = 0.1; goalUnit.value='mg_per_ml';
+    finalVol.value = 100;
+  } else if(v==='norepi_1_to_0_004_in_250'){
+    stockVal.value = 1; stockUnit.value='mg_per_ml';
+    goalVal.value  = 0.004; goalUnit.value='mg_per_ml';
+    finalVol.value = 250;
+  } else if(v==='vasopressin_20u_per_ml_to_0_4u_per_ml_in_50'){
+    stockVal.value = 20; stockUnit.value='mg_per_ml'; // treat U/mL numerically for ratio calc
+    goalVal.value  = 0.4; goalUnit.value='mg_per_ml';
+    finalVol.value = 50;
+  } else if(v==='lidocaine_2_to_1_in_20'){
+    stockVal.value = 20; stockUnit.value='mg_per_ml'; // 2% = 20 mg/mL
+    goalVal.value  = 10; goalUnit.value='mg_per_ml';
+    finalVol.value = 20;
+  } else {
+    return;
+  }
+  calc();
+});
+  }
+
+  // initialize
+  calc();
+})();
+</script>
+
 </body>
 </html>
+<script>
+(function(){
+  // Attempt to color-match the LA running total percent badge to the overall slider accent color
+  function applyLaPercentColor(){
+    try{
+      // Find a likely "overall LA" slider
+      const laSection = Array.from(document.querySelectorAll('.card, .section')).find(el => /Local\s*Anesth/i.test(el.textContent||''));
+      const slider = laSection ? laSection.querySelector('input[type="range"]') : document.querySelector('input[type="range"]');
+      const percentEl = document.querySelector('[id*="percent"][id*="la"], [id*="la"][id*="percent"], [id*="TotalGivenPercent"], [id*="laTotalPercent"]');
+      if(!slider || !percentEl) return;
+
+      // Prefer CSS variables already used for accent; fallback to computed styles
+      const styles = getComputedStyle(slider);
+      const accent = styles.getPropertyValue('--primary-600') || styles.getPropertyValue('--accent') || styles.color || '#3b82f6';
+
+      // Apply as text/border background using existing badge classes by setting inline CSS vars
+      percentEl.style.setProperty('--badge-bg', accent.trim());
+      percentEl.style.setProperty('background', accent.trim());
+      percentEl.style.setProperty('color', 'white');
+      percentEl.style.setProperty('border-color', accent.trim());
+      const parentBadge = percentEl.closest('.badge') || percentEl;
+      if(parentBadge){
+        parentBadge.style.setProperty('background', accent.trim());
+        parentBadge.style.setProperty('color', 'white');
+        parentBadge.style.setProperty('border-color', accent.trim());
+      }
+    }catch(e){}
+  }
+  document.addEventListener('DOMContentLoaded', applyLaPercentColor);
+  window.addEventListener('load', applyLaPercentColor);
+})();
+</script>
