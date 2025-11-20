@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 
 <html lang="en">
@@ -97,6 +96,530 @@
 
 #laOverallPct{color:#4caf50;font-weight:600}
 </style>
+
+<style>
+/* === SRNA Pediatric Enhancements (v50) === */
+:root {
+  --srna-blue:#3b82f6;
+  --srna-pink:#fbcfe8;          
+  --srna-pink-border:#f472b6;
+  --srna-ink:#111827;
+  --srna-dark-bg:#1f2a44;       
+  --srna-dark-border:#93c5fd;
+  --srna-dark-ink:#e5e7eb;
+}
+.srna-tab-scope { position: relative; }
+
+.srna-tab-toggle { margin:8px 0 12px 0; display:inline-flex; border:2px solid #64748b; border-radius:9999px; overflow:hidden;
+  background: rgba(15,23,42,0.7); backdrop-filter: blur(6px); font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial; }
+.srna-tab-toggle button { padding:.38rem .8rem; border:0; background:transparent; cursor:pointer; font-weight:900; color:#fff; }
+.srna-tab-toggle button.active[data-mode="adult"]{ background:#0ea5e9; color:#fff }
+.srna-tab-toggle button.active[data-mode="peds"] { background:#3b82f6; color:#fff }
+
+.srna-adult-block{ width:100% }
+.srna-peds-block{ border:1px solid var(--srna-pink-border); border-radius:14px; padding:12px; margin:10px 0; background: var(--srna-pink); color:var(--srna-ink);
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial; }
+.srna-divider{ height:1px; background:#f472b6; opacity:.6; margin:8px 0 }
+.srna-small{ color:#334155; font-size:.92rem }
+.srna-badge{ display:inline-block; border-radius:9999px; padding:.2rem .55rem; font-weight:900; background:#ec4899; color:#fff; font-size:.85rem; }
+.srna-chip{ display:inline-block; border:1px solid #be185d; border-radius:9999px; padding:.25rem .7rem; margin-right:.3rem; background:#fdf2f8; color:#831843; font-weight:700; }
+.srna-chip:hover{ background:#fce7f3 }
+.srna-btn{ display:inline-flex; align-items:center; gap:6px; border:1px solid #be185d; border-radius:9999px; padding:.35rem .8rem; background:#fb7185; color:#fff; font-weight:800; cursor:pointer; }
+.srna-btn:hover{ filter:brightness(.95) }
+.srna-input,.srna-select{ width:100%; border:1px solid #be185d; border-radius:9999px; padding:.6rem .8rem; background:#fff; color:#111827 }
+.srna-input::placeholder{ color:#6b7280 }
+.srna-grid{ display:grid; gap:10px }
+@media (min-width:768px){ .srna-g-3{ grid-template-columns: repeat(3,1fr) } .srna-g-2{ grid-template-columns: repeat(2,1fr) } }
+
+.srna-drug-row{ display:grid; grid-template-columns:1fr auto; gap:.6rem; align-items:center; padding:.55rem .6rem; border-bottom:1px solid #f472b6 }
+.srna-drug-name{ font-weight:900; display:flex; align-items:center; gap:.5rem; flex-wrap:wrap }
+
+.srna-accordion{ border:1px solid #f472b6; border-radius:12px; margin:8px 0; overflow:hidden }
+.srna-accordion summary{ cursor:pointer; padding:.55rem .7rem; font-weight:900; background:#fce7f3 }
+.srna-accordion > div{ padding:.55rem .8rem }
+
+.srna-table{ width:100%; border-collapse: collapse; margin:6px 0 }
+.srna-table th, .srna-table td{ border:1px solid #f472b6; padding:.4rem .5rem; text-align:left }
+.srna-table th{ background:#fce7f3 }
+
+.srna-modal-backdrop{ position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:999999 }
+.srna-modal{ background:#fff; color:#111827; border-radius:16px; width:min(1000px, 92vw); box-shadow:0 10px 30px rgba(0,0,0,.3); overflow:hidden; }
+.srna-modal header{ display:flex; align-items:center; justify-content:space-between; padding:12px 16px; background:#fecdd3 }
+.srna-modal header h3{ margin:0; font-size:1.05rem }
+.srna-modal .body{ padding:12px 16px; max-height:72vh; overflow:auto }
+.srna-modal .body ul{ margin:.3rem 0 .2rem 1.1rem }
+
+.srna-note{ background:#e0f2fe; border:1px solid #38bdf8; color:#111827; border-radius:10px; padding:.5rem .7rem }
+
+@media (prefers-color-scheme: dark){
+  .srna-tab-toggle{ background: rgba(15,23,42,0.85); color:#e2e8f0; border-color:#475569 }
+  .srna-peds-block{ background: var(--srna-dark-bg); color:var(--srna-dark-ink); border-color: var(--srna-dark-border) }
+  .srna-divider{ background: var(--srna-dark-border); opacity:.45 }
+  .srna-small{ color:#cbd5e1 }
+  .srna-accordion{ border-color: var(--srna-dark-border) }
+  .srna-accordion summary{ background:#0f172a; color:#e5e7eb }
+  .srna-table th, .srna-table td{ border-color: var(--srna-dark-border) }
+  .srna-table th{ background:#0f172a; color:#e5e7eb }
+  .srna-chip{ background:#0f172a; color:#e5e7eb; border-color: var(--srna-dark-border) }
+  .srna-btn{ background:#0ea5e9; border-color:#0284c7 }
+  .srna-input,.srna-select{ background:#0b1220; color:#e5e7eb; border-color:#334155 }
+  .srna-input::placeholder{ color:#64748b }
+  .srna-modal{ background:#0b1220; color:#e5e7eb }
+  .srna-modal header{ background:#1f2937; color:#e5e7eb }
+  .srna-note{ background:#0b3c5c; border-color:#38bdf8; color:#e5e7eb }
+}
+
+.srna-vis-note{ font-size:.8rem; opacity:.75 }
+.srna-tab-scope[data-srna-mode="adult"] > .srna-adult-block { display:block }
+.srna-tab-scope[data-srna-mode="adult"] > .srna-peds-block  { display:none }
+.srna-tab-scope[data-srna-mode="peds"]  > .srna-adult-block { display:none }
+.srna-tab-scope[data-srna-mode="peds"]  > .srna-peds-block  { display:block }
+</style>
+
+
+<style>
+/* === v51 Pediatric Theme Refinements: distinct light vs dark looks === */
+
+/* Light mode — soft pink panel + vivid peds toggle */
+.srna-tab-scope[data-srna-mode="peds"] .srna-peds-block{
+  background:#fff1f5;           /* very light pink */
+  border-color:#f9a8d4;
+  color:#1f2937;
+}
+.srna-tab-scope[data-srna-mode="peds"] .srna-divider{ background:#f9a8d4; opacity:.7 }
+.srna-tab-scope[data-srna-mode="peds"] .srna-accordion{ border-color:#f9a8d4 }
+.srna-tab-scope[data-srna-mode="peds"] .srna-accordion summary{ background:#ffe4f1; color:#111827 }
+.srna-tab-scope[data-srna-mode="peds"] .srna-table th, 
+.srna-tab-scope[data-srna-mode="peds"] .srna-table td{ border-color:#f9a8d4 }
+.srna-tab-scope[data-srna-mode="peds"] .srna-table th{ background:#ffe4f1; color:#111827 }
+.srna-tab-scope[data-srna-mode="peds"] .srna-chip{
+  background:#ffe4f1; color:#831843; border-color:#f472b6;
+}
+.srna-tab-scope[data-srna-mode="peds"] .srna-btn{
+  background:#ec4899; border-color:#be185d; color:#ffffff;
+}
+.srna-tab-scope[data-srna-mode="peds"] .srna-input,
+.srna-tab-scope[data-srna-mode="peds"] .srna-select{
+  background:#ffffff; color:#111827; border-color:#f59eb6;
+}
+.srna-tab-scope[data-srna-mode="peds"] .srna-input::placeholder{ color:#6b7280 }
+.srna-tab-scope[data-srna-mode="peds"] .srna-badge{
+  background:#db2777; color:#ffffff;
+}
+
+/* Make the Pediatric tab toggle clearly pink in light mode */
+.srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"]{
+  background:#ec4899; color:#ffffff;
+}
+.srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle{ border-color:#f59eb6; background:#fff7fb }
+
+/* Dark mode — soft baby blue accents on a slate backdrop for pediatric */
+@media (prefers-color-scheme: dark){
+  .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block{
+    background:#152238;         /* deep slate-blue */
+    border-color:#60a5fa;       /* baby-blue accent */
+    color:#e5e7eb;
+  }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-divider{ background:#60a5fa; opacity:.45 }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-accordion{ border-color:#60a5fa }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-accordion summary{ background:#0b1324; color:#e5e7eb }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-table th, 
+  .srna-tab-scope[data-srna-mode="peds"] .srna-table td{ border-color:#60a5fa }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-table th{ background:#0b1324; color:#e5e7eb }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-chip{
+    background:#0b1324; color:#e5e7eb; border-color:#60a5fa;
+  }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-btn{
+    background:#60a5fa; border-color:#3b82f6; color:#0b1324; font-weight:900;
+  }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-input,
+  .srna-tab-scope[data-srna-mode="peds"] .srna-select{
+    background:#0b1220; color:#e5e7eb; border-color:#3b82f6;
+  }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-badge{
+    background:#3b82f6; color:#0b1220; font-weight:900;
+  }
+  /* Pediatric toggle in dark: baby-blue highlight */
+  .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle{ background: rgba(9,14,24,0.8); border-color:#3b82f6 }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"]{ background:#60a5fa; color:#0b1220 }
+}
+
+/* Ensure select dropdown options are readable across themes */
+.srna-select{ color-scheme: light dark; }
+</style>
+
+
+<style>
+/* === v52 Pediatric Light Mode: true light (white) background with soft pink accents === */
+
+/* Force a bright/light base in light mode for pediatric sections */
+@media (prefers-color-scheme: light){
+  .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block{
+    background:#ffffff !important;   /* pure light background */
+    border-color:#f4a7c7 !important; /* soft pink border */
+    color:#1f2937 !important;
+  }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-divider{ background:#f4a7c7 !important; opacity:.7 }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-accordion{ border-color:#f4a7c7 !important }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-accordion summary{
+    background:#fff5f9 !important; color:#111827 !important; 
+  }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-table th, 
+  .srna-tab-scope[data-srna-mode="peds"] .srna-table td{ border-color:#f4a7c7 !important }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-table th{ background:#fff5f9 !important; color:#111827 !important }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-chip{
+    background:#fff5f9 !important; color:#7a1041 !important; border-color:#f08ab3 !important;
+  }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-btn{
+    background:#ec4899 !important; border-color:#be185d !important; color:#ffffff !important;
+  }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-input,
+  .srna-tab-scope[data-srna-mode="peds"] .srna-select{
+    background:#ffffff !important; color:#111827 !important; border-color:#f3a0bb !important;
+  }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-badge{
+    background:#db2777 !important; color:#ffffff !important;
+  }
+  /* Pediatric toggle — light mode visuals */
+  .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle{ 
+    border-color:#f3a0bb !important; background:#fffafd !important;
+  }
+  .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"]{
+    background:#ec4899 !important; color:#ffffff !important;
+  }
+}
+</style>
+
+
+<style>
+/* === v53 Pediatric Light-Mode Enforcement ===
+   Many apps use their own light/dark classes (e.g., body.light, [data-theme="light"], .theme-light).
+   These rules force a true light pediatric look whenever an ancestor indicates "light".
+*/
+
+/* Helper: any-light ancestor selector list */
+body.light .srna-tab-scope[data-srna-mode="peds"],
+body.theme-light .srna-tab-scope[data-srna-mode="peds"],
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"],
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"],
+.theme-light .srna-tab-scope[data-srna-mode="peds"],
+.light-mode .srna-tab-scope[data-srna-mode="peds"],
+.light .srna-tab-scope[data-srna-mode="peds"] {
+  /* no-op block used to increase specificity via group selectors */
+}
+
+/* Panels/cards */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block {
+  background:#ffffff !important;
+  border-color:#f3a0bb !important;
+  color:#1f2937 !important;
+}
+
+/* Dividers & Accordion */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-divider,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-divider,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-divider,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-divider,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-divider,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-divider,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-divider {
+  background:#f4a7c7 !important; opacity:.7 !important;
+}
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-accordion,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-accordion,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-accordion,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-accordion,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-accordion,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-accordion,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-accordion {
+  border-color:#f4a7c7 !important;
+}
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-accordion summary,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-accordion summary,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-accordion summary,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-accordion summary,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-accordion summary,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-accordion summary,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-accordion summary {
+  background:#fff5f9 !important; color:#111827 !important;
+}
+
+/* Tables */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-table th,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-table th,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-table th,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-table th,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-table th,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-table th,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-table th {
+  background:#fff5f9 !important; color:#111827 !important; border-color:#f4a7c7 !important;
+}
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-table td,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-table td,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-table td,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-table td,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-table td,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-table td,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-table td {
+  border-color:#f4a7c7 !important;
+}
+
+/* Chips, Buttons, Inputs */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-chip,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-chip,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-chip,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-chip,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-chip,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-chip,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-chip {
+  background:#fff5f9 !important; color:#7a1041 !important; border-color:#f08ab3 !important;
+}
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-btn,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-btn,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-btn,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-btn,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-btn,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-btn,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-btn {
+  background:#ec4899 !important; border-color:#be185d !important; color:#ffffff !important;
+}
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-input,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-input,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-input,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-input,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-input,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-input,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-input,
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-select,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-select,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-select,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-select,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-select,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-select,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-select {
+  background:#ffffff !important; color:#111827 !important; border-color:#f3a0bb !important;
+}
+
+/* Badges */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-badge,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-badge,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-badge,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-badge,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-badge,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-badge,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-badge {
+  background:#db2777 !important; color:#ffffff !important;
+}
+
+/* Pediatric toggle pill */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle {
+  background:#fffafd !important; border-color:#f3a0bb !important;
+}
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"],
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"],
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"],
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"],
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"],
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"],
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"] {
+  background:#ec4899 !important; color:#ffffff !important;
+}
+
+/* Keep dark mode behavior as previously defined via prefers-color-scheme */
+</style>
+
+
+<style>
+/* === v54 UI Tweaks === */
+/* Pediatric light-mode toggle readability: make both buttons high-contrast */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button {
+  color:#111827 !important;           /* default dark text for readability */
+  background:#ffffff !important;       /* white pill base */
+}
+
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button[data-mode="adult"],
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button[data-mode="adult"],
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button[data-mode="adult"],
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button[data-mode="adult"],
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button[data-mode="adult"],
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button[data-mode="adult"],
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button[data-mode="adult"] {
+  background:#e6edf3 !important;      /* subtle blue-gray for "Adult" when viewing Peds */
+  color:#0f172a !important;
+  border-right:1px solid #cbd5e1;
+}
+
+/* Active buttons remain strongly colored */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"],
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"],
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"],
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"],
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"],
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"],
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button.active[data-mode="peds"] {
+  background:#ec4899 !important; color:#ffffff !important;
+}
+
+/* In dark mode keep the previous strong contrast for both buttons */
+@media (prefers-color-scheme: dark){
+  .srna-tab-scope[data-srna-mode="peds"] .srna-tab-toggle button[data-mode="adult"]{
+    background:#0b1220 !important; color:#e5e7eb !important; border-right:1px solid #334155;
+  }
+}
+</style>
+
+
+<style>
+/* === v55: Pink accents for all Pediatric panels (Medications, Pearls, Calculators) in LIGHT mode === */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block {
+  border-color:#f3a0bb !important;
+}
+
+/* Dividers */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-divider,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-divider,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-divider,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-divider,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-divider,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-divider,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-divider {
+  background:#f4a7c7 !important; opacity:.7 !important;
+}
+
+/* Accordions within Peds (Pearls & Calcs) */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion {
+  border-color:#f4a7c7 !important;
+}
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion summary,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion summary,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion summary,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion summary,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion summary,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion summary,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-accordion summary {
+  background:#fff5f9 !important;
+  color:#111827 !important;
+}
+
+/* Tables within Peds (Pearls & Calcs) */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table th,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table th,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table th,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table th,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table th,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table th,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table th {
+  background:#fff5f9 !important;
+  color:#111827 !important;
+  border-color:#f4a7c7 !important;
+}
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table td,
+body.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table td,
+body[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table td,
+[data-theme="light"] .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table td,
+.theme-light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table td,
+.light-mode .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table td,
+.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-table td {
+  border-color:#f4a7c7 !important;
+}
+
+/* Chips & badges within Peds blocks */
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-chip{
+  background:#fff5f9 !important; color:#7a1041 !important; border-color:#f08ab3 !important;
+}
+body.light .srna-tab-scope[data-srna-mode="peds"] .srna-peds-block .srna-badge{
+  background:#db2777 !important; color:#ffffff !important;
+}
+</style>
+
+
+<style>
+/* === v56 Mobile UX Tweaks (SRNA requests) === */
+
+/* 1) Pediatric drug rows: put dosage on its own line under the drug name on small screens */
+@media (max-width: 640px){
+  /* Applies to both adult/peds styled drug rows that use the srna-drug-row pattern */
+  .srna-drug-row{ 
+    grid-template-columns: 1fr !important; 
+    align-items: start !important;
+    row-gap: .2rem !important;
+  }
+  /* Ensure the second cell (dose/calculated text) drops below and left-aligns */
+  .srna-drug-row > *:nth-child(2){
+    justify-self: start !important;
+    margin-top: .15rem !important;
+    opacity: 0.98;
+  }
+  /* If a dedicated dosage class exists, give it breathing room */
+  .srna-dose, .dose, .peds-dose{
+    display: block !important;
+    margin-top: .15rem !important;
+    font-weight: 700;
+  }
+  /* Keep long units from squashing */
+  .srna-drug-row, .srna-drug-name{ 
+    word-break: keep-all;
+  }
+}
+
+/* 2) Side-scroll graphs/tables in Clinical Pearls (adult & peds), and Pediatric quick references */
+@media (max-width: 820px){
+  /* Any tables inside the Pearls tab or inside pediatric blocks become horizontally scrollable */
+  #tab-pearls table,
+  .srna-peds-block table{
+    display: block !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  /* Helpful hint for sections that use .body or .ghost wrappers */
+  #tab-pearls .body,
+  #tab-pearls .ghost,
+  .srna-peds-block{
+    overflow-x: hidden; /* container stays tidy */
+  }
+  /* Specific nudge for the Adult Laryngoscope Blade Size table header row to avoid wrapping */
+  #tab-pearls table thead tr th{ white-space: nowrap; }
+}
+
+/* 3) Small quality-of-life tweaks */
+@media (max-width: 640px){
+  /* Slightly increase tap targets for chips and buttons on mobile */
+  .chip, .srna-chip{ padding: .3rem .6rem; }
+  .btn, .srna-btn{ padding: .6rem .9rem; }
+}
+</style>
+
 </head>
 <body data-theme="dark">
 <header>
@@ -875,7 +1398,7 @@ function renderDrug(name){ const d = DRUGS.find(x=>x.name===name); if(!d){ drugB
 document.getElementById('medList').addEventListener('click', (e)=>{ const btn = e.target.closest('button[data-info]'); if(!btn) return; const name = btn.getAttribute('data-info'); drugTitle.textContent=name; drugTab='quick'; renderDrug(name); drugMask.classList.add('active'); document.getElementById('drugTabQuick').onclick=()=>{ drugTab='quick'; renderDrug(name); }; document.getElementById('drugTabExpanded').onclick=()=>{ drugTab='expanded'; renderDrug(name); }; });
 document.getElementById('drugClose').addEventListener('click', ()=>drugMask.classList.remove('active'));
 /* CALCULATORS */
-function calcAll(){ const h = parseFloat(($('hCm').value)||'0'); const w = parseFloat(($('wKg').value)||'0'); const sex=$('pSex').value||'Male'; const ibw = sex==='Male' ? (50 + 0.9*(h-152)) : (45.5 + 0.9*(h-152)); const bmi = h>0 ? (w / ((h/100)**2)) : 0; const ebv = (sex==='Male'?75:65) * (w>0?w:0); const tv = 7 * (w>0?w:0); const ett = sex==='Male' ? '7.5–8.0' : '7.0–7.5'; const lma = w<50?'#3':(w<70?'#4':'#5'); const glance=[['IBW (kg)', ibw>0?ibw.toFixed(1):'—'],['BMI', bmi>0?bmi.toFixed(1):'—'],['EBV (mL)', ebv>0?Math.round(ebv):'—'],['Tidal Volume (mL)', tv>0?Math.round(tv):'—'],['ETT Size', ett],['LMA Size', lma]]; const at=$('atGlance'); at.innerHTML=''; glance.forEach(([k,v])=>{ const div=document.createElement('div'); div.innerHTML = `<b>${k}:</b> <span class="hl">${v}</span>`; at.appendChild(div); }); const hs=parseFloat(($('hctStart').value)||'0'); const ht=parseFloat(($('hctTarget').value)||'0'); if(w>0 && hs>0 && ht>0){ const ebvCalc=(sex==='Male'?75:65)*w; const abl = ebvCalc * (hs - ht) / hs; $('ablOut').textContent = isFinite(abl)? Math.round(abl) + ' mL' : '—'; } else $('ablOut').textContent='—'; const npo=parseFloat(($('npoH').value)||'0'); if(w>0){ let rate=0; if (w <= 10) rate = w*4; else if (w <= 20) rate = 40 + (w-10)*2; else rate = 60 + (w-20)*1; $('mivfOut').textContent = Math.round(rate) + ' mL/hr'; $('defOut').textContent = Math.round(rate*(npo>0?npo:0)) + ' mL'; } else { $('mivfOut').textContent='—'; $('defOut').textContent='—'; } const d=$('laDrug').value, conc=parseFloat(($('laConc').value)||'0'), epi=$('laEpi').value; if(w>0 && d && conc>0){ const caps={ lidocaine:{plain:4.5, epi:7}, bupivacaine:{plain:2.5, epi:3}, ropivacaine:{plain:3, epi:3}, mepivacaine:{plain:5, epi:7} }; const mgkg = (epi==='yes'? caps[d].epi : caps[d].plain); const maxDose = mgkg * w; const mgPerMl = conc*10; const maxVol = maxDose / mgPerMl; $('laMaxDose').textContent = maxDose.toFixed(1)+' mg ('+mgkg+' mg/kg)'; $('laMaxVol').textContent = maxVol.toFixed(1)+' mL @ '+conc+'%'; } else { $('laMaxDose').textContent='—'; $('laMaxVol').textContent='—'; } 
+function calcAll(){ const h = parseFloat(($('hCm').value)||'0'); const w = parseFloat(($('wKg').value)||'0'); const sex=$('pSex').value||'Male'; const ibw = sex==='Male' ? (50 + 0.9*(h-152)) : (45.5 + 0.9*(h-152)); const bmi = h>0 ? (w / ((h/100)**2)) : 0; const ebv = (sex==='Male'?75:65) * (w>0?w:0); const tv = 7 * (ibw>0?ibw:0); const ett = sex==='Male' ? '7.5–8.0' : '7.0–7.5'; const lma = w<50?'#3':(w<70?'#4':'#5'); const glance=[['IBW (kg)', ibw>0?ibw.toFixed(1):'—'],['BMI', bmi>0?bmi.toFixed(1):'—'],['EBV (mL)', ebv>0?Math.round(ebv):'—'],['Tidal Volume (mL)', tv>0?Math.round(tv):'—'],['ETT Size', ett],['LMA Size', lma]]; const at=$('atGlance'); at.innerHTML=''; glance.forEach(([k,v])=>{ const div=document.createElement('div'); div.innerHTML = `<b>${k}:</b> <span class="hl">${v}</span>`; at.appendChild(div); }); const hs=parseFloat(($('hctStart').value)||'0'); const ht=parseFloat(($('hctTarget').value)||'0'); if(w>0 && hs>0 && ht>0){ const ebvCalc=(sex==='Male'?75:65)*w; const abl = ebvCalc * (hs - ht) / hs; $('ablOut').textContent = isFinite(abl)? Math.round(abl) + ' mL' : '—'; } else $('ablOut').textContent='—'; const npo=parseFloat(($('npoH').value)||'0'); if(w>0){ let rate=0; if (w <= 10) rate = w*4; else if (w <= 20) rate = 40 + (w-10)*2; else rate = 60 + (w-20)*1; $('mivfOut').textContent = Math.round(rate) + ' mL/hr'; $('defOut').textContent = Math.round(rate*(npo>0?npo:0)) + ' mL'; } else { $('mivfOut').textContent='—'; $('defOut').textContent='—'; } const d=$('laDrug').value, conc=parseFloat(($('laConc').value)||'0'), epi=$('laEpi').value; if(w>0 && d && conc>0){ const caps={ lidocaine:{plain:4.5, epi:7}, bupivacaine:{plain:2.5, epi:3}, ropivacaine:{plain:3, epi:3}, mepivacaine:{plain:5, epi:7} }; const mgkg = (epi==='yes'? caps[d].epi : caps[d].plain); const maxDose = mgkg * w; const mgPerMl = conc*10; const maxVol = maxDose / mgPerMl; $('laMaxDose').textContent = maxDose.toFixed(1)+' mg ('+mgkg+' mg/kg)'; $('laMaxVol').textContent = maxVol.toFixed(1)+' mL @ '+conc+'%'; } else { $('laMaxDose').textContent='—'; $('laMaxVol').textContent='—'; } 
 // BEGIN SURGICAL FLUIDS
 if ($('surgCase')) {
   const sel = $('surgCase').value;
@@ -1824,6 +2347,1856 @@ document.addEventListener('DOMContentLoaded', function(){
 })();
 </script>
 
+
+<script>
+(function(){
+  function getPanelsByLabel(keyword){
+    const L = keyword.toLowerCase();
+    const candidates = new Set();
+    document.querySelectorAll('[role="tab"]').forEach(t => {
+      const txt = (t.textContent || '').toLowerCase();
+      if(txt.includes(L)){
+        const ctrl = t.getAttribute('aria-controls');
+        if(ctrl){
+          const p = document.getElementById(ctrl);
+          if(p) candidates.add(p);
+        } else {
+          const p = t.closest('[role="tabpanel"], .tab-pane, .tabcontent, .tabContent, .tab-panel, .mui-tab-panel, .panel, .tabPage, section, article, div');
+          if(p) candidates.add(p);
+        }
+      }
+    });
+    const possiblePanels = document.querySelectorAll('[role="tabpanel"], .tab-pane, .tabcontent, .tabContent, .tab-panel, .mui-tab-panel, .panel, .tabPage, section, article, div');
+    possiblePanels.forEach(p => {
+      const head = p.querySelector('h1,h2,h3,h4,h5,button');
+      if(!head) return;
+      const txt = (head.textContent || '').toLowerCase();
+      if(txt.includes(L)) candidates.add(p);
+    });
+    document.querySelectorAll(`[id*="${L}"], [class*="${L}"]`).forEach(el => {
+      const p = el.closest('[role="tabpanel"], .tab-pane, .tabcontent, .tabContent, .tab-panel, .mui-tab-panel, .panel, .tabPage, section, article, div');
+      if(p) candidates.add(p);
+    });
+    return Array.from(candidates);
+  }
+  function firstPanelFor(...labels){
+    for(const k of labels){
+      const found = getPanelsByLabel(k);
+      if(found.length) return found[0];
+    }
+    return null;
+  }
+  const medsPanel   = firstPanelFor('medications','meds');
+  const pearlsPanel = firstPanelFor('clinical pearls','pearls','clinical');
+  const calcsPanel  = firstPanelFor('calculators','calculator','calc');
+
+  function scopePanel(panel, storageKey){
+    if(!panel) return null;
+    if(panel.classList.contains('srna-tab-scope') || panel.querySelector(':scope > .srna-tab-scope')){
+      return panel.classList.contains('srna-tab-scope') ? panel : panel.querySelector(':scope > .srna-tab-scope');
+    }
+    const scope = document.createElement('div');
+    scope.className = 'srna-tab-scope';
+    scope.setAttribute('data-srna-mode', localStorage.getItem(storageKey) || 'adult');
+    const adult = document.createElement('div');
+    adult.className = 'srna-adult-block';
+    while(panel.firstChild){ adult.appendChild(panel.firstChild); }
+    const pill = document.createElement('div');
+    pill.className = 'srna-tab-toggle';
+    pill.innerHTML = `<button data-mode="adult" class="active">Adult</button><button data-mode="peds">Pediatric</button>`;
+    scope.appendChild(pill);
+    scope.appendChild(adult);
+    panel.appendChild(scope);
+    const btnAdult = pill.querySelector('button[data-mode="adult"]');
+    const btnPeds  = pill.querySelector('button[data-mode="peds"]');
+    function setMode(m){
+      scope.setAttribute('data-srna-mode', m);
+      btnAdult.classList.toggle('active', m==='adult');
+      btnPeds .classList.toggle('active', m==='peds');
+      localStorage.setItem(storageKey, m);
+    }
+    btnAdult.addEventListener('click', ()=>setMode('adult'));
+    btnPeds .addEventListener('click', ()=>setMode('peds'));
+    setMode(localStorage.getItem(storageKey) || 'adult');
+    return scope;
+  }
+
+  const medsScope   = scopePanel(medsPanel,   'srna_mode_meds');
+  const pearlsScope = scopePanel(pearlsPanel, 'srna_mode_pearls');
+  const calcsScope  = scopePanel(calcsPanel,  'srna_mode_calcs');
+
+  /* === Pediatric Medications dataset (now normalized to sections) === */
+  function L(items){ return `<ul>${items.join('')}</ul>`; }
+  function it(txt){ return `<li>${txt}</li>`; }
+
+  const DRUGS=[
+    // Sedation / Anxiolysis
+    {cat:'Sedation', name:'Midazolam PO', unit:'mg/kg', range:[0.5,0.7], max:'20 mg', route:'PO',
+      detailed: L([
+        it('<b>Use:</b> pre-op anxiolysis/sedation'),
+        it('<b>Onset/Duration:</b> 15–30 min / 60–90 min'),
+        it('<b>Contra.:</b> severe respiratory depression without monitoring; hypersensitivity to benzos'),
+        it('<b>Adverse:</b> paradoxical agitation, respiratory depression (↑ with opioids), hypotension (rare)'),
+        it('<b>Pearls:</b> bitter—flavoring helps; consider IN if refuses PO; avoid near discharge in OSA'),
+        it('<b>Conc.:</b> syrup ~2 mg/mL (verify formulary)')
+      ])},
+    {cat:'Sedation', name:'Midazolam IN', unit:'mg/kg', range:[0.2,0.3], route:'IN',
+      detailed: L([
+        it('<b>Use:</b> non‑IV anxiolysis/sedation'),
+        it('<b>Onset/Duration:</b> 5–10 min / ~60 min'),
+        it('<b>Contra.:</b> significant nasal trauma/bleeding (relative)'),
+        it('<b>Adverse:</b> nasal sting/irritation; respiratory depression with co‑sedatives'),
+        it('<b>Pearls:</b> use atomizer; split dose between nares'),
+        it('<b>Conc.:</b> IV 1–5 mg/mL used IN via atomizer (check policy)')
+      ])},
+    {cat:'Sedation', name:'Midazolam IV', unit:'mg/kg', range:[0.05,0.1], route:'IV',
+      detailed: L([
+        it('<b>Use:</b> IV anxiolysis/induction adjunct'),
+        it('<b>Onset/Duration:</b> &lt;5 min / 30–60 min'),
+        it('<b>Contra.:</b> severe hypotension/shock (relative)'),
+        it('<b>Adverse:</b> respiratory depression, hypotension (dose‑related)'),
+        it('<b>Pearls:</b> titrate slowly; synergy with opioids'),
+        it('<b>Conc.:</b> 1 mg/mL or 5 mg/mL vials')
+      ])},
+
+    // Induction
+    {cat:'Induction', name:'Propofol', unit:'mg/kg', range:[2,4],
+      detailed: L([
+        it('<b>Use:</b> induction/maintenance'),
+        it('<b>Onset/Duration:</b> 30–45 s / 5–10 min'),
+        it('<b>Contra.:</b> hypersensitivity to components (egg/soy allergy rarely absolute; follow institutional policy)'),
+        it('<b>Adverse:</b> hypotension, apnea, pain on injection'),
+        it('<b>Pearls:</b> higher mg/kg vs adults; consider lidocaine admixture; monitor hemodynamics'),
+        it('<b>Conc.:</b> 10 mg/mL emulsion')
+      ])},
+    {cat:'Induction', name:'Etomidate', unit:'mg/kg', range:[0.3,0.3],
+      detailed: L([
+        it('<b>Use:</b> hemodynamically fragile induction'),
+        it('<b>Onset/Duration:</b> 30–60 s / 3–10 min'),
+        it('<b>Contra.:</b> known porphyria (relative); sepsis (consider adrenal suppression)'),
+        it('<b>Adverse:</b> myoclonus, adrenal suppression (transient), N/V'),
+        it('<b>Pearls:</b> pre‑dose with small opioid/benzo to blunt myoclonus'),
+        it('<b>Conc.:</b> 2 mg/mL')
+      ])},
+    {cat:'Induction', name:'Thiopental', unit:'mg/kg', range:[4,6],
+      detailed: L([
+        it('<b>Use:</b> induction/anticonvulsant'),
+        it('<b>Onset/Duration:</b> 30–45 s / 5–10 min'),
+        it('<b>Contra.:</b> porphyria, hemodynamic instability'),
+        it('<b>Adverse:</b> hypotension, respiratory depression, histamine release'),
+        it('<b>Pearls:</b> limited availability in some centers'),
+        it('<b>Conc.:</b> reconstituted per vial instructions')
+      ])},
+    {cat:'Induction', name:'Ketamine IV', unit:'mg/kg', range:[1,2],
+      detailed: L([
+        it('<b>Use:</b> induction/analgesia; bronchodilatory'),
+        it('<b>Onset/Duration:</b> 30–60 s / 10–20 min'),
+        it('<b>Contra.:</b> severe pulmonary HTN (relative); ↑ICP history (controversial)'),
+        it('<b>Adverse:</b> hypersalivation, emergence agitation (↓ with benzo/dex)'),
+        it('<b>Pearls:</b> good in reactive airways/asthma; consider anticholinergic'),
+        it('<b>Conc.:</b> 10 mg/mL, 50 mg/mL (verify)')
+      ])},
+    {cat:'Sedation', name:'Ketamine PO', unit:'mg/kg', range:[3,6], route:'PO',
+      detailed: L([
+        it('<b>Use:</b> PO premedication'),
+        it('<b>Onset/Duration:</b> 15–30 min / 60–120 min'),
+        it('<b>Contra.:</b> significant airway risk without monitoring'),
+        it('<b>Adverse:</b> N/V, hypersalivation'),
+        it('<b>Pearls:</b> mix with syrup for palatability'),
+        it('<b>Conc.:</b> compounded per pharmacy')
+      ])},
+    {cat:'Sedation', name:'Ketamine IM', unit:'mg/kg', range:[3,7], route:'IM',
+      detailed: L([
+        it('<b>Use:</b> uncooperative child without IV'),
+        it('<b>Onset/Duration:</b> 3–5 min / 15–30 min'),
+        it('<b>Contra.:</b> significant cardiac disease (relative)'),
+        it('<b>Adverse:</b> pain at injection, hypersalivation'),
+        it('<b>Pearls:</b> consider atropine/glyco for secretions'),
+        it('<b>Conc.:</b> 50 mg/mL typical')
+      ])},
+    {cat:'Sedation', name:'Ketamine IN', unit:'mg/kg', range:[5,6], route:'IN',
+      detailed: L([
+        it('<b>Use:</b> brief non‑IV sedation'),
+        it('<b>Onset/Duration:</b> 5–10 min / 20–30 min'),
+        it('<b>Contra.:</b> nasal trauma'),
+        it('<b>Adverse:</b> nasal irritation, dysphoria'),
+        it('<b>Pearls:</b> atomizer delivery; split between nares'),
+        it('<b>Conc.:</b> 50 mg/mL drawn for IN')
+      ])},
+
+    // Dex
+    {cat:'Sedation', name:'Dexmedetomidine (load)', unit:'mcg/kg', range:[0.5,1],
+      detailed: L([
+        it('<b>Use:</b> sedation; emergence delirium mitigation'),
+        it('<b>Onset/Duration:</b> onset 10–15 min / variable'),
+        it('<b>Contra.:</b> severe bradyarrhythmias (relative)'),
+        it('<b>Adverse:</b> bradycardia, hypotension'),
+        it('<b>Pearls:</b> avoid rapid IV push; consider during emergence'),
+        it('<b>Conc.:</b> 4 mcg/mL after dilution (common)')
+      ])},
+    {cat:'Sedation', name:'Dexmedetomidine gtt', unit:'mcg/kg/hr', range:[0.2,1.0],
+      detailed: L([
+        it('<b>Use:</b> sedation infusion'),
+        it('<b>Onset/Duration:</b> titratable'),
+        it('<b>Contra.:</b> severe conduction disease (relative)'),
+        it('<b>Adverse:</b> bradycardia, hypotension'),
+        it('<b>Pearls:</b> titrate by effect with monitoring'),
+        it('<b>Conc.:</b> 4 mcg/mL after dilution (verify)')
+      ])},
+    {cat:'Sedation', name:'Dexmedetomidine IN', unit:'mcg/kg', range:[0.5,3], route:'IN',
+      detailed: L([
+        it('<b>Use:</b> non‑IV sedation (MRI/CT)'),
+        it('<b>Onset/Duration:</b> 30–45 min / variable'),
+        it('<b>Contra.:</b> nasal trauma'),
+        it('<b>Adverse:</b> bradycardia, hypotension (less common than IV bolus)'),
+        it('<b>Pearls:</b> plan lead time'),
+        it('<b>Conc.:</b> IV solution via atomizer')
+      ])},
+
+    // Analgesia
+    {cat:'Analgesia', name:'Fentanyl (induction)', unit:'mcg/kg', range:[1,2],
+      detailed: L([
+        it('<b>Use:</b> opioid adjunct/analgesia'),
+        it('<b>Onset/Duration:</b> 1–2 min / 30–60 min'),
+        it('<b>Contra.:</b> severe respiratory depression without support'),
+        it('<b>Adverse:</b> chest wall rigidity with rapid/high doses; respiratory depression'),
+        it('<b>Pearls:</b> slow titration; consider age/OSA'),
+        it('<b>Conc.:</b> 50 mcg/mL')
+      ])},
+    {cat:'Analgesia', name:'Sufentanil (induction)', unit:'mcg/kg', range:[1,10],
+      detailed: L([
+        it('<b>Use:</b> potent opioid adjunct'),
+        it('<b>Onset/Duration:</b> 1–3 min / 20–45 min'),
+        it('<b>Contra.:</b> severe respiratory depression without support'),
+        it('<b>Adverse:</b> respiratory depression, bradycardia'),
+        it('<b>Pearls:</b> titrate cautiously'),
+        it('<b>Conc.:</b> 50 mcg/mL (dilute per protocol)')
+      ])},
+    {cat:'Analgesia', name:'Remifentanil gtt', unit:'mcg/kg/min', range:[0.05,2.0],
+      detailed: L([
+        it('<b>Use:</b> ultra‑short acting opioid infusion'),
+        it('<b>Onset/Duration:</b> rapid / minutes'),
+        it('<b>Contra.:</b> none absolute (relative: severe bradyarrhythmias)'),
+        it('<b>Adverse:</b> bradycardia, rigidity, apnea'),
+        it('<b>Pearls:</b> plan longer‑acting analgesia for emergence'),
+        it('<b>Conc.:</b> reconstituted per vial; dilute to convenient mcg/mL')
+      ])},
+    {cat:'Analgesia', name:'Hydromorphone', unit:'mcg/kg', range:[10,20],
+      detailed: L([
+        it('<b>Use:</b> longer‑acting opioid'),
+        it('<b>Onset/Duration:</b> 5–10 min / 3–5 h'),
+        it('<b>Contra.:</b> severe respiratory depression without support'),
+        it('<b>Adverse:</b> nausea, pruritus, respiratory depression'),
+        it('<b>Pearls:</b> reduce dose in OSA; titrate slowly'),
+        it('<b>Conc.:</b> 1 mg/mL (dilutions vary)')
+      ])},
+    {cat:'Analgesia', name:'Morphine', unit:'mg/kg', range:[0.1,0.1],
+      detailed: L([
+        it('<b>Use:</b> opioid analgesic'),
+        it('<b>Onset/Duration:</b> 5–10 min / 3–4 h'),
+        it('<b>Contra.:</b> severe respiratory depression; renal failure (relative)'),
+        it('<b>Adverse:</b> histamine release → hypotension/pruritus; nausea'),
+        it('<b>Pearls:</b> slower titration prudent'),
+        it('<b>Conc.:</b> 1–2 mg/mL after dilution for peds')
+      ])},
+
+    // Antiemetic/Steroid/GI
+    {cat:'Antiemetic', name:'Ondansetron', unit:'mg/kg', range:[0.1,0.1],
+      detailed: L([
+        it('<b>Use:</b> PONV prophylaxis/treatment'),
+        it('<b>Onset/Duration:</b> 10–30 min / 4–6 h'),
+        it('<b>Contra.:</b> congenital long QT (relative)'),
+        it('<b>Adverse:</b> headache, QT prolongation'),
+        it('<b>Pearls:</b> give near end of case'),
+        it('<b>Conc.:</b> 2 mg/mL (IV)')
+      ])},
+    {cat:'Steroid', name:'Dexamethasone (antiemetic)', unit:'mg/kg', range:[0.1,0.1], max:'10 mg',
+      detailed: L([
+        it('<b>Use:</b> PONV prophylaxis'),
+        it('<b>Onset/Duration:</b> 30–60 min / 24–48 h'),
+        it('<b>Contra.:</b> systemic fungal infection'),
+        it('<b>Adverse:</b> hyperglycemia, mood changes'),
+        it('<b>Pearls:</b> also reduces airway edema in ENT'),
+        it('<b>Conc.:</b> 4 mg/mL or 10 mg/mL')
+      ])},
+    {cat:'Steroid', name:'Dexamethasone (airway)', unit:'mg/kg', range:[0.5,0.5], max:'10 mg',
+      detailed: L([
+        it('<b>Use:</b> airway edema prophylaxis/treatment'),
+        it('<b>Onset/Duration:</b> hours / prolonged'),
+        it('<b>Contra.:</b> systemic fungal infection'),
+        it('<b>Adverse:</b> hyperglycemia, mood changes'),
+        it('<b>Pearls:</b> common in tonsil/adenoid cases'),
+        it('<b>Conc.:</b> 4 mg/mL or 10 mg/mL')
+      ])},
+    {cat:'Steroid', name:'Hydrocortisone (stress)', unit:'mg/kg', range:[2,2],
+      detailed: L([
+        it('<b>Use:</b> adrenal insufficiency coverage'),
+        it('<b>Onset/Duration:</b> 1–2 h / 6–12 h'),
+        it('<b>Contra.:</b> systemic fungal infection'),
+        it('<b>Adverse:</b> hyperglycemia, fluid retention'),
+        it('<b>Pearls:</b> follow institutional stress‑dose protocol'),
+        it('<b>Conc.:</b> varies by product; reconstitute per vial')
+      ])},
+    {cat:'GI', name:'Metoclopramide', unit:'mg/kg', range:[0.1,0.2],
+      detailed: L([
+        it('<b>Use:</b> prokinetic/antiemetic'),
+        it('<b>Onset/Duration:</b> 1–3 min IV / 1–2 h'),
+        it('<b>Contra.:</b> bowel obstruction; pheochromocytoma'),
+        it('<b>Adverse:</b> extrapyramidal sx (rare), akathisia'),
+        it('<b>Pearls:</b> combine with ondansetron in high risk'),
+        it('<b>Conc.:</b> 5 mg/mL')
+      ])},
+
+    // Anticholinergics
+    {cat:'Anticholinergic', name:'Atropine (IV)', unit:'mcg/kg', range:[10,20], minDose:'0.1 mg',
+      detailed: L([
+        it('<b>Use:</b> bradycardia treatment; antisialagogue'),
+        it('<b>Onset/Duration:</b> 1–2 min / 30–60 min'),
+        it('<b>Contra.:</b> narrow‑angle glaucoma (relative)'),
+        it('<b>Adverse:</b> tachycardia, dry mouth, urinary retention'),
+        it('<b>Pearls:</b> minimum total dose 0.1 mg'),
+        it('<b>Conc.:</b> 0.1 mg/mL')
+      ])},
+    {cat:'Anticholinergic', name:'Glycopyrrolate', unit:'mcg/kg', range:[10,10],
+      detailed: L([
+        it('<b>Use:</b> antisialagogue; NMB reversal partner'),
+        it('<b>Onset/Duration:</b> 2–3 min / 2–4 h'),
+        it('<b>Contra.:</b> narrow‑angle glaucoma (relative)'),
+        it('<b>Adverse:</b> tachycardia, dry mouth'),
+        it('<b>Pearls:</b> limited CNS penetration'),
+        it('<b>Conc.:</b> 0.2 mg/mL')
+      ])},
+
+    // Vasoactive
+    {cat:'Vasoactive', name:'Epinephrine (bronchospasm)', unit:'mcg/kg', range:[1,2],
+      detailed: L([
+        it('<b>Use:</b> bronchospasm refractory to inhaled β‑agonists'),
+        it('<b>Onset/Duration:</b> rapid / short'),
+        it('<b>Contra.:</b> none absolute in emergency'),
+        it('<b>Adverse:</b> tachycardia, arrhythmias, hyperglycemia'),
+        it('<b>Pearls:</b> consider nebulized adjuncts; monitor ECG'),
+        it('<b>Conc.:</b> dilute from 1 mg/mL (1:1000) per protocol')
+      ])},
+    {cat:'Vasoactive', name:'Epinephrine (resuscitation)', unit:'mcg/kg', range:[10,10],
+      detailed: L([
+        it('<b>Use:</b> PALS resuscitation'),
+        it('<b>Onset/Duration:</b> rapid / short'),
+        it('<b>Contra.:</b> none in arrest'),
+        it('<b>Adverse:</b> tachyarrhythmias'),
+        it('<b>Pearls:</b> follow PALS intervals'),
+        it('<b>Conc.:</b> 0.1 mg/mL (1:10,000)')
+      ])},
+    {cat:'Vasoactive', name:'Phenylephrine', unit:'mcg/kg', range:[1,10],
+      detailed: L([
+        it('<b>Use:</b> hypotension, ↑SVR'),
+        it('<b>Onset/Duration:</b> immediate / short'),
+        it('<b>Contra.:</b> severe bradycardia (relative)'),
+        it('<b>Adverse:</b> reflex bradycardia, hypertension'),
+        it('<b>Pearls:</b> titrate to effect'),
+        it('<b>Conc.:</b> dilute to 10–100 mcg/mL for boluses')
+      ])},
+    {cat:'Vasoactive', name:'Ephedrine', unit:'mg/kg', range:[0.15,0.15],
+      detailed: L([
+        it('<b>Use:</b> hypotension with low HR/CO'),
+        it('<b>Onset/Duration:</b> rapid / 10–60 min'),
+        it('<b>Contra.:</b> pheochromocytoma'),
+        it('<b>Adverse:</b> tachycardia, hypertension, nausea'),
+        it('<b>Pearls:</b> tachyphylaxis with repeat boluses'),
+        it('<b>Conc.:</b> dilute to 1–5 mg/mL bolus')
+      ])},
+
+    // Electrolytes
+    {cat:'Electrolyte', name:'Calcium Chloride', unit:'mg/kg', range:[10,20],
+      detailed: L([
+        it('<b>Use:</b> hypocalcemia, hyperkalemia stabilization, cardiac support'),
+        it('<b>Onset/Duration:</b> immediate / variable'),
+        it('<b>Contra.:</b> tissue infiltration risk (extravasation)'),
+        it('<b>Adverse:</b> arrhythmias if rapid push'),
+        it('<b>Pearls:</b> central access preferred'),
+        it('<b>Conc.:</b> 100 mg/mL (10%)')
+      ])},
+    {cat:'Electrolyte', name:'Calcium Gluconate', unit:'mg/kg', range:[30,60],
+      detailed: L([
+        it('<b>Use:</b> hypocalcemia; safer peripheral'),
+        it('<b>Onset/Duration:</b> immediate / variable'),
+        it('<b>Contra.:</b> caution with digitalis'),
+        it('<b>Adverse:</b> irritation extravasation'),
+        it('<b>Pearls:</b> slower IV; monitor ECG'),
+        it('<b>Conc.:</b> 100 mg/mL (10%)')
+      ])},
+
+    // NMBDs
+    {cat:'NMBD', name:'Rocuronium (induction)', unit:'mg/kg', range:[0.45,0.6],
+      detailed: L([
+        it('<b>Use:</b> intubation paralysis'),
+        it('<b>Onset/Duration:</b> 1–2 min / 30–60 min'),
+        it('<b>Contra.:</b> hypersensitivity'),
+        it('<b>Adverse:</b> prolonged block (hepatic impairment)'),
+        it('<b>Pearls:</b> adjust for hepatic function'),
+        it('<b>Conc.:</b> 10 mg/mL')
+      ])},
+    {cat:'NMBD', name:'Rocuronium (RSI)', unit:'mg/kg', range:[1.2,1.2],
+      detailed: L([
+        it('<b>Use:</b> RSI intubation'),
+        it('<b>Onset/Duration:</b> ~60 s / prolonged'),
+        it('<b>Contra.:</b> hypersensitivity'),
+        it('<b>Adverse:</b> prolonged paralysis'),
+        it('<b>Pearls:</b> anticipate longer duration'),
+        it('<b>Conc.:</b> 10 mg/mL')
+      ])},
+    {cat:'NMBD', name:'Vecuronium', unit:'mg/kg', range:[0.1,0.1],
+      detailed: L([
+        it('<b>Use:</b> intermediate NMBD'),
+        it('<b>Onset/Duration:</b> 2–3 min / 30–40 min'),
+        it('<b>Contra.:</b> hypersensitivity'),
+        it('<b>Adverse:</b> prolonged block (hepatic/renal)'),
+        it('<b>Pearls:</b> biliary/renal elimination'),
+        it('<b>Conc.:</b> reconstitute 1 mg/mL or 2 mg/mL')
+      ])},
+    {cat:'NMBD', name:'Cisatracurium', unit:'mg/kg', range:[0.1,0.2],
+      detailed: L([
+        it('<b>Use:</b> intermediate NMBD'),
+        it('<b>Onset/Duration:</b> 2–3 min / 30–40 min'),
+        it('<b>Contra.:</b> hypersensitivity'),
+        it('<b>Adverse:</b> minimal histamine release'),
+        it('<b>Pearls:</b> Hofmann elimination; organ‑independent'),
+        it('<b>Conc.:</b> 2 mg/mL')
+      ])},
+    {cat:'NMBD', name:'Pancuronium', unit:'mg/kg', range:[0.1,0.1],
+      detailed: L([
+        it('<b>Use:</b> long‑acting NMBD'),
+        it('<b>Onset/Duration:</b> 2–3 min / 60–90+ min'),
+        it('<b>Contra.:</b> hypertrophic cardiomyopathy (relative)'),
+        it('<b>Adverse:</b> tachycardia (vagolytic)'),
+        it('<b>Pearls:</b> consider in long cases when tachycardia acceptable'),
+        it('<b>Conc.:</b> 2 mg/mL')
+      ])},
+    {cat:'NMBD', name:'Succinylcholine (IV induction)', unit:'mg/kg', range:[1.5,2],
+      detailed: L([
+        it('<b>Use:</b> rapid paralysis'),
+        it('<b>Onset/Duration:</b> 30–60 s / 5–10 min'),
+        it('<b>Contra.:</b> neuromuscular dz, hyperkalemia risk, burns &gt;24–48 h, MH'),
+        it('<b>Adverse:</b> hyperkalemia, bradycardia (repeat dose), ↑IOP/ICP, MH trigger'),
+        it('<b>Pearls:</b> consider atropine in infants; avoid in undiagnosed myopathy'),
+        it('<b>Conc.:</b> 20 mg/mL')
+      ])},
+    {cat:'NMBD', name:'Succinylcholine (laryngospasm IV)', unit:'mg/kg', range:[0.1,1.0],
+      detailed: L([
+        it('<b>Use:</b> refractory laryngospasm'),
+        it('<b>Onset/Duration:</b> 30–60 s / 5–10 min'),
+        it('<b>Contra.:</b> same as above'),
+        it('<b>Adverse:</b> same as above'),
+        it('<b>Pearls:</b> IM 4 mg/kg if no IV access'),
+        it('<b>Conc.:</b> 20 mg/mL (dilute for small doses)')
+      ])},
+
+    // Reversal & antagonists
+    {cat:'Reversal', name:'Neostigmine', unit:'mg/kg', range:[0.07,0.07], max:'5 mg',
+      detailed: L([
+        it('<b>Use:</b> reversal of non‑depolarizing block'),
+        it('<b>Onset/Duration:</b> 5–10 min / 45–60 min'),
+        it('<b>Contra.:</b> bowel/urinary obstruction'),
+        it('<b>Adverse:</b> bradycardia, secretions (counter with glycopyrrolate)'),
+        it('<b>Pearls:</b> pair with glycopyrrolate; TOF‑guided dosing'),
+        it('<b>Conc.:</b> 1 mg/mL')
+      ])},
+    {cat:'Reversal', name:'Sugammadex (TOF>2)', unit:'mg/kg', range:[2,2],
+      detailed: L([
+        it('<b>Use:</b> reversal of roc/vec'),
+        it('<b>Onset/Duration:</b> 2–3 min / dose‑dependent'),
+        it('<b>Contra.:</b> severe renal failure (relative)'),
+        it('<b>Adverse:</b> bradycardia, hypersensitivity'),
+        it('<b>Pearls:</b> deeper block may require 4 mg/kg (or 16 mg/kg for immediate)'),
+        it('<b>Conc.:</b> 100 mg/mL')
+      ])},
+    {cat:'Antagonist', name:'Naloxone', unit:'mg/kg', range:[0.001,0.001],
+      detailed: L([
+        it('<b>Use:</b> reversal of opioid effects'),
+        it('<b>Onset/Duration:</b> 1–2 min / 20–60 min'),
+        it('<b>Contra.:</b> caution in opioid‑dependent (withdrawal)'),
+        it('<b>Adverse:</b> acute pain, hypertension, pulmonary edema (rare)'),
+        it('<b>Pearls:</b> titrate in 1 mcg/kg increments; watch for renarcotization'),
+        it('<b>Conc.:</b> 0.4 mg/mL (dilute for peds)')
+      ])},
+    {cat:'Antagonist', name:'Flumazenil', unit:'mg/kg', range:[0.01,0.01],
+      detailed: L([
+        it('<b>Use:</b> reverse benzodiazepines'),
+        it('<b>Onset/Duration:</b> 1–2 min / 30–60 min'),
+        it('<b>Contra.:</b> seizure disorders on chronic benzos'),
+        it('<b>Adverse:</b> seizures (rare), agitation'),
+        it('<b>Pearls:</b> titrate small doses; resedation possible'),
+        it('<b>Conc.:</b> 0.1 mg/mL')
+      ])},
+
+    // Analgesics & NSAIDs
+    {cat:'Analgesic', name:'Acetaminophen PO', unit:'mg/kg', range:[10,15], route:'PO',
+      detailed: L([
+        it('<b>Use:</b> non‑opioid analgesic/antipyretic'),
+        it('<b>Onset/Duration:</b> 30–60 min / 4–6 h'),
+        it('<b>Contra.:</b> severe hepatic impairment'),
+        it('<b>Adverse:</b> hepatotoxicity at high total dose'),
+        it('<b>Pearls:</b> include in multimodal plan'),
+        it('<b>Conc.:</b> 160 mg/5 mL suspension common')
+      ])},
+    {cat:'Analgesic', name:'Acetaminophen PR (load)', unit:'mg/kg', range:[30,40], route:'PR',
+      detailed: L([
+        it('<b>Use:</b> if no IV/PO'),
+        it('<b>Onset/Duration:</b> slower / 4–6 h'),
+        it('<b>Contra.:</b> severe rectal pathology'),
+        it('<b>Adverse:</b> local irritation'),
+        it('<b>Pearls:</b> use loading dose; maintenance 15–20 mg/kg'),
+        it('<b>Conc.:</b> suppositories various strengths')
+      ])},
+    {cat:'Analgesic', name:'Acetaminophen IV', unit:'mg/kg', range:[15,15],
+      detailed: L([
+        it('<b>Use:</b> analgesia/antipyresis'),
+        it('<b>Onset/Duration:</b> 5–10 min / 4–6 h'),
+        it('<b>Contra.:</b> severe hepatic impairment'),
+        it('<b>Adverse:</b> hypotension (rare), liver injury high totals'),
+        it('<b>Pearls:</b> round to mL based on bag concentration'),
+        it('<b>Conc.:</b> 10 mg/mL (1000 mg/100 mL)')
+      ])},
+    {cat:'NSAID', name:'Ketorolac IV', unit:'mg/kg', range:[0.5,0.5], max:'30 mg',
+      detailed: L([
+        it('<b>Use:</b> non‑opioid analgesic'),
+        it('<b>Onset/Duration:</b> 10–30 min / 4–6 h'),
+        it('<b>Contra.:</b> renal insufficiency, bleeding risk'),
+        it('<b>Adverse:</b> platelet inhibition, renal effects'),
+        it('<b>Pearls:</b> avoid in tonsil bleed risk per policy'),
+        it('<b>Conc.:</b> 30 mg/mL (dilute)')
+      ])},
+    {cat:'NSAID', name:'Ketorolac IM', unit:'mg/kg', range:[0.5,1.0], max:'30 mg',
+      detailed: L([
+        it('<b>Use:</b> analgesia IM route'),
+        it('<b>Onset/Duration:</b> 30–60 min / 4–6 h'),
+        it('<b>Contra.:</b> same as IV'),
+        it('<b>Adverse:</b> same as IV'),
+        it('<b>Pearls:</b> consider patient comfort'),
+        it('<b>Conc.:</b> 30 mg/mL')
+      ])},
+
+    // Local anesthetics
+    {cat:'Local Anesthetic', name:'Lidocaine (IV blunting)', unit:'mg/kg', range:[1,1],
+      detailed: L([
+        it('<b>Use:</b> blunt intubation response'),
+        it('<b>Onset/Duration:</b> 1–2 min / 10–20 min'),
+        it('<b>Contra.:</b> severe heart block, local anesthetic allergy'),
+        it('<b>Adverse:</b> CNS/cardiac toxicity at high levels'),
+        it('<b>Pearls:</b> keep total daily max in mind with infiltration'),
+        it('<b>Conc.:</b> 20 mg/mL (2%) — dilute for IV')
+      ])},
+    {cat:'Local Anesthetic', name:'Lidocaine (infiltration)', unit:'mg/kg', range:[4.5,4.5],
+      detailed: L([
+        it('<b>Use:</b> local infiltration'),
+        it('<b>Onset/Duration:</b> rapid / 1–2 h'),
+        it('<b>Contra.:</b> local anesthetic allergy'),
+        it('<b>Adverse:</b> LAST with overdose'),
+        it('<b>Pearls:</b> compute mg; label syringe'),
+        it('<b>Conc.:</b> 5–20 mg/mL')
+      ])},
+    {cat:'Local Anesthetic', name:'Lidocaine w/ epi (infiltration)', unit:'mg/kg', range:[4.5,4.5],
+      detailed: L([
+        it('<b>Use:</b> local infiltration with vasoconstriction'),
+        it('<b>Onset/Duration:</b> rapid / longer with epi'),
+        it('<b>Contra.:</b> end‑artery sites (relative)'),
+        it('<b>Adverse:</b> LAST with overdose'),
+        it('<b>Pearls:</b> still respect max dose'),
+        it('<b>Conc.:</b> 5–20 mg/mL + epi')
+      ])},
+    {cat:'Local Anesthetic', name:'Bupivacaine w/ epi (infiltration)', unit:'mg/kg', range:[2.5,2.5], max:'175 mg',
+      detailed: L([
+        it('<b>Use:</b> infiltration/regional'),
+        it('<b>Onset/Duration:</b> slower / 3–8 h'),
+        it('<b>Contra.:</b> local anesthetic allergy'),
+        it('<b>Adverse:</b> cardiotoxicity at high levels'),
+        it('<b>Pearls:</b> incremental dosing'),
+        it('<b>Conc.:</b> 2.5–5 mg/mL')
+      ])},
+    {cat:'Local Anesthetic', name:'Bupivacaine PF (caudal)', unit:'mg/kg', range:[2.5,2.5], max:'175 mg',
+      detailed: L([
+        it('<b>Use:</b> caudal epidural'),
+        it('<b>Onset/Duration:</b> 10–20 min / 3–8 h'),
+        it('<b>Contra.:</b> coagulopathy, infection at site'),
+        it('<b>Adverse:</b> LAST, motor block'),
+        it('<b>Pearls:</b> consider clonidine 1–2 mcg/kg adjunct'),
+        it('<b>Conc.:</b> 2.5 mg/mL (0.25%) typical')
+      ])},
+    {cat:'Local Anesthetic', name:'Ropivacaine', unit:'mg/kg', range:[2.0,2.0],
+      detailed: L([
+        it('<b>Use:</b> infiltration/regional'),
+        it('<b>Onset/Duration:</b> similar to bupivacaine'),
+        it('<b>Contra.:</b> local anesthetic allergy'),
+        it('<b>Adverse:</b> LAST (less cardiotoxic vs bupivacaine)'),
+        it('<b>Pearls:</b> consider for safety margin'),
+        it('<b>Conc.:</b> 2–5 mg/mL')
+      ])},
+
+    // Emergencies & antifibrinolytics
+    {cat:'Emergencies', name:'Dantrolene/Ryanodex', unit:'mg/kg', range:[2.5,2.5],
+      detailed: L([
+        it('<b>Use:</b> malignant hyperthermia treatment'),
+        it('<b>Onset/Duration:</b> minutes / hours'),
+        it('<b>Contra.:</b> none in MH crisis'),
+        it('<b>Adverse:</b> muscle weakness, phlebitis'),
+        it('<b>Pearls:</b> repeat to 10 mg/kg as needed; follow MH protocol'),
+        it('<b>Conc.:</b> per product reconstitution')
+      ])},
+    {cat:'Emergencies', name:'Intralipid 20% (bolus)', unit:'mL/kg', range:[1.5,1.5],
+      detailed: L([
+        it('<b>Use:</b> LAST rescue'),
+        it('<b>Onset/Duration:</b> immediate / variable'),
+        it('<b>Contra.:</b> none in toxicity setting'),
+        it('<b>Adverse:</b> pancreatitis risk with large totals'),
+        it('<b>Pearls:</b> bolus 1.5 mL/kg (max 3), then 0.25 mL/kg/min'),
+        it('<b>Conc.:</b> 20%')
+      ])},
+    {cat:'Antifibrinolytic', name:'Tranexamic Acid (load)', unit:'mg/kg', range:[100,100],
+      detailed: L([
+        it('<b>Use:</b> reduce bleeding (ENT/orthopedics, etc.)'),
+        it('<b>Onset/Duration:</b> within 30–60 min / hours'),
+        it('<b>Contra.:</b> active intravascular clotting (relative)'),
+        it('<b>Adverse:</b> seizures at very high doses, nausea'),
+        it('<b>Pearls:</b> follow surgical protocol'),
+        it('<b>Conc.:</b> 100 mg/mL')
+      ])},
+    {cat:'Antifibrinolytic', name:'Tranexamic Acid gtt', unit:'mg/kg/hr', range:[10,10],
+      detailed: L([
+        it('<b>Use:</b> maintenance antifibrinolytic'),
+        it('<b>Onset/Duration:</b> continuous'),
+        it('<b>Contra.:</b> see above'),
+        it('<b>Adverse:</b> see above'),
+        it('<b>Pearls:</b> 10 mg/kg/hr common; some use fixed 500 mg/hr if >50 kg'),
+        it('<b>Conc.:</b> 10 mg/mL after dilution')
+      ])},
+  ];
+
+  /* ---- Meds UI ---- */
+  function medsBlock(){
+    const wrap=document.createElement('div');
+    wrap.className='srna-peds-block';
+    wrap.innerHTML=`
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="srna-badge">Pediatric Medications</div>
+        <div class="srna-small">Enter weight → inline dose stays visible; tap <b>Info</b> for details.</div>
+      </div>
+      <div class="srna-divider"></div>
+      <div class="srna-grid srna-g-3">
+        <label>Patient Weight (kg)<input id="srnaPtWt" class="srna-input" type="number" step="0.1" min="0" placeholder="e.g., 15"></label>
+        <label>Category<select id="srnaCat" class="srna-select"><option value="">All</option></select></label>
+        <label>Search<input id="srnaSearch" class="srna-input" placeholder="Drug name..."></label>
+      </div>
+      <div class="srna-small" id="srnaCount">—</div>
+      <div class="srna-divider"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="srnaExpand" class="srna-chip">Expand All</button>
+        <button id="srnaCollapse" class="srna-chip">Collapse All</button>
+        <button id="srnaReset" class="srna-chip">Reset</button>
+      </div>
+      <div id="srnaMeds"></div>
+
+      <!-- Modal (Detailed only) -->
+      <div class="srna-modal-backdrop" id="srnaModalBg">
+        <div class="srna-modal" role="dialog" aria-modal="true" aria-labelledby="srnaModalTitle">
+          <header>
+            <h3 id="srnaModalTitle">Medication</h3>
+            <button id="srnaModalClose" class="srna-btn">Close</button>
+          </header>
+          <div class="body">
+            <div id="srnaDetailContent"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    return wrap;
+  }
+
+  function mountMeds(scope){
+    if(!scope) return;
+    scope.querySelectorAll(':scope > .srna-peds-block').forEach(n=>n.remove());
+    const block = medsBlock();
+    scope.appendChild(block);
+
+    const medsRoot = block.querySelector('#srnaMeds');
+    const inpWt = block.querySelector('#srnaPtWt');
+    const selCat = block.querySelector('#srnaCat');
+    const inpSearch = block.querySelector('#srnaSearch');
+    const count = block.querySelector('#srnaCount');
+
+    const modalBg = block.querySelector('#srnaModalBg');
+    const modalTitle = block.querySelector('#srnaModalTitle');
+    const modalClose = block.querySelector('#srnaModalClose');
+    const detailEl = block.querySelector('#srnaDetailContent');
+
+    function openModal(drug){
+      modalTitle.textContent = drug.name;
+      detailEl.innerHTML = drug.detailed || '—';
+      modalBg.style.display = 'flex';
+    }
+    function closeModal(){ modalBg.style.display = 'none'; }
+    modalClose.addEventListener('click', closeModal);
+    modalBg.addEventListener('click', (e)=>{ if(e.target===modalBg) closeModal(); });
+
+    function kgNum(v){ const n=parseFloat(v||'0'); return (isFinite(n)&&n>0)?n:0; }
+    function doseRangeString(d){ const u=d.unit; return (d.range[0]===d.range[1])?(`${d.range[0]} ${u}`):(`${d.range[0]}–${d.range[1]} ${u}`); }
+    function calcDose(d, wt){ if(/kg/.test(d.unit)){ const lo=d.range[0]*wt, hi=d.range[1]*wt; const unit=d.unit.replace('/kg',''); return {lo,hi,unit}; } return null; }
+
+    function fillCats(drugs){
+      const cats=[...new Set(drugs.map(d=>d.cat))].sort();
+      selCat.innerHTML = '<option value=\"\">All</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+    }
+
+    function doseBadge(d, wt){
+      const calc = calcDose(d, wt);
+      if(wt>0 && calc){
+        return (calc.lo===calc.hi) ? `<span class="srna-badge">${calc.lo.toFixed(2)} ${calc.unit}</span>`
+                                   : `<span class="srna-badge">${calc.lo.toFixed(2)}–${calc.hi.toFixed(2)} ${calc.unit}</span>`;
+      }
+      return `<span class="srna-badge">${doseRangeString(d)}${d.max?` • max ${d.max}`:''}${d.minDose?` • min ${d.minDose}`:''}${d.route?` • ${d.route}`:''}</span>`;
+    }
+
+    function drugRow(d, wt){
+      return `
+        <div class="srna-drug-row">
+          <div class="srna-drug-name"><span>${d.name}</span>${doseBadge(d, wt)}</div>
+          <div><button class="srna-btn" data-info="${encodeURIComponent(d.name)}">Info</button></div>
+        </div>`;
+    }
+
+    function render(){
+      fillCats(DRUGS);
+      const q=(inpSearch.value||'').toLowerCase();
+      const wt=kgNum(inpWt.value);
+      const cats=[...new Set(DRUGS.map(d=>d.cat))];
+      let totalShown=0, total=DRUGS.length;
+      medsRoot.innerHTML = cats.map(cat=>{
+        const items=DRUGS.filter(d=>d.cat===cat)
+          .filter(d=>!q || d.name.toLowerCase().includes(q))
+          .filter(d=>!selCat.value || d.cat===selCat.value);
+        if(!items.length) return '';
+        totalShown+=items.length;
+        const inner = items.map(d=>drugRow(d, wt)).join('');
+        return `<details open class="srna-accordion">
+          <summary>${cat}</summary>
+          <div>${inner || '<div class="srna-small">No matches</div>'}</div>
+        </details>`;
+      }).join('');
+      count.textContent = `${totalShown} of ${total} shown` + (wt?` • Calculated for ${wt.toFixed(1)} kg`:' • enter weight to calculate');
+
+      medsRoot.querySelectorAll('button.srna-btn[data-info]').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          const name = decodeURIComponent(btn.getAttribute('data-info'));
+          const d = DRUGS.find(x=>x.name===name);
+          if(d) openModal(d);
+        });
+      });
+    }
+
+    render();
+    block.querySelector('#srnaExpand')?.addEventListener('click', ()=>block.querySelectorAll('#srnaMeds details').forEach(d=>d.open=true));
+    block.querySelector('#srnaCollapse')?.addEventListener('click', ()=>block.querySelectorAll('#srnaMeds details').forEach(d=>d.open=false));
+    block.querySelector('#srnaReset')?.addEventListener('click', ()=>{ inpSearch.value=''; selCat.value=''; inpWt.value=''; render(); });
+    inpSearch.addEventListener('input', render);
+    inpWt.addEventListener('input', render);
+    selCat.addEventListener('change', render);
+  }
+  mountMeds(medsScope);
+
+  /* === Pediatric Clinical Pearls retained from v49 (no changes) === */
+  function pearlsBlock(){
+    const wrap=document.createElement('div');
+    wrap.className='srna-peds-block';
+    wrap.innerHTML=`
+      <div class="srna-badge">Pediatric Clinical Pearls</div>
+      <div class="srna-divider"></div>
+
+      <details class="srna-accordion" open>
+        <summary>Airway & Equipment — Quick Reference</summary>
+        <div>
+          <table class="srna-table">
+            <thead><tr><th>Age / Weight</th><th>ETT (Cuffed)</th><th>ETT (Uncuffed)</th><th>Depth (cm)</th><th>LMA Size</th><th>Blade</th></tr></thead>
+            <tbody>
+              <tr><td>Preterm &lt; 1.5 kg</td><td>2.5</td><td>3.0</td><td>~ 7–8</td><td>#1</td><td>Miller 0</td></tr>
+              <tr><td>Term 3–4 kg</td><td>3.0–3.5</td><td>3.5–4.0</td><td>~ 9–10</td><td>#1</td><td>Miller 0–1</td></tr>
+              <tr><td>Infant &lt; 1 yr</td><td>3.5–4.0</td><td>4.0–4.5</td><td>~ 10–11</td><td>#1.5–2</td><td>Miller 1</td></tr>
+              <tr><td>1–2 yrs</td><td>≈ (age/4)+3.5 → 4.0–4.5</td><td>+0.5</td><td>3 × ID</td><td>#2</td><td>Miller 1–2</td></tr>
+              <tr><td>3–6 yrs</td><td>≈ (age/4)+3.5 → 4.5–5.0</td><td>+0.5</td><td>3 × ID</td><td>#2–2.5</td><td>Miller 2</td></tr>
+              <tr><td>7–12 yrs</td><td>≈ (age/4)+3.5 → 5.0–6.0</td><td>+0.5</td><td>3 × ID</td><td>#2.5–3</td><td>Mac 2</td></tr>
+              <tr><td>&gt; 12 yrs</td><td>Adult sizes</td><td>+0.5 if uncuffed</td><td>3 × ID</td><td>#3–4</td><td>Mac 3</td></tr>
+            </tbody>
+          </table>
+          <div class="srna-note" style="margin-top:6px">Leak test ~20–25 cmH₂O with cuffed ETT.</div>
+        </div>
+      </details>
+
+      <details class="srna-accordion">
+        <summary>Congenital Heart Disease — Anesthesia Implications</summary>
+        <div>
+          <ul style="margin-left:1rem">
+            <li><b>ASD/VSD:</b> avoid ↑PVR (hypoxia, hypercarbia); maintain SVR.</li>
+            <li><b>PDA:</b> pre/post‑ductal sats; avoid ↑PVR.</li>
+            <li><b>TOF:</b> treat spells: ↑SVR (phenylephrine), fluids, deepen anesthesia.</li>
+            <li><b>Single ventricle/Fontan:</b> preload dependent; avoid ↑PVR; spontaneous ventilation may help.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="srna-accordion">
+        <summary>Airway & Syndromes</summary>
+        <div>
+          <ul style="margin-left:1rem">
+            <li><b>Trisomy 21:</b> large tongue, subglottic narrowing; smaller ETT; atlanto‑axial precautions.</li>
+            <li><b>Pierre Robin/Micrognathia:</b> difficult mask/intubation—prepare adjuncts; maintain spont vent.</li>
+            <li><b>Laryngomalacia/Stridor:</b> gentle induction; avoid agitation; CPAP support.</li>
+            <li><b>Recent URI:</b> ↑ laryngospasm risk—delay if able; if proceeding, minimize stimulation.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="srna-accordion">
+        <summary>GI & Surgical</summary>
+        <div>
+          <ul style="margin-left:1rem">
+            <li><b>Pyloric stenosis:</b> correct lytes; RSI after gastric decompression; opioid‑sparing early.</li>
+            <li><b>TEF/EA:</b> avoid bagging; tube distal to fistula; maintain spont vent initially.</li>
+            <li><b>CDH:</b> avoid mask ventilation; intubate early; low PIP; avoid N₂O.</li>
+            <li><b>NEC risk:</b> careful fluids; minimize high airway pressures.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="srna-accordion">
+        <summary>Heme & Pulmonary</summary>
+        <div>
+          <ul style="margin-left:1rem">
+            <li><b>Sickle cell disease:</b> hydrate, oxygenate, warm; avoid acidosis; transfusion plan as indicated.</li>
+            <li><b>Asthma/reactive airways:</b> bronchodilators preop; ketamine helpful; avoid irritation.</li>
+            <li><b>OSA/Obesity:</b> opioid‑sparing; extended monitoring; consider CPAP.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="srna-accordion">
+        <summary>Metabolic & Misc</summary>
+        <div>
+          <ul style="margin-left:1rem">
+            <li><b>Apnea of prematurity:</b> admit/monitor if PCA &lt; 60 wks or comorbidities; caffeine protocols.</li>
+            <li><b>MH susceptibility:</b> avoid triggers (volatile, succinylcholine); TIVA; dantrolene available.</li>
+            <li><b>Hypoglycemia risk:</b> neonates/infants—use dextrose fluids as indicated.</li>
+          </ul>
+        </div>
+      </details>
+
+      <details class="srna-accordion">
+        <summary>Fluids & Blood</summary>
+        <div>
+          <ul style="margin-left:1rem">
+            <li>Maintenance 4–2–1; bolus 10–20 mL/kg isotonic crystalloid.</li>
+            <li>EBV (mL/kg): Preterm 100; Neonate 85; Infant 75; Child 70.</li>
+            <li>ABL ≈ EBV × (Hct_start − Hct_allowable)/Hct_start.</li>
+          </ul>
+        </div>
+      </details>
+    `;
+    return wrap;
+  }
+  function ensurePearls(scope){
+    if(!scope) return;
+    scope.querySelectorAll(':scope > .srna-peds-block').forEach(n=>n.remove());
+    scope.appendChild(pearlsBlock());
+  }
+  ensurePearls(pearlsScope);
+
+  /* === Pediatric Calculators (add Surgical Replacement) === */
+  function pedsCalcsBlock(){
+    const wrap=document.createElement('div');
+    wrap.className='srna-peds-block';
+    wrap.innerHTML=`
+      <div class="srna-badge">Pediatric Calculators</div>
+      <div class="srna-divider"></div>
+
+      <!-- Patient Inputs -->
+      <div class="srna-grid srna-g-3">
+        <label>Age
+          <div style="display:flex; gap:8px">
+            <input id="srnaAgeVal" class="srna-input" type="number" step="0.1" placeholder="3">
+            <select id="srnaAgeUnit" class="srna-select">
+              <option value="years">years</option>
+              <option value="months">&lt; 1 year (months)</option>
+            </select>
+          </div>
+        </label>
+        <label>Premature? 
+          <select id="srnaPrem" class="srna-select">
+            <option value="no">No</option>
+            <option value="yes">Yes</option>
+          </select>
+        </label>
+        <label>Weight (kg)<input id="srnaWKg" class="srna-input" type="number" step="0.1" placeholder="15"></label>
+      </div>
+
+      <div class="srna-grid srna-g-3" style="margin-top:8px">
+        <label>Height (cm)<input id="srnaHCm" class="srna-input" type="number" step="0.1" placeholder="95"></label>
+        <label>EBV Profile
+          <select id="srnaEBVProfile" class="srna-select">
+            <option value="auto" selected>Auto (by age/prematurity)</option>
+            <option value="preterm">Preterm (100 mL/kg)</option>
+            <option value="neonate">Neonate (85 mL/kg)</option>
+            <option value="infant">Infant (75 mL/kg)</option>
+            <option value="child">Child (70 mL/kg)</option>
+          </select>
+        </label>
+        <label>Tidal Volume Target (mL/kg)
+          <select id="srnaVtKg" class="srna-select">
+            <option value="6">6</option><option value="7">7</option><option value="8" selected>8</option>
+          </select>
+        </label>
+      </div>
+
+      <!-- At a glance -->
+      <div class="srna-accordion" open style="margin-top:8px">
+        <summary>At a glance</summary>
+        <div class="srna-grid srna-g-2">
+          <div><b>ETT (cuffed):</b> <span id="glETTc" class="srna-badge">—</span></div>
+          <div><b>ETT (uncuffed):</b> <span id="glETTu" class="srna-badge">—</span></div>
+          <div><b>LMA size:</b> <span id="glLMA" class="srna-badge">—</span></div>
+          <div><b>EBV:</b> <span id="glEBV" class="srna-badge">—</span></div>
+          <div><b>Tidal Volume:</b> <span id="glVt" class="srna-badge">—</span></div>
+          <div><b>Blade:</b> <span id="glBlade" class="srna-badge">—</span></div>
+        </div>
+      </div>
+
+      <!-- Airway & Ventilation -->
+      <div class="srna-grid srna-g-2">
+        <div class="srna-accordion" open>
+          <summary>Airway</summary>
+          <div>
+            <div><b>Cuffed ETT:</b> <span id="srnaETT" class="srna-badge">—</span></div>
+            <div style="margin-top:6px"><b>Uncuffed ETT:</b> <span id="srnaETTUn" class="srna-badge">—</span></div>
+            <div style="margin-top:6px"><b>Estimated Depth:</b> <span id="srnaDepth" class="srna-badge">—</span></div>
+            <div style="margin-top:6px"><b>LMA Size:</b> <span id="srnaLMA" class="srna-badge">—</span></div>
+            <div style="margin-top:6px"><b>Blade:</b> <span id="srnaBlade" class="srna-badge">—</span></div>
+          </div>
+        </div>
+        <div class="srna-accordion" open>
+          <summary>Ventilation</summary>
+          <div>
+            <div><b>Tidal Volume:</b> <span id="srnaVt" class="srna-badge">—</span> <span class="srna-small">(6–8 mL/kg typical)</span></div>
+            <div style="margin-top:6px"><b>Suggested RR:</b> <span id="srnaRR" class="srna-badge">—</span> <span class="srna-small">(age‑appropriate)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Fluids & Blood calculators -->
+      <div class="srna-grid srna-g-2">
+        <div class="srna-accordion" open>
+          <summary>Maintenance / NPO &amp; Dehydration</summary>
+          <div class="srna-grid srna-g-2">
+            <label>Fasting Time (h)<input id="srnaFastingH" class="srna-input" type="number" step="0.5" value="6"></label>
+            <label>Dehydration % (0–10)
+              <input id="srnaDehydPct" class="srna-input" type="number" step="1" value="0">
+              <div class="srna-vis-note">Dehydration deficit = <i>%</i> × 10 mL/kg × weight. (Clinical estimate; not surgical loss.)</div>
+            </label>
+          </div>
+          <div style="margin-top:6px"><b>Maintenance (4–2–1):</b> <span id="srnaMIVF" class="srna-badge">—</span></div>
+          <div style="margin-top:6px"><b>NPO Deficit:</b> <span id="srnaNPO" class="srna-badge">—</span> <span class="srna-small">(replace 50/25/25% over 1st/2nd/3rd hr)</span></div>
+          <div style="margin-top:6px"><b>Dehydration Deficit:</b> <span id="srnaDehyd" class="srna-badge">—</span></div>
+        </div>
+
+        <div class="srna-accordion" open>
+          <summary>Blood &amp; Surgical Replacement</summary>
+          <div class="srna-grid srna-g-2">
+            <label>Starting Hct (%)<input id="srnaHctStart" class="srna-input" type="number" step="1" value="36"></label>
+            <label>Allowable Hct (%)<input id="srnaHctAllow" class="srna-input" type="number" step="1" value="25"></label>
+
+            <label>Surgical Class (2/4/6 mL/kg/h)
+              <select id="srnaSurgClass" class="srna-select">
+                <option value="2">Minor (2 mL/kg/h)</option>
+                <option value="4" selected>Moderate (4 mL/kg/h)</option>
+                <option value="6">Major (6 mL/kg/h)</option>
+              </select>
+            </label>
+            <label>Case Duration (h)<input id="srnaCaseH" class="srna-input" type="number" step="0.25" value="2"></label>
+          </div>
+          <div style="margin-top:6px"><b>EBV:</b> <span id="srnaEBV" class="srna-badge">—</span></div>
+          <div style="margin-top:6px"><b>Allowable Blood Loss (ABL):</b> <span id="srnaABL" class="srna-badge">—</span></div>
+          <div style="margin-top:6px"><b>Est. Surgical Replacement:</b> <span id="srnaSurgLoss" class="srna-badge">—</span> <span class="srna-small">(2/4/6 mL/kg/h × weight × hours)</span></div>
+        </div>
+      </div>
+    `;
+    return wrap;
+  }
+
+  function ensureCalcs(scope){
+    if(!scope) return null;
+    scope.querySelectorAll(':scope > .srna-peds-block').forEach(n=>n.remove());
+    const b = pedsCalcsBlock();
+    scope.appendChild(b);
+    return b;
+  }
+  const calcsBlock = ensureCalcs(calcsScope);
+
+  // --- Calculator logic with surgical replacement ---
+  function lmaByWeight(kg){
+    if(!(kg>0)) return '—';
+    if(kg<=5) return '#1';
+    if(kg<=10) return '#1.5';
+    if(kg<=20) return '#2';
+    if(kg<=30) return '#2.5';
+    if(kg<=50) return '#3';
+    if(kg<=70) return '#4';
+    return '#5';
+  }
+  function bladeByAgeYears(ay){
+    if(ay<0.1) return 'Miller 0';
+    if(ay<1)   return 'Miller 0–1';
+    if(ay<3)   return 'Miller 1–2';
+    if(ay<8)   return 'Miller 2';
+    if(ay<12)  return 'Mac 2';
+    return 'Mac 3';
+  }
+  function cuffedByAgeWeight(ageYears, months, wt, premature){
+    if(ageYears<1){
+      if(premature || wt<=1.5) return 2.5;
+      if(wt<=3) return 3.0;
+      if(wt<=4) return 3.5;
+      return 3.5;
+    }
+    return (ageYears/4)+3.5;
+  }
+  function rrByAgeYears(ay){
+    if(ay<0.1) return '40–60/min';
+    if(ay<1)   return '30–40/min';
+    if(ay<3)   return '24–30/min';
+    if(ay<6)   return '20–24/min';
+    if(ay<12)  return '16–20/min';
+    return '12–18/min';
+  }
+  function ebvProfileAuto(ageYears, premature){
+    if(ageYears<0.1 || premature) return 'preterm';
+    if(ageYears<0.25) return 'neonate';
+    if(ageYears<1) return 'infant';
+    return 'child';
+  }
+  function ebvPerKg(profile){
+    switch(profile){
+      case 'preterm': return 100;
+      case 'neonate': return 85;
+      case 'infant': return 75;
+      default: return 70;
+    }
+  }
+  function mivf(kg){ if(!kg||kg<=0) return 0; if(kg<=10) return 4*kg; if(kg<=20) return 40+2*(kg-10); return 60+(kg-20); }
+
+  function wireCalcs(block){
+    if(!block) return;
+    const ageVal = block.querySelector('#srnaAgeVal');
+    const ageUnit= block.querySelector('#srnaAgeUnit');
+    const prem   = block.querySelector('#srnaPrem');
+    const wkg    = block.querySelector('#srnaWKg');
+    const hcm    = block.querySelector('#srnaHCm');
+    const vtSel  = block.querySelector('#srnaVtKg');
+    const prof   = block.querySelector('#srnaEBVProfile');
+
+    const outETT = block.querySelector('#srnaETT');
+    const outETTU= block.querySelector('#srnaETTUn');
+    const outDepth=block.querySelector('#srnaDepth');
+    const outLMA = block.querySelector('#srnaLMA');
+    const outBlade = block.querySelector('#srnaBlade');
+    const outMIVF= block.querySelector('#srnaMIVF');
+    const outEBV = block.querySelector('#srnaEBV');
+    const outABL = block.querySelector('#srnaABL');
+    const outVt  = block.querySelector('#srnaVt');
+    const outRR  = block.querySelector('#srnaRR');
+
+    // glance
+    const glETTc= block.querySelector('#glETTc');
+    const glETTu= block.querySelector('#glETTu');
+    const glLMA = block.querySelector('#glLMA');
+    const glEBV = block.querySelector('#glEBV');
+    const glVt  = block.querySelector('#glVt');
+    const glBlade= block.querySelector('#glBlade');
+
+    // NPO/Dehydration
+    const fastingH = block.querySelector('#srnaFastingH');
+    const dehydPct = block.querySelector('#srnaDehydPct');
+    const outNPO   = block.querySelector('#srnaNPO');
+    const outDehyd = block.querySelector('#srnaDehyd');
+
+    const hctStart = block.querySelector('#srnaHctStart');
+    const hctAllow = block.querySelector('#srnaHctAllow');
+
+    // surgical replacement
+    const surgClass = block.querySelector('#srnaSurgClass');
+    const caseHrs   = block.querySelector('#srnaCaseH');
+    const outSurg   = block.querySelector('#srnaSurgLoss');
+
+    function update(){
+      const a = parseFloat(ageVal.value||'0')||0;
+      const unit = ageUnit.value;
+      const months = unit==='months';
+      const ageYears = months? (a/12) : a;
+      const isPrem = prem.value==='yes';
+      const w = parseFloat(wkg.value||'0')||0;
+      const vtkg = parseFloat(vtSel.value||'8')||8;
+      const profileSel = prof.value;
+      const profile = profileSel==='auto' ? ebvProfileAuto(ageYears, isPrem) : profileSel;
+
+      const cuff = cuffedByAgeWeight(ageYears, months?a:0, w, isPrem);
+      const uncuff = cuff ? (cuff+0.5) : 0;
+      const depth = cuff ? (3*cuff) : 0;
+      const lma = lmaByWeight(w);
+      const blade = bladeByAgeYears(ageYears);
+      const m = mivf(w);
+      const ebvkg = ebvPerKg(profile);
+      const ebv = w>0 ? w*ebvkg : 0;
+      const hs = parseFloat(hctStart.value||'0')||0;
+      const ha = parseFloat(hctAllow.value||'0')||0;
+      const abl = (hs>0 && ha>=0 && ha<hs && ebv>0) ? ebv*(hs-ha)/hs : 0;
+      const vt = (w>0 && vtkg>0) ? w*vtkg : 0;
+      const rr = rrByAgeYears(ageYears);
+
+      const fast = Math.max(0, parseFloat(fastingH.value||'0')||0);
+      const npoDef = (m>0) ? m*fast : 0;  // mL
+      const dehyd = Math.max(0, Math.min(10, parseFloat(dehydPct.value||'0')||0));
+      const dehydDef = (w>0) ? w*dehyd*10 : 0; // 10 mL/kg per %
+
+      const sc = parseFloat(surgClass.value||'4')||4; // mL/kg/h
+      const ch = Math.max(0, parseFloat(caseHrs.value||'0')||0);
+      const surgLoss = (w>0 && ch>0) ? sc*w*ch : 0;
+
+      function badge(el, val, suffix=''){
+        if(!el) return;
+        el.textContent = (val && (typeof val==='string' || isFinite(val))) ? `${val}${suffix}` : '—';
+      }
+
+      // Assign
+      badge(outETT, cuff? `${cuff.toFixed(1)} mm` : '—');
+      badge(outETTU, uncuff? `${uncuff.toFixed(1)} mm` : '—');
+      badge(outDepth, depth? `${depth.toFixed(0)} cm` : '—');
+      badge(outLMA, lma);
+      badge(outBlade, blade);
+      badge(outMIVF, w>0? `${m.toFixed(0)} mL/hr` : '—');
+      badge(outEBV, w>0? `${ebv.toFixed(0)} mL (${ebvkg} mL/kg)` : '—');
+      badge(outABL, (abl>0)? `${abl.toFixed(0)} mL` : '—');
+      badge(outVt, (vt>0)? `${vt.toFixed(0)} mL` : '—');
+      badge(outRR, rr);
+      badge(outNPO, (npoDef>0)? `${npoDef.toFixed(0)} mL` : '—');
+      badge(outDehyd, (dehydDef>0)? `${dehydDef.toFixed(0)} mL` : '—');
+      badge(outSurg, (surgLoss>0)? `${surgLoss.toFixed(0)} mL` : '—');
+
+      // glance
+      const glETTc = block.querySelector('#glETTc');
+      const glETTu = block.querySelector('#glETTu');
+      const glLMA  = block.querySelector('#glLMA');
+      const glEBV  = block.querySelector('#glEBV');
+      const glVt   = block.querySelector('#glVt');
+      const glBlade= block.querySelector('#glBlade');
+      badge(glETTc, cuff? `${cuff.toFixed(1)} mm` : '—');
+      badge(glETTu, uncuff? `${uncuff.toFixed(1)} mm` : '—');
+      badge(glLMA, lma);
+      badge(glEBV, w>0? `${ebv.toFixed(0)} mL` : '—');
+      badge(glVt, (vt>0)? `${vt.toFixed(0)} mL` : '—');
+      badge(glBlade, blade);
+    }
+
+    [ageVal,ageUnit,prem,wkg,hcm,vtSel,prof,hctStart,hctAllow,fastingH,dehydPct,surgClass,caseHrs].forEach(el=>el && el.addEventListener('input', update));
+    update();
+  }
+  wireCalcs(calcsBlock);
+
+  document.getElementById('srnaModeToggle')?.remove();
+})();
+</script>
+
+
+<script>
+(function(){
+  // Find existing meds scope created earlier
+  function getPanelsByLabel(keyword){
+    const L = keyword.toLowerCase();
+    const candidates = new Set();
+    document.querySelectorAll('[role="tab"]').forEach(t => {
+      const txt = (t.textContent || '').toLowerCase();
+      if(txt.includes(L)){
+        const ctrl = t.getAttribute('aria-controls');
+        const p = ctrl ? document.getElementById(ctrl) : t.closest('[role="tabpanel"], .tab-pane, .tab-panel, section, article, div');
+        if(p) candidates.add(p);
+      }
+    });
+    document.querySelectorAll(`[id*="${L}"], [class*="${L}"]`).forEach(el => {
+      const p = el.closest('[role="tabpanel"], .tab-pane, .tab-panel, section, article, div');
+      if(p) candidates.add(p);
+    });
+    return Array.from(candidates);
+  }
+  function firstPanelFor(...labels){
+    for(const k of labels){
+      const found = getPanelsByLabel(k);
+      if(found.length) return found[0];
+    }
+    return null;
+  }
+  const medsPanel = firstPanelFor('medications','meds');
+  if(!medsPanel) return;
+  const scope = medsPanel.querySelector('.srna-tab-scope');
+  if(!scope) return;
+
+  // Rebuild the Pediatric Medications block with new layout
+  // We cannot access the previous DRUGS array (scoped), so we copy the dataset here (same as v50/v51 with full info).
+  function L(items){ return `<ul>${items.join('')}</ul>`; }
+  function it(txt){ return `<li>${txt}</li>`; }
+
+  const DRUGS=[
+    {cat:'Sedation', name:'Midazolam PO', unit:'mg/kg', range:[0.5,0.7], max:'20 mg', route:'PO',
+      detailed:L([it('<b>Use:</b> pre-op anxiolysis/sedation'),it('<b>Onset/Duration:</b> 15–30 min / 60–90 min'),
+      it('<b>Contra.:</b> severe respiratory depression without monitoring; hypersensitivity to benzos'),
+      it('<b>Adverse:</b> paradoxical agitation, respiratory depression (↑ with opioids), hypotension (rare)'),
+      it('<b>Pearls:</b> bitter—flavoring helps; consider IN if refuses PO; avoid near discharge in OSA'),
+      it('<b>Conc.:</b> syrup ~2 mg/mL (verify formulary)')])},
+    {cat:'Sedation', name:'Midazolam IN', unit:'mg/kg', range:[0.2,0.3], route:'IN',
+      detailed:L([it('<b>Use:</b> non‑IV anxiolysis/sedation'),it('<b>Onset/Duration:</b> 5–10 min / ~60 min'),
+      it('<b>Contra.:</b> significant nasal trauma/bleeding (relative)'),
+      it('<b>Adverse:</b> nasal sting/irritation; respiratory depression with co‑sedatives'),
+      it('<b>Pearls:</b> use atomizer; split dose between nares'),
+      it('<b>Conc.:</b> IV 1–5 mg/mL used IN via atomizer (check policy)')])},
+    {cat:'Sedation', name:'Midazolam IV', unit:'mg/kg', range:[0.05,0.1], route:'IV',
+      detailed:L([it('<b>Use:</b> IV anxiolysis/induction adjunct'),it('<b>Onset/Duration:</b> &lt;5 min / 30–60 min'),
+      it('<b>Contra.:</b> severe hypotension/shock (relative)'),
+      it('<b>Adverse:</b> respiratory depression, hypotension (dose‑related)'),
+      it('<b>Pearls:</b> titrate slowly; synergy with opioids'),
+      it('<b>Conc.:</b> 1 mg/mL or 5 mg/mL vials')])},
+    {cat:'Induction', name:'Propofol', unit:'mg/kg', range:[2,4],
+      detailed:L([it('<b>Use:</b> induction/maintenance'),it('<b>Onset/Duration:</b> 30–45 s / 5–10 min'),
+      it('<b>Contra.:</b> hypersensitivity to components (egg/soy allergy rarely absolute; follow policy)'),
+      it('<b>Adverse:</b> hypotension, apnea, pain on injection'),
+      it('<b>Pearls:</b> higher mg/kg vs adults; consider lidocaine admixture; monitor hemodynamics'),
+      it('<b>Conc.:</b> 10 mg/mL emulsion')])},
+    {cat:'Induction', name:'Etomidate', unit:'mg/kg', range:[0.3,0.3],
+      detailed:L([it('<b>Use:</b> hemodynamically fragile induction'),it('<b>Onset/Duration:</b> 30–60 s / 3–10 min'),
+      it('<b>Contra.:</b> porphyria (relative); sepsis (adrenal suppression)'),it('<b>Adverse:</b> myoclonus, adrenal suppression, N/V'),
+      it('<b>Pearls:</b> pre‑dose small opioid/benzo to blunt myoclonus'),it('<b>Conc.:</b> 2 mg/mL')])},
+    {cat:'Induction', name:'Thiopental', unit:'mg/kg', range:[4,6],
+      detailed:L([it('<b>Use:</b> induction/anticonvulsant'),it('<b>Onset/Duration:</b> 30–45 s / 5–10 min'),
+      it('<b>Contra.:</b> porphyria, hemodynamic instability'),it('<b>Adverse:</b> hypotension, respiratory depression, histamine release'),
+      it('<b>Pearls:</b> limited availability'),it('<b>Conc.:</b> reconstituted per vial')])},
+    {cat:'Induction', name:'Ketamine IV', unit:'mg/kg', range:[1,2],
+      detailed:L([it('<b>Use:</b> induction/analgesia; bronchodilatory'),it('<b>Onset/Duration:</b> 30–60 s / 10–20 min'),
+      it('<b>Contra.:</b> severe pHTN (relative); ↑ICP controversial'),it('<b>Adverse:</b> hypersalivation, emergence agitation'),
+      it('<b>Pearls:</b> good in reactive airways; consider anticholinergic'),it('<b>Conc.:</b> 10 or 50 mg/mL')])},
+    {cat:'Sedation', name:'Ketamine PO', unit:'mg/kg', range:[3,6], route:'PO',
+      detailed:L([it('<b>Use:</b> PO premedication'),it('<b>Onset/Duration:</b> 15–30 min / 60–120 min'),
+      it('<b>Contra.:</b> airway risk without monitoring'),it('<b>Adverse:</b> N/V, hypersalivation'),
+      it('<b>Pearls:</b> mix with syrup'),it('<b>Conc.:</b> compounded')])},
+    {cat:'Sedation', name:'Ketamine IM', unit:'mg/kg', range:[3,7], route:'IM',
+      detailed:L([it('<b>Use:</b> uncooperative child'),it('<b>Onset/Duration:</b> 3–5 min / 15–30 min'),
+      it('<b>Contra.:</b> significant cardiac disease (relative)'),it('<b>Adverse:</b> pain at injection, hypersalivation'),
+      it('<b>Pearls:</b> consider atropine/glyco'),it('<b>Conc.:</b> 50 mg/mL')])},
+    {cat:'Sedation', name:'Ketamine IN', unit:'mg/kg', range:[5,6], route:'IN',
+      detailed:L([it('<b>Use:</b> brief non‑IV sedation'),it('<b>Onset/Duration:</b> 5–10 min / 20–30 min'),
+      it('<b>Contra.:</b> nasal trauma'),it('<b>Adverse:</b> nasal irritation, dysphoria'),
+      it('<b>Pearls:</b> atomizer; split dose'),it('<b>Conc.:</b> 50 mg/mL drawn for IN')])},
+    {cat:'Sedation', name:'Dexmedetomidine (load)', unit:'mcg/kg', range:[0.5,1],
+      detailed:L([it('<b>Use:</b> sedation; emergence delirium mitigation'),it('<b>Onset/Duration:</b> 10–15 min / variable'),
+      it('<b>Contra.:</b> severe bradyarrhythmias (relative)'),it('<b>Adverse:</b> bradycardia, hypotension'),
+      it('<b>Pearls:</b> avoid rapid IV push'),it('<b>Conc.:</b> 4 mcg/mL after dilution')])},
+    {cat:'Sedation', name:'Dexmedetomidine gtt', unit:'mcg/kg/hr', range:[0.2,1.0],
+      detailed:L([it('<b>Use:</b> sedation infusion'),it('<b>Onset/Duration:</b> titratable'),
+      it('<b>Contra.:</b> severe conduction disease (relative)'),it('<b>Adverse:</b> bradycardia, hypotension'),
+      it('<b>Pearls:</b> titrate to effect'),it('<b>Conc.:</b> 4 mcg/mL after dilution')])},
+    {cat:'Sedation', name:'Dexmedetomidine IN', unit:'mcg/kg', range:[0.5,3], route:'IN',
+      detailed:L([it('<b>Use:</b> non‑IV sedation (MRI/CT)'),it('<b>Onset/Duration:</b> 30–45 min / variable'),
+      it('<b>Contra.:</b> nasal trauma'),it('<b>Adverse:</b> bradycardia, hypotension'),
+      it('<b>Pearls:</b> plan lead time'),it('<b>Conc.:</b> IV solution via atomizer')])},
+    {cat:'Analgesia', name:'Fentanyl (induction)', unit:'mcg/kg', range:[1,2],
+      detailed:L([it('<b>Use:</b> opioid adjunct'),it('<b>Onset/Duration:</b> 1–2 min / 30–60 min'),
+      it('<b>Contra.:</b> severe respiratory depression'),it('<b>Adverse:</b> chest wall rigidity; respiratory depression'),
+      it('<b>Pearls:</b> slow titration; consider OSA'),it('<b>Conc.:</b> 50 mcg/mL')])},
+    {cat:'Analgesia', name:'Sufentanil (induction)', unit:'mcg/kg', range:[1,10],
+      detailed:L([it('<b>Use:</b> potent opioid adjunct'),it('<b>Onset/Duration:</b> 1–3 min / 20–45 min'),
+      it('<b>Contra.:</b> severe respiratory depression'),it('<b>Adverse:</b> respiratory depression, bradycardia'),
+      it('<b>Pearls:</b> titrate cautiously'),it('<b>Conc.:</b> 50 mcg/mL (dilute)')])},
+    {cat:'Analgesia', name:'Remifentanil gtt', unit:'mcg/kg/min', range:[0.05,2.0],
+      detailed:L([it('<b>Use:</b> ultra‑short acting infusion'),it('<b>Onset/Duration:</b> rapid / minutes'),
+      it('<b>Contra.:</b> none absolute'),it('<b>Adverse:</b> bradycardia, rigidity, apnea'),
+      it('<b>Pearls:</b> plan long‑acting analgesia for emergence'),it('<b>Conc.:</b> dilute to mcg/mL')])},
+    {cat:'Analgesia', name:'Hydromorphone', unit:'mcg/kg', range:[10,20],
+      detailed:L([it('<b>Use:</b> longer‑acting opioid'),it('<b>Onset/Duration:</b> 5–10 min / 3–5 h'),
+      it('<b>Contra.:</b> severe respiratory depression'),it('<b>Adverse:</b> nausea, pruritus, respiratory depression'),
+      it('<b>Pearls:</b> reduce dose in OSA; titrate slowly'),it('<b>Conc.:</b> 1 mg/mL (dilutions vary)')])},
+    {cat:'Analgesia', name:'Morphine', unit:'mg/kg', range:[0.1,0.1],
+      detailed:L([it('<b>Use:</b> analgesic'),it('<b>Onset/Duration:</b> 5–10 min / 3–4 h'),
+      it('<b>Contra.:</b> severe respiratory depression; renal failure (relative)'),
+      it('<b>Adverse:</b> histamine release → hypotension/pruritus; nausea'),it('<b>Pearls:</b> slower titration prudent'),
+      it('<b>Conc.:</b> 1–2 mg/mL after dilution')])},
+    {cat:'Antiemetic', name:'Ondansetron', unit:'mg/kg', range:[0.1,0.1],
+      detailed:L([it('<b>Use:</b> PONV prophylaxis/treatment'),it('<b>Onset/Duration:</b> 10–30 min / 4–6 h'),
+      it('<b>Contra.:</b> congenital long QT (relative)'),it('<b>Adverse:</b> headache, QT prolongation'),
+      it('<b>Pearls:</b> give near end of case'),it('<b>Conc.:</b> 2 mg/mL')])},
+    {cat:'Steroid', name:'Dexamethasone (antiemetic)', unit:'mg/kg', range:[0.1,0.1], max:'10 mg',
+      detailed:L([it('<b>Use:</b> PONV prophylaxis'),it('<b>Onset/Duration:</b> 30–60 min / 24–48 h'),
+      it('<b>Contra.:</b> systemic fungal infection'),it('<b>Adverse:</b> hyperglycemia, mood changes'),
+      it('<b>Pearls:</b> also reduces airway edema in ENT'),it('<b>Conc.:</b> 4 or 10 mg/mL')])},
+    {cat:'Steroid', name:'Dexamethasone (airway)', unit:'mg/kg', range:[0.5,0.5], max:'10 mg',
+      detailed:L([it('<b>Use:</b> airway edema prophylaxis/treatment'),it('<b>Onset/Duration:</b> hours / prolonged'),
+      it('<b>Contra.:</b> systemic fungal infection'),it('<b>Adverse:</b> hyperglycemia, mood changes'),
+      it('<b>Pearls:</b> common in tonsil/adenoid cases'),it('<b>Conc.:</b> 4 or 10 mg/mL')])},
+    {cat:'Steroid', name:'Hydrocortisone (stress)', unit:'mg/kg', range:[2,2],
+      detailed:L([it('<b>Use:</b> adrenal insufficiency coverage'),it('<b>Onset/Duration:</b> 1–2 h / 6–12 h'),
+      it('<b>Contra.:</b> systemic fungal infection'),it('<b>Adverse:</b> hyperglycemia, fluid retention'),
+      it('<b>Pearls:</b> follow stress‑dose protocol'),it('<b>Conc.:</b> reconstitute per vial')])},
+    {cat:'GI', name:'Metoclopramide', unit:'mg/kg', range:[0.1,0.2],
+      detailed:L([it('<b>Use:</b> prokinetic/antiemetic'),it('<b>Onset/Duration:</b> 1–3 min / 1–2 h'),
+      it('<b>Contra.:</b> obstruction; pheochromocytoma'),it('<b>Adverse:</b> EPS (rare), akathisia'),
+      it('<b>Pearls:</b> combine with ondansetron in high risk'),it('<b>Conc.:</b> 5 mg/mL')])},
+    {cat:'Anticholinergic', name:'Atropine (IV)', unit:'mcg/kg', range:[10,20], minDose:'0.1 mg',
+      detailed:L([it('<b>Use:</b> bradycardia; antisialagogue'),it('<b>Onset/Duration:</b> 1–2 min / 30–60 min'),
+      it('<b>Contra.:</b> narrow‑angle glaucoma (relative)'),it('<b>Adverse:</b> tachycardia, dry mouth, urinary retention'),
+      it('<b>Pearls:</b> minimum total dose 0.1 mg'),it('<b>Conc.:</b> 0.1 mg/mL')])},
+    {cat:'Anticholinergic', name:'Glycopyrrolate', unit:'mcg/kg', range:[10,10],
+      detailed:L([it('<b>Use:</b> antisialagogue; NMB reversal partner'),it('<b>Onset/Duration:</b> 2–3 min / 2–4 h'),
+      it('<b>Contra.:</b> narrow‑angle glaucoma (relative)'),it('<b>Adverse:</b> tachycardia, dry mouth'),
+      it('<b>Pearls:</b> limited CNS penetration'),it('<b>Conc.:</b> 0.2 mg/mL')])},
+    {cat:'Vasoactive', name:'Epinephrine (bronchospasm)', unit:'mcg/kg', range:[1,2],
+      detailed:L([it('<b>Use:</b> bronchospasm refractory to β‑agonists'),it('<b>Onset/Duration:</b> rapid / short'),
+      it('<b>Contra.:</b> none absolute'),it('<b>Adverse:</b> tachycardia, arrhythmias, hyperglycemia'),
+      it('<b>Pearls:</b> consider nebulized adjuncts; monitor ECG'),it('<b>Conc.:</b> dilute from 1 mg/mL per protocol')])},
+    {cat:'Vasoactive', name:'Epinephrine (resuscitation)', unit:'mcg/kg', range:[10,10],
+      detailed:L([it('<b>Use:</b> PALS resuscitation'),it('<b>Onset/Duration:</b> rapid / short'),
+      it('<b>Contra.:</b> none in arrest'),it('<b>Adverse:</b> tachyarrhythmias'),
+      it('<b>Pearls:</b> follow PALS intervals'),it('<b>Conc.:</b> 0.1 mg/mL (1:10,000)')])},
+    {cat:'Vasoactive', name:'Phenylephrine', unit:'mcg/kg', range:[1,10],
+      detailed:L([it('<b>Use:</b> hypotension, ↑SVR'),it('<b>Onset/Duration:</b> immediate / short'),
+      it('<b>Contra.:</b> severe bradycardia (relative)'),it('<b>Adverse:</b> reflex bradycardia, hypertension'),
+      it('<b>Pearls:</b> titrate to effect'),it('<b>Conc.:</b> dilute to 10–100 mcg/mL')])},
+    {cat:'Vasoactive', name:'Ephedrine', unit:'mg/kg', range:[0.15,0.15],
+      detailed:L([it('<b>Use:</b> hypotension with low HR/CO'),it('<b>Onset/Duration:</b> rapid / 10–60 min'),
+      it('<b>Contra.:</b> pheochromocytoma'),it('<b>Adverse:</b> tachycardia, hypertension, nausea'),
+      it('<b>Pearls:</b> tachyphylaxis with repeat'),it('<b>Conc.:</b> dilute to 1–5 mg/mL')])},
+    {cat:'Electrolyte', name:'Calcium Chloride', unit:'mg/kg', range:[10,20],
+      detailed:L([it('<b>Use:</b> hypocalcemia, hyperkalemia stabilization, cardiac support'),it('<b>Onset/Duration:</b> immediate / variable'),
+      it('<b>Contra.:</b> tissue infiltration risk'),it('<b>Adverse:</b> arrhythmias if rapid push'),
+      it('<b>Pearls:</b> central access preferred'),it('<b>Conc.:</b> 100 mg/mL (10%)')])},
+    {cat:'Electrolyte', name:'Calcium Gluconate', unit:'mg/kg', range:[30,60],
+      detailed:L([it('<b>Use:</b> hypocalcemia; safer peripheral'),it('<b>Onset/Duration:</b> immediate / variable'),
+      it('<b>Contra.:</b> caution with digitalis'),it('<b>Adverse:</b> irritation extravasation'),
+      it('<b>Pearls:</b> slower IV; monitor ECG'),it('<b>Conc.:</b> 100 mg/mL (10%)')])},
+    {cat:'NMBD', name:'Rocuronium (induction)', unit:'mg/kg', range:[0.45,0.6],
+      detailed:L([it('<b>Use:</b> intubation paralysis'),it('<b>Onset/Duration:</b> 1–2 min / 30–60 min'),
+      it('<b>Contra.:</b> hypersensitivity'),it('<b>Adverse:</b> prolonged block (hepatic impairment)'),
+      it('<b>Pearls:</b> adjust for hepatic function'),it('<b>Conc.:</b> 10 mg/mL')])},
+    {cat:'NMBD', name:'Rocuronium (RSI)', unit:'mg/kg', range:[1.2,1.2],
+      detailed:L([it('<b>Use:</b> RSI intubation'),it('<b>Onset/Duration:</b> ~60 s / prolonged'),
+      it('<b>Contra.:</b> hypersensitivity'),it('<b>Adverse:</b> prolonged paralysis'),
+      it('<b>Pearls:</b> anticipate longer duration'),it('<b>Conc.:</b> 10 mg/mL')])},
+    {cat:'NMBD', name:'Vecuronium', unit:'mg/kg', range:[0.1,0.1],
+      detailed:L([it('<b>Use:</b> intermediate NMBD'),it('<b>Onset/Duration:</b> 2–3 min / 30–40 min'),
+      it('<b>Contra.:</b> hypersensitivity'),it('<b>Adverse:</b> prolonged block (hepatic/renal)'),
+      it('<b>Pearls:</b> biliary/renal elimination'),it('<b>Conc.:</b> reconstitute 1–2 mg/mL')])},
+    {cat:'NMBD', name:'Cisatracurium', unit:'mg/kg', range:[0.1,0.2],
+      detailed:L([it('<b>Use:</b> intermediate NMBD'),it('<b>Onset/Duration:</b> 2–3 min / 30–40 min'),
+      it('<b>Contra.:</b> hypersensitivity'),it('<b>Adverse:</b> minimal histamine release'),
+      it('<b>Pearls:</b> Hofmann elimination; organ‑independent'),it('<b>Conc.:</b> 2 mg/mL')])},
+    {cat:'NMBD', name:'Pancuronium', unit:'mg/kg', range:[0.1,0.1],
+      detailed:L([it('<b>Use:</b> long‑acting NMBD'),it('<b>Onset/Duration:</b> 2–3 min / 60–90+ min'),
+      it('<b>Contra.:</b> HCM (relative)'),it('<b>Adverse:</b> tachycardia (vagolytic)'),
+      it('<b>Pearls:</b> consider in long cases'),it('<b>Conc.:</b> 2 mg/mL')])},
+    {cat:'NMBD', name:'Succinylcholine (IV induction)', unit:'mg/kg', range:[1.5,2],
+      detailed:L([it('<b>Use:</b> rapid paralysis'),it('<b>Onset/Duration:</b> 30–60 s / 5–10 min'),
+      it('<b>Contra.:</b> neuromuscular dz, hyperkalemia risk, burns >24–48 h, MH'),it('<b>Adverse:</b> hyperkalemia, bradycardia, ↑IOP/ICP, MH trigger'),
+      it('<b>Pearls:</b> consider atropine in infants'),it('<b>Conc.:</b> 20 mg/mL')])},
+    {cat:'NMBD', name:'Succinylcholine (laryngospasm IV)', unit:'mg/kg', range:[0.1,1.0],
+      detailed:L([it('<b>Use:</b> refractory laryngospasm'),it('<b>Onset/Duration:</b> 30–60 s / 5–10 min'),
+      it('<b>Contra.:</b> as above'),it('<b>Adverse:</b> as above'),
+      it('<b>Pearls:</b> IM 4 mg/kg if no IV'),it('<b>Conc.:</b> 20 mg/mL (dilute)')])},
+    {cat:'Reversal', name:'Neostigmine', unit:'mg/kg', range:[0.07,0.07], max:'5 mg',
+      detailed:L([it('<b>Use:</b> reversal of non‑depolarizing block'),it('<b>Onset/Duration:</b> 5–10 min / 45–60 min'),
+      it('<b>Contra.:</b> bowel/urinary obstruction'),it('<b>Adverse:</b> bradycardia, secretions'),
+      it('<b>Pearls:</b> pair with glycopyrrolate; TOF‑guided'),it('<b>Conc.:</b> 1 mg/mL')])},
+    {cat:'Reversal', name:'Sugammadex (TOF>2)', unit:'mg/kg', range:[2,2],
+      detailed:L([it('<b>Use:</b> reversal of roc/vec'),it('<b>Onset/Duration:</b> 2–3 min / dose‑dependent'),
+      it('<b>Contra.:</b> severe renal failure (relative)'),it('<b>Adverse:</b> bradycardia, hypersensitivity'),
+      it('<b>Pearls:</b> 4 mg/kg for deeper block; 16 mg/kg immediate'),it('<b>Conc.:</b> 100 mg/mL')])},
+    {cat:'Antagonist', name:'Naloxone', unit:'mg/kg', range:[0.001,0.001],
+      detailed:L([it('<b>Use:</b> reverse opioids'),it('<b>Onset/Duration:</b> 1–2 min / 20–60 min'),
+      it('<b>Contra.:</b> caution in dependence'),it('<b>Adverse:</b> acute pain, hypertension, pulmonary edema (rare)'),
+      it('<b>Pearls:</b> titrate ~1 mcg/kg increments; watch for renarcotization'),it('<b>Conc.:</b> 0.4 mg/mL (dilute)')])},
+    {cat:'Antagonist', name:'Flumazenil', unit:'mg/kg', range:[0.01,0.01],
+      detailed:L([it('<b>Use:</b> reverse benzodiazepines'),it('<b>Onset/Duration:</b> 1–2 min / 30–60 min'),
+      it('<b>Contra.:</b> seizure disorders on chronic benzos'),it('<b>Adverse:</b> seizures (rare), agitation'),
+      it('<b>Pearls:</b> resedation possible'),it('<b>Conc.:</b> 0.1 mg/mL')])},
+    {cat:'Analgesic', name:'Acetaminophen PO', unit:'mg/kg', range:[10,15], route:'PO',
+      detailed:L([it('<b>Use:</b> analgesic/antipyretic'),it('<b>Onset/Duration:</b> 30–60 min / 4–6 h'),
+      it('<b>Contra.:</b> severe hepatic impairment'),it('<b>Adverse:</b> hepatotoxicity at high totals'),
+      it('<b>Pearls:</b> multimodal'),it('<b>Conc.:</b> 160 mg/5 mL')])},
+    {cat:'Analgesic', name:'Acetaminophen PR (load)', unit:'mg/kg', range:[30,40], route:'PR',
+      detailed:L([it('<b>Use:</b> if no IV/PO'),it('<b>Onset/Duration:</b> slower / 4–6 h'),
+      it('<b>Contra.:</b> rectal pathology'),it('<b>Adverse:</b> local irritation'),
+      it('<b>Pearls:</b> loading then 15–20 mg/kg'),it('<b>Conc.:</b> suppositories various')])},
+    {cat:'Analgesic', name:'Acetaminophen IV', unit:'mg/kg', range:[15,15],
+      detailed:L([it('<b>Use:</b> analgesia/antipyresis'),it('<b>Onset/Duration:</b> 5–10 min / 4–6 h'),
+      it('<b>Contra.:</b> severe hepatic impairment'),it('<b>Adverse:</b> hypotension (rare), liver injury at high totals'),
+      it('<b>Pearls:</b> round to mL based on bag conc'),it('<b>Conc.:</b> 10 mg/mL')])},
+    {cat:'NSAID', name:'Ketorolac IV', unit:'mg/kg', range:[0.5,0.5], max:'30 mg',
+      detailed:L([it('<b>Use:</b> analgesic'),it('<b>Onset/Duration:</b> 10–30 min / 4–6 h'),
+      it('<b>Contra.:</b> renal insufficiency, bleeding risk'),it('<b>Adverse:</b> platelet inhibition, renal effects'),
+      it('<b>Pearls:</b> avoid if tonsil bleed risk'),it('<b>Conc.:</b> 30 mg/mL (dilute)')])},
+    {cat:'NSAID', name:'Ketorolac IM', unit:'mg/kg', range:[0.5,1.0], max:'30 mg',
+      detailed:L([it('<b>Use:</b> analgesia IM'),it('<b>Onset/Duration:</b> 30–60 min / 4–6 h'),
+      it('<b>Contra.:</b> as IV'),it('<b>Adverse:</b> as IV'),
+      it('<b>Pearls:</b> consider comfort'),it('<b>Conc.:</b> 30 mg/mL')])},
+    {cat:'Local Anesthetic', name:'Lidocaine (IV blunting)', unit:'mg/kg', range:[1,1],
+      detailed:L([it('<b>Use:</b> blunt intubation response'),it('<b>Onset/Duration:</b> 1–2 min / 10–20 min'),
+      it('<b>Contra.:</b> severe heart block, LA allergy'),it('<b>Adverse:</b> CNS/cardiac toxicity at high levels'),
+      it('<b>Pearls:</b> mind total daily max'),it('<b>Conc.:</b> 20 mg/mL (2%) — dilute')])},
+    {cat:'Local Anesthetic', name:'Lidocaine (infiltration)', unit:'mg/kg', range:[4.5,4.5],
+      detailed:L([it('<b>Use:</b> local infiltration'),it('<b>Onset/Duration:</b> rapid / 1–2 h'),
+      it('<b>Contra.:</b> LA allergy'),it('<b>Adverse:</b> LAST with overdose'),
+      it('<b>Pearls:</b> compute mg; label syringe'),it('<b>Conc.:</b> 5–20 mg/mL')])},
+    {cat:'Local Anesthetic', name:'Lidocaine w/ epi (infiltration)', unit:'mg/kg', range:[4.5,4.5],
+      detailed:L([it('<b>Use:</b> infiltration with vasoconstriction'),it('<b>Onset/Duration:</b> rapid / longer with epi'),
+      it('<b>Contra.:</b> end‑artery sites (relative)'),it('<b>Adverse:</b> LAST with overdose'),
+      it('<b>Pearls:</b> still respect max'),it('<b>Conc.:</b> 5–20 mg/mL + epi')])},
+    {cat:'Local Anesthetic', name:'Bupivacaine w/ epi (infiltration)', unit:'mg/kg', range:[2.5,2.5], max:'175 mg',
+      detailed:L([it('<b>Use:</b> infiltration/regional'),it('<b>Onset/Duration:</b> slower / 3–8 h'),
+      it('<b>Contra.:</b> LA allergy'),it('<b>Adverse:</b> cardiotoxicity at high levels'),
+      it('<b>Pearls:</b> incremental dosing'),it('<b>Conc.:</b> 2.5–5 mg/mL')])},
+    {cat:'Local Anesthetic', name:'Bupivacaine PF (caudal)', unit:'mg/kg', range:[2.5,2.5], max:'175 mg',
+      detailed:L([it('<b>Use:</b> caudal epidural'),it('<b>Onset/Duration:</b> 10–20 min / 3–8 h'),
+      it('<b>Contra.:</b> coagulopathy, infection at site'),it('<b>Adverse:</b> LAST, motor block'),
+      it('<b>Pearls:</b> consider clonidine 1–2 mcg/kg'),it('<b>Conc.:</b> 2.5 mg/mL (0.25%)')])},
+    {cat:'Local Anesthetic', name:'Ropivacaine', unit:'mg/kg', range:[2.0,2.0],
+      detailed:L([it('<b>Use:</b> infiltration/regional'),it('<b>Onset/Duration:</b> similar to bupivacaine'),
+      it('<b>Contra.:</b> LA allergy'),it('<b>Adverse:</b> LAST (less cardiotoxic vs bupivacaine)'),
+      it('<b>Pearls:</b> consider for safety margin'),it('<b>Conc.:</b> 2–5 mg/mL')])},
+    {cat:'Emergencies', name:'Dantrolene/Ryanodex', unit:'mg/kg', range:[2.5,2.5],
+      detailed:L([it('<b>Use:</b> malignant hyperthermia treatment'),it('<b>Onset/Duration:</b> minutes / hours'),
+      it('<b>Contra.:</b> none in MH crisis'),it('<b>Adverse:</b> muscle weakness, phlebitis'),
+      it('<b>Pearls:</b> repeat to 10 mg/kg as needed; follow protocol'),it('<b>Conc.:</b> per product')])},
+    {cat:'Emergencies', name:'Intralipid 20% (bolus)', unit:'mL/kg', range:[1.5,1.5],
+      detailed:L([it('<b>Use:</b> LAST rescue'),it('<b>Onset/Duration:</b> immediate / variable'),
+      it('<b>Contra.:</b> none'),it('<b>Adverse:</b> pancreatitis risk with large totals'),
+      it('<b>Pearls:</b> bolus 1.5 mL/kg (max 3), then 0.25 mL/kg/min'),it('<b>Conc.:</b> 20%')])},
+    {cat:'Antifibrinolytic', name:'Tranexamic Acid (load)', unit:'mg/kg', range:[100,100],
+      detailed:L([it('<b>Use:</b> reduce bleeding'),it('<b>Onset/Duration:</b> 30–60 min / hours'),
+      it('<b>Contra.:</b> active intravascular clotting (relative)'),it('<b>Adverse:</b> seizures at high doses, nausea'),
+      it('<b>Pearls:</b> follow surgical protocol'),it('<b>Conc.:</b> 100 mg/mL')])},
+    {cat:'Antifibrinolytic', name:'Tranexamic Acid gtt', unit:'mg/kg/hr', range:[10,10],
+      detailed:L([it('<b>Use:</b> maintenance antifibrinolytic'),it('<b>Onset/Duration:</b> continuous'),
+      it('<b>Contra.:</b> see above'),it('<b>Adverse:</b> see above'),
+      it('<b>Pearls:</b> 10 mg/kg/hr common; some use fixed 500 mg/hr if >50 kg'),it('<b>Conc.:</b> 10 mg/mL after dilution')])},
+  ];
+
+  function medsBlock(){
+    const wrap=document.createElement('div');
+    wrap.className='srna-peds-block';
+    wrap.innerHTML=`
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+        <div class="srna-badge">Pediatric Medications</div>
+        <div class="srna-small">Dose range always visible. Enter weight to see <b>calculated</b> dose near the Info button.</div>
+      </div>
+      <div class="srna-divider"></div>
+      <div class="srna-grid srna-g-3">
+        <label>Patient Weight (kg)<input id="srnaPtWt_v54" class="srna-input" type="number" step="0.1" min="0" placeholder="e.g., 15"></label>
+        <label>Category<select id="srnaCat_v54" class="srna-select"><option value="">All</option></select></label>
+        <label>Search<input id="srnaSearch_v54" class="srna-input" placeholder="Drug name..."></label>
+      </div>
+      <div class="srna-small" id="srnaCount_v54">—</div>
+      <div class="srna-divider"></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button id="srnaExpand_v54" class="srna-chip">Expand All</button>
+        <button id="srnaCollapse_v54" class="srna-chip">Collapse All</button>
+        <button id="srnaReset_v54" class="srna-chip">Reset</button>
+      </div>
+      <div id="srnaMeds_v54"></div>
+
+      <div class="srna-modal-backdrop" id="srnaModalBg_v54">
+        <div class="srna-modal" role="dialog" aria-modal="true" aria-labelledby="srnaModalTitle_v54">
+          <header>
+            <h3 id="srnaModalTitle_v54">Medication</h3>
+            <button id="srnaModalClose_v54" class="srna-btn">Close</button>
+          </header>
+          <div class="body">
+            <div id="srnaDetailContent_v54"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    return wrap;
+  }
+
+  // Remove existing peds meds block and mount the new one
+  scope.querySelectorAll(':scope > .srna-peds-block').forEach(n=>n.remove());
+  const block = medsBlock();
+  scope.appendChild(block);
+
+  const medsRoot = block.querySelector('#srnaMeds_v54');
+  const inpWt = block.querySelector('#srnaPtWt_v54');
+  const selCat = block.querySelector('#srnaCat_v54');
+  const inpSearch = block.querySelector('#srnaSearch_v54');
+  const count = block.querySelector('#srnaCount_v54');
+
+  const modalBg = block.querySelector('#srnaModalBg_v54');
+  const modalTitle = block.querySelector('#srnaModalTitle_v54');
+  const modalClose = block.querySelector('#srnaModalClose_v54');
+  const detailEl = block.querySelector('#srnaDetailContent_v54');
+
+  function openModal(drug){
+    modalTitle.textContent = drug.name;
+    detailEl.innerHTML = drug.detailed || '—';
+    modalBg.style.display = 'flex';
+  }
+  function closeModal(){ modalBg.style.display = 'none'; }
+  modalClose.addEventListener('click', closeModal);
+  modalBg.addEventListener('click', (e)=>{ if(e.target===modalBg) closeModal(); });
+
+  function kgNum(v){ const n=parseFloat(v||'0'); return (isFinite(n)&&n>0)?n:0; }
+  function rangeText(d){ const u=d.unit; return (d.range[0]===d.range[1])?(`${d.range[0]} ${u}`):(`${d.range[0]}–${d.range[1]} ${u}`); }
+  function calcDose(d, wt){ if(/kg/.test(d.unit)){ const lo=d.range[0]*wt, hi=d.range[1]*wt; const unit=d.unit.replace('/kg',''); return {lo,hi,unit}; } return null; }
+
+  function fillCats(drugs){
+    const cats=[...new Set(drugs.map(d=>d.cat))].sort();
+    selCat.innerHTML = '<option value=\"\">All</option>'+cats.map(c=>`<option value="${c}">${c}</option>`).join('');
+  }
+
+  function baseRangeBadge(d){
+    return `<span class="srna-badge">${rangeText(d)}${d.max?` • max ${d.max}`:''}${d.minDose?` • min ${d.minDose}`:''}${d.route?` • ${d.route}`:''}</span>`;
+  }
+  function calcBadge(d, wt){
+    const c = calcDose(d, wt);
+    if(!c || wt<=0) return '';
+    if(c.lo===c.hi) return `<span class="srna-badge">${c.lo.toFixed(2)} ${c.unit}</span>`;
+    return `<span class="srna-badge">${c.lo.toFixed(2)}–${c.hi.toFixed(2)} ${c.unit}</span>`;
+  }
+
+  function drugRow(d, wt){
+    return `
+      <div class="srna-drug-row">
+        <div class="srna-drug-name">
+          <span>${d.name}</span>
+          ${baseRangeBadge(d)}
+        </div>
+        <div style="display:flex; align-items:center; gap:.5rem; flex-wrap:wrap; justify-content:flex-end">
+          <span class="srna-small">Calc:</span>${calcBadge(d, wt)}
+          <button class="srna-btn" data-info="${encodeURIComponent(d.name)}">Info</button>
+        </div>
+      </div>`;
+  }
+
+  function render(){
+    fillCats(DRUGS);
+    const q=(inpSearch.value||'').toLowerCase();
+    const wt=kgNum(inpWt.value);
+    const cats=[...new Set(DRUGS.map(d=>d.cat))];
+    let totalShown=0, total=DRUGS.length;
+    medsRoot.innerHTML = cats.map(cat=>{
+      const items=DRUGS.filter(d=>d.cat===cat)
+        .filter(d=>!q || d.name.toLowerCase().includes(q))
+        .filter(d=>!selCat.value || d.cat===selCat.value);
+      if(!items.length) return '';
+      totalShown+=items.length;
+      const inner = items.map(d=>drugRow(d, wt)).join('');
+      return `<details open class="srna-accordion">
+        <summary>${cat}</summary>
+        <div>${inner || '<div class="srna-small">No matches</div>'}</div>
+      </details>`;
+    }).join('');
+    count.textContent = `${totalShown} of ${total} shown` + (wt?` • Calculated for ${wt.toFixed(1)} kg`:' • enter weight to calculate');
+
+    medsRoot.querySelectorAll('button.srna-btn[data-info]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const name = decodeURIComponent(btn.getAttribute('data-info'));
+        const d = DRUGS.find(x=>x.name===name);
+        if(d) openModal(d);
+      });
+    });
+  }
+
+  render();
+  block.querySelector('#srnaExpand_v54')?.addEventListener('click', ()=>block.querySelectorAll('#srnaMeds_v54 details').forEach(d=>d.open=true));
+  block.querySelector('#srnaCollapse_v54')?.addEventListener('click', ()=>block.querySelectorAll('#srnaMeds_v54 details').forEach(d=>d.open=false));
+  block.querySelector('#srnaReset_v54')?.addEventListener('click', ()=>{ inpSearch.value=''; selCat.value=''; inpWt.value=''; render(); });
+  inpSearch.addEventListener('input', render);
+  inpWt.addEventListener('input', render);
+  selCat.addEventListener('change', render);
+})();
+</script>
+
+
+<!-- === SRNA Adult Med Additions v56.12 (new drugs + no blank expanded fields) === -->
+<script>
+(function(){
+  if (typeof DRUGS === 'undefined') return;
+
+  function upsertDrug(d){
+    var idx = DRUGS.findIndex(function(x){ return x.name === d.name; });
+    if (idx >= 0){
+      DRUGS[idx] = d;
+    } else {
+      DRUGS.push(d);
+    }
+  }
+
+  // 1) Define/override ONLY the nine requested adult drugs
+  var newDrugs = [
+    {
+      cat:'Induction',
+      name:'Methohexital',
+      brand:'Brevital',
+      unit:'mg/kg',
+      range:[1,1.5],
+      fixed:'20–40 mg IV aliquots',
+      quick:{
+        use:'IV induction; commonly used for ECT anesthesia.',
+        onset:'30–60 sec',
+        duration:'5–10 min (bolus; rapid redistribution)',
+        ci:'Acute porphyria; severe hemodynamic instability; barbiturate allergy.',
+        ae:'Hypotension, respiratory depression/apnea, myoclonus, hiccups, pain on injection.',
+        pearls:'Induction 1–1.5 mg/kg IV (ECT often 0.5–1 mg/kg); consider smaller aliquots in elderly, hypovolemic, or unstable patients.'
+      },
+      expanded:{
+        cls:'Barbiturate sedative–hypnotic',
+        moa:'Potentiates GABA-A receptor activity, producing CNS depression.',
+        pk:'Very rapid onset due to high lipid solubility and short clinical duration from redistribution; hepatic oxidative metabolism to active and inactive metabolites.',
+        excr:'Renal excretion of metabolites; highly protein bound.',
+        tips:'Used frequently for ECT because it can prolong seizure duration; avoid in acute porphyria and titrate carefully in hemodynamic compromise.'
+      }
+    },
+    {
+      cat:'NMBD',
+      name:'Cisatracurium',
+      brand:'Nimbex',
+      unit:'mg/kg',
+      range:[0.1,0.2],
+      quick:{
+        use:'Intermediate non-depolarizing neuromuscular blockade for intubation and maintenance.',
+        onset:'2–3 min',
+        duration:'30–60 min',
+        ci:'Known hypersensitivity.',
+        ae:'Prolonged neuromuscular block; rare hypotension or flushing; minimal histamine release.',
+        pearls:'Intubation dose 0.1–0.2 mg/kg IV; organ-independent Hofmann elimination makes it useful in severe hepatic or renal dysfunction.'
+      },
+      expanded:{
+        cls:'Non-depolarizing benzylisoquinolinium neuromuscular blocker',
+        moa:'Competitive antagonist at nicotinic acetylcholine receptors at the neuromuscular junction, preventing depolarization.',
+        pk:'Onset usually 2–3 minutes with intermediate duration; clearance predominantly via temperature- and pH-dependent Hofmann degradation with minor renal and biliary routes.',
+        excr:'Metabolized to laudanosine and other inactive products via Hofmann elimination; minor renal and biliary excretion.',
+        tips:'Use quantitative TOF monitoring; for maintenance give 0.01–0.02 mg/kg boluses or infusion, then reverse with neostigmine/glycopyrrolate as appropriate.'
+      }
+    },
+    {
+      cat:'NMBD',
+      name:'Vecuronium',
+      brand:'Norcuron',
+      unit:'mg/kg',
+      range:[0.1,0.1],
+      quick:{
+        use:'Intermediate-acting non-depolarizing neuromuscular blocker for intubation and maintenance.',
+        onset:'2–3 min',
+        duration:'30–45 min',
+        ci:'Hypersensitivity; caution in significant hepatic or renal impairment.',
+        ae:'Residual paralysis if incompletely reversed; rare bradycardia or hypotension; prolonged block with infusions.',
+        pearls:'Intubation dose ~0.1 mg/kg IV; duration prolongs with hepatic/renal dysfunction and prolonged infusions; always confirm recovery with quantitative TOF.'
+      },
+      expanded:{
+        cls:'Non-depolarizing aminosteroid neuromuscular blocker',
+        moa:'Competitive antagonist at nicotinic acetylcholine receptors at the neuromuscular junction, preventing acetylcholine-mediated depolarization.',
+        pk:'Onset 2–3 minutes with intermediate duration; hepatically metabolized to active 3-desacetyl-vecuronium with biliary and renal elimination; context-sensitive half-time increases with infusions.',
+        excr:'Biliary (primary) and renal excretion of parent drug and active metabolite; accumulation and prolonged block possible with organ dysfunction.', 
+        tips:'Maintenance 0.01 mg/kg boluses or infusion; reverse with neostigmine/glycopyrrolate or sugammadex based on depth of block and clinical context.'
+      }
+    },
+    {
+      cat:'Opioid',
+      name:'Sufentanil',
+      brand:'Sufenta',
+      unit:'mcg/kg',
+      range:[0.1,0.5],
+      fixed:'5–10 mcg IV',
+      quick:{
+        use:'Very potent opioid for intra-operative analgesia and blunting sympathetic responses.',
+        onset:'1–3 min',
+        duration:'20–45 min (single bolus)',
+        ci:'Significant respiratory depression without ventilatory support; caution in severe bradycardia or profound hypotension.',
+        ae:'Respiratory depression, chest wall or glottic rigidity (especially with rapid or large boluses), bradycardia, nausea, vomiting.',
+        pearls:'Common adult bolus 5–10 mcg IV; dose in small increments and allow time to peak; reduce dose in elderly, OSA, or hemodynamically unstable patients.'
+      },
+      expanded:{
+        cls:'Highly potent synthetic opioid analgesic',
+        moa:'Predominantly μ-opioid receptor agonist producing profound analgesia and sympathetic blunting.',
+        pk:'Rapid onset due to high lipid solubility; relatively short context-sensitive half-time for typical bolus dosing; hepatic metabolism primarily via CYP3A4.',
+        excr:'Renal and biliary excretion of inactive metabolites.',
+        tips:'Use careful titration and close respiratory/hemodynamic monitoring; consider smaller doses when combined with other sedatives or in high-risk respiratory patients.'
+      }
+    },
+    {
+      cat:'Opioid',
+      name:'Morphine',
+      brand:'Morphine',
+      unit:'mg/kg',
+      range:[0.05,0.1],
+      fixed:'2–4 mg IV',
+      quick:{
+        use:'Longer-acting opioid analgesia during and after anesthesia.',
+        onset:'5–10 min',
+        duration:'3–4 h',
+        ci:'Severe respiratory depression without ventilatory support; acute or severe asthma; paralytic ileus.',
+        ae:'Histamine release, pruritus, hypotension, nausea, vomiting, respiratory depression.',
+        pearls:'Typical adult bolus 2–4 mg IV; titrate slowly; reduce dose and extend dosing intervals in renal impairment (M6G accumulation).' 
+      },
+      expanded:{
+        cls:'Phenanthrene opioid analgesic',
+        moa:'μ-opioid receptor agonist with some κ activity, producing analgesia and sedation.',
+        pk:'Onset 5–10 minutes IV with peak effect around 20 minutes; hepatic glucuronidation to M3G (inactive) and M6G (active); active metabolite accumulates in renal dysfunction.',
+        excr:'Renal excretion of glucuronide metabolites; prolonged and exaggerated effect possible in renal failure.', 
+        tips:'Useful when longer-lasting analgesia is desired; consider multimodal analgesia and avoid large repeated doses in elderly or renally impaired patients.'
+      }
+    },
+    {
+      cat:'Opioid',
+      name:'Methadone',
+      brand:'Methadone',
+      unit:'mg',
+      range:[0,0],
+      fixed:'2.5–10 mg IV',
+      quick:{
+        use:'Long-acting intra-operative and post-operative opioid analgesia.',
+        onset:'5–10 min',
+        duration:'6–12+ h (analgesia)',
+        ci:'Documented QT prolongation or serious ventricular arrhythmia; caution with concurrent MAOI therapy.',
+        ae:'Prolonged respiratory depression, QT prolongation and torsades risk, sedation, nausea, vomiting.',
+        pearls:'Typical adult dose 2.5–10 mg IV (often 5 mg); consider ECG monitoring in high-risk patients and avoid frequent redosing or combining with other QT-prolonging drugs.'
+      },
+      expanded:{
+        cls:'Diphenylheptane synthetic opioid',
+        moa:'μ-opioid receptor agonist with additional NMDA receptor antagonism and monoamine reuptake inhibition.',
+        pk:'Highly variable half-life (roughly 8–60+ hours); hepatic metabolism via CYP3A4, 2B6, and 2D6; significant risk of accumulation with repeated dosing or infusions.',
+        excr:'Fecal and renal excretion of metabolites; very long terminal half-life results in prolonged analgesic effects and accumulation with frequent dosing.', 
+        tips:'Best used as a single modest intra-operative dose to provide long-lasting analgesia; assess QT risk and concomitant medications before giving.'
+      }
+    },
+    {
+      cat:'Reversal',
+      name:'Flumazenil',
+      brand:'Romazicon',
+      unit:'mg',
+      range:[0,0],
+      fixed:'0.2 mg IV; repeat to 1 mg',
+      quick:{
+        use:'Reversal of benzodiazepine sedation or overdose.',
+        onset:'1–2 min',
+        duration:'30–60 min (often shorter than the benzodiazepine)',
+        ci:'Chronic benzodiazepine dependence; seizure disorders; mixed tricyclic or pro-convulsant overdose.',
+        ae:'Seizures, agitation, resedation, withdrawal symptoms in benzodiazepine-dependent patients.',
+        pearls:'Initial dose 0.2 mg IV over 15 seconds, then 0.1–0.2 mg every 60 seconds up to about 1 mg; observe for resedation, especially with long-acting benzodiazepines.'
+      },
+      expanded:{
+        cls:'Competitive benzodiazepine receptor antagonist',
+        moa:'Competitive antagonism at the benzodiazepine binding site on the GABA-A receptor.',
+        pk:'Rapid onset with short half-life around 40–80 minutes; hepatic metabolism; duration often shorter than the benzodiazepine being reversed.', 
+        excr:'Renal excretion of inactive metabolites.', 
+        tips:'Use cautious incremental dosing in high-risk patients (chronic benzo users, seizure disorders); monitor for at least 1–2 hours for recurrence of sedation.'
+      }
+    },
+    {
+      cat:'Rescue',
+      name:'Labetalol',
+      brand:'Trandate',
+      unit:'mg',
+      range:[0,0],
+      fixed:'5–10 mg IV',
+      quick:{
+        use:'Acute control of intra-operative hypertension and tachycardia.',
+        onset:'2–5 min',
+        duration:'2–4 h',
+        ci:'Asthma or significant bronchospasm, bradycardia, greater than first-degree AV block, decompensated heart failure, cardiogenic shock.',
+        ae:'Hypotension, bradycardia, bronchospasm, dizziness, fatigue.',
+        pearls:'Typical bolus 5–10 mg IV; give in small increments and allow several minutes for full effect before redosing; avoid in patients with severe bronchospastic disease or advanced heart block.'
+      },
+      expanded:{
+        cls:'Mixed α1 and β1/β2 adrenergic antagonist',
+        moa:'Reduces blood pressure via decreased systemic vascular resistance from α1 blockade and decreased heart rate and contractility from β blockade.',
+        pk:'Onset 2–5 minutes IV with peak effect around 5–15 minutes; hepatic metabolism; duration of action several hours.',
+        excr:'Renal and biliary excretion of metabolites.', 
+        tips:'Useful when both HR and BP are elevated; monitor hemodynamics closely, especially in patients with limited cardiac reserve.'
+      }
+    },
+    {
+      cat:'Rescue',
+      name:'Metoprolol',
+      brand:'Lopressor',
+      unit:'mg',
+      range:[0,0],
+      fixed:'2.5–5 mg IV',
+      quick:{
+        use:'Rate and blood pressure control for intra-operative or post-operative tachycardia and hypertension.',
+        onset:'1–5 min',
+        duration:'3–6 h',
+        ci:'Bradycardia, high-grade AV block, decompensated heart failure, severe hypotension.',
+        ae:'Bradycardia, hypotension, fatigue; bronchospasm possible in susceptible patients at higher doses.',
+        pearls:'Typical adult bolus 2.5–5 mg IV every 5 minutes up to about 15 mg; consider esmolol when a very short-acting beta blocker is preferred.'
+      },
+      expanded:{
+        cls:'β1-selective adrenergic blocker',
+        moa:'Decreases heart rate and myocardial contractility via selective β1 blockade.',
+        pk:'Onset 1–5 minutes IV with peak around 20 minutes; hepatic metabolism primarily via CYP2D6; duration several hours.',
+        excr:'Renal excretion of metabolites; prolonged effect possible in severe hepatic impairment due to reduced clearance.',
+        tips:'Monitor heart rate and blood pressure closely; avoid in decompensated heart failure or severe conduction abnormalities.'
+      }
+    }
+  ];
+
+  newDrugs.forEach(upsertDrug);
+
+  // 2) Guarantee NO blank fields on expanded card for these nine drugs
+  var targetNames = [
+    'Methohexital',
+    'Cisatracurium',
+    'Vecuronium',
+    'Sufentanil',
+    'Morphine',
+    'Methadone',
+    'Flumazenil',
+    'Labetalol',
+    'Metoprolol'
+  ];
+
+  DRUGS.forEach(function(d){
+    if (targetNames.indexOf(d.name) === -1) return;
+    d.expanded = d.expanded || {};
+    // hydrate from quick if enrichment hasn’t run yet
+    var q = d.quick || {};
+    if (!d.expanded.onset && q.onset) d.expanded.onset = q.onset;
+    if (!d.expanded.duration && q.duration) d.expanded.duration = q.duration;
+    if (!d.expanded.uses && q.use) d.expanded.uses = q.use;
+    if (!d.expanded.ci && q.ci) d.expanded.ci = q.ci;
+    if (!d.expanded.ae && q.ae) d.expanded.ae = q.ae;
+    // dose string if still missing
+    if (!d.expanded.dose){
+      var r = d.range || [];
+      var lo = r[0], hi = r[1];
+      var unit = d.unit || '';
+      var doseStr = '';
+      if (typeof lo === 'number' && typeof hi === 'number'){
+        doseStr = (lo === hi) ? (lo + ' ' + unit) : (lo + '–' + hi + ' ' + unit);
+      }
+      if (d.fixed){
+        doseStr += (doseStr ? ' • ' : '') + 'Fixed: ' + d.fixed;
+      }
+      d.expanded.dose = doseStr || 'N/A';
+    }
+    // finally, ensure all fields used in expandedHTML are non-empty
+    var keys = ['cls','moa','onset','duration','dose','uses','ae','excr','ci','tips'];
+    keys.forEach(function(k){
+      if (!d.expanded[k] || (typeof d.expanded[k] === 'string' && d.expanded[k].trim() === '')){
+        d.expanded[k] = 'N/A';
+      }
+    });
+  });
+
+  if (typeof renderMeds === 'function') renderMeds();
+})();
+</script>
+
 </body>
 </html>
 <script>
@@ -1856,5 +4229,48 @@ document.addEventListener('DOMContentLoaded', function(){
   }
   document.addEventListener('DOMContentLoaded', applyLaPercentColor);
   window.addEventListener('load', applyLaPercentColor);
+})();
+</script>
+
+<script>
+(function(){
+  function annotate(){
+    try {
+      var sel = document.getElementById('laDrug');
+      // Try to access LA_CAPS whether defined as global binding or window property
+      var CAPS = (typeof LA_CAPS !== 'undefined') ? LA_CAPS : (window.LA_CAPS || null);
+      if (!sel || !CAPS) return;
+      var LABELS = {
+        lidocaine: 'Lidocaine',
+        bupivacaine: 'Bupivacaine',
+        ropivacaine: 'Ropivacaine',
+        mepivacaine: 'Mepivacaine',
+        prilocaine: 'Prilocaine',
+        chloroprocaine: 'Chloroprocaine',
+        procaine: 'Procaine',
+        tetracaine: 'Tetracaine',
+        articaine: 'Articaine'
+      };
+      for (var i = 0; i < sel.options.length; i++) {
+        var opt = sel.options[i];
+        var v = (opt.value || '').trim();
+        var caps = CAPS[v];
+        if (!caps) continue;
+        var base = LABELS[v] || opt.textContent.replace(/\s—.*$/, '').trim();
+        var txt = base + ' — ' + caps.plain + ' mg/kg (no epi), ' + caps.epi + ' mg/kg (epi)';
+        if (opt.textContent !== txt) {
+          opt.textContent = txt;
+          opt.title = txt;
+        }
+      }
+    } catch(e) {
+      // No-op fail safe
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', annotate);
+  } else {
+    annotate();
+  }
 })();
 </script>
